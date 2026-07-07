@@ -43,7 +43,7 @@ const Input: FC<InputProps> = ({
             'w-full px-4 py-3 bg-dark-900 border-2 border-dark-800 rounded-lg text-white placeholder-gray-500',
             'focus:outline-none focus:border-primary-500 transition-colors duration-200',
             'disabled:opacity-50 disabled:cursor-not-allowed',
-            icon && 'pl-10',
+                Boolean(icon) && 'pl-10',
             error && 'border-red-500 focus:border-red-500',
             className
           )}
