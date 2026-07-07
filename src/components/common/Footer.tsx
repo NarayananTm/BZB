@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Mail, MapPin, Phone } from 'lucide-react';
-import { ROUTES, COMPANY_INFO } from '@/utils/constants';
+import { ROUTES } from '@/utils/constants';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -49,8 +49,7 @@ export default function Footer() {
 
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Let's build your future together
-              Whether you're looking for your next
+              Let&apos;s build your future together. Whether you&apos;re looking for your next
               property or want to leverage business
               opportunity to grow and scale your network,
               BZB is here to support your dreams.

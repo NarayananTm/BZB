@@ -1,6 +1,6 @@
 'use client';
 
-import type { FC, ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react';
+import type { FC, ButtonHTMLAttributes, ReactNode } from 'react';
 import Link from 'next/link';
 import { cn } from '@/utils/helpers';
 
@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string;
   fullWidth?: boolean;
   loading?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   iconPosition?: 'left' | 'right';
 }
 

@@ -54,7 +54,7 @@ export default function Hero() {
               </span>
 
               <span className="block text-[#F3C300] text-[20px] md:text-[30px] xl:text-[40px]">
-                Tomorrow's
+                Tomorrow&apos;s
               </span>
 
               <span className="block text-white text-[20px] md:text-[30px] xl:text-[40px]">
