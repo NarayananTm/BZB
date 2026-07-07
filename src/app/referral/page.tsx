@@ -1,12 +1,8 @@
 
 
 import type { Metadata } from 'next';
-import { ArrowRight, Share2, Users, Trophy, Gift, Zap, ChevronDown, ChevronRight } from 'lucide-react';
-import Hero from '@/components/sections/Hero';
-import { Button, StepCard, FeatureCard, FAQ } from '@/components';
-import Section from '@/layouts/Section';
-import Container from '@/layouts/Container';
-import Link from 'next/link';
+import { ArrowRight, Share2, Users, Trophy, Gift, Zap } from 'lucide-react';
+import { Button } from '@/components';
 import Image from 'next/image';
 
 
@@ -17,7 +13,7 @@ export const metadata: Metadata = {
   keywords: ['referral program', 'earn money', 'referral rewards', 'network growth'],
 };
 
-const steps = [
+const _steps = [
   {
     number: 1,
     title: 'Become a Member',
@@ -45,7 +41,7 @@ const steps = [
   },
 ];
 
-const benefits = [
+const _benefits = [
   {
     icon: Share2,
     title: 'Easy to Share',
@@ -78,7 +74,7 @@ const benefits = [
   },
 ];
 
-const faqItems = [
+const _faqItems = [
   {
     question: 'Is joining the referral program free?',
     answer: 'Yes! The referral program is available for registered BZB members at no additional cost.',
@@ -110,7 +106,7 @@ const faqItems = [
   },
 ];
 
-const levels = [
+const _levels = [
   { level: 'Bronze', members: '5+', reward: 'Initial Benefits' },
   { level: 'Silver', members: '10+', reward: 'Premium Access' },
   { level: 'Gold', members: '25+', reward: 'Exclusive Rewards' },
@@ -121,7 +117,6 @@ const levels = [
 
 
 export default function ReferralPage() {
-  let openFaq = 0; // State to track which FAQ is open
   return (
     <>
       {/* ================= HERO ================= */}

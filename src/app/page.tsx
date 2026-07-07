@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components';
 import ContactForm from '@/components/sections/ContactForm';
 
@@ -212,7 +211,7 @@ export default function HomePage() {
               </p>
 
               <p className="mt-10 text-[22px] leading-[1.9] text-[#666]">
-                Whether you're looking to own a property, invest in real
+                Whether you&apos;re looking to own a property, invest in real
                 estate, or earn through referrals, BZB provides a
                 transparent and trusted ecosystem designed for long-term
                 growth.
