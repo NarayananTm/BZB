@@ -1,19 +1,18 @@
-
-
-import type { Metadata } from 'next';
-import { ArrowRight } from 'lucide-react';
+"use client";
+import {
+  ArrowRight,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from '@/components';
 import Image from 'next/image';
+import { useState } from "react";
 
 
-export const metadata: Metadata = {
-  title: 'Referral Program | BZB - Born to Win',
-  description:
-    'Join BZB referral program. Refer friends, grow your network, complete levels, and earn exclusive rewards.',
-  keywords: ['referral program', 'earn money', 'referral rewards', 'network growth'],
-};
+
 
 export default function ReferralPage() {
+   const [openFaq, setOpenFaq] = useState<number | null>(0);
   return (
     <>
       {/* ================= HERO ================= */}
@@ -456,7 +455,7 @@ export default function ReferralPage() {
             >
 
               <button
-                // onClick={() => openFaq = openFaq === index ? -1 : index}
+                onClick={() => setOpenFaq(openFaq === index ? null : index)}
                 className="w-full flex justify-between items-center px-8 py-7"
               >
 
