@@ -27,7 +27,7 @@ export default function AboutPage() {
         description="Discover the story, mission, and vision behind BZB"
       /> */}
 
-<section className="relative bg-[#161414] overflow-hidden min-h-[760px]">
+      <section className="relative bg-[#161414] overflow-hidden min-h-[760px]">
 
         {/* Background Pattern */}
 
@@ -167,173 +167,173 @@ export default function AboutPage() {
 
       </section>
 
-{/* WHAT WE DO */}
-{/* ===================================== */}
+      {/* WHAT WE DO */}
+      {/* ===================================== */}
 
-<section className="bg-[#F8F8F8] py-28">
+      <section className="bg-[#F8F8F8] py-28">
 
-  <div className="max-w-[1600px] mx-auto px-10">
+        <div className="max-w-[1600px] mx-auto px-10">
 
-    <h2 className="text-center text-[52px] font-bold text-black mb-20">
-      What We Do
-    </h2>
+          <h2 className="text-center text-[52px] font-bold text-black mb-20">
+            What We Do
+          </h2>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
 
-      {/* CARD 1 */}
+            {/* CARD 1 */}
 
-      <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
+            <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
 
-        <div className="h-[330px] relative">
+              <div className="h-[330px] relative">
 
-          <Image
-            src="/images/about/helmet.png"
-            alt=""
-            fill
-            className="object-cover p-3 rounded-[30px]"
-          />
+                <Image
+                  src="/images/about/helmet.png"
+                  alt=""
+                  fill
+                  className="object-cover p-3 rounded-[30px]"
+                />
+
+              </div>
+
+              <div className="p-10 h-[200px]">
+
+                <h3 className="text-white text-[20px] font-bold leading-tight ">
+                  Builders & Developers
+                </h3>
+
+                <p className="mt-3 text-white/90 text-[20px] leading-[1.6]">
+
+                  Creating premium residential and commercial developments.
+
+                </p>
+
+              </div>
+
+            </div>
+
+            {/* CARD 2 */}
+
+            <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
+
+              <div className="h-[330px] relative">
+
+                <Image
+                  src="/images/about/business-card.png"
+                  alt=""
+                  fill
+                  className="object-cover p-3 rounded-[30px]"
+                />
+
+              </div>
+
+              <div className="p-10 h-[200px]">
+
+                <h3 className="text-white text-[20px] font-bold leading-tight">
+
+                  Property Investment
+
+                </h3>
+
+                <p className="mt-3 text-white/90 text-[20px] leading-[1.6]">
+
+                  Providing carefully selected investment opportunities.
+
+                </p>
+
+              </div>
+
+            </div>
+
+            {/* CARD 3 */}
+
+            <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
+
+              <div className="h-[330px] relative">
+
+                <Image
+                  src="/images/about/mobile.png"
+                  alt=""
+                  fill
+                  className="object-cover p-3 rounded-[30px]"
+                />
+
+              </div>
+
+              <div className="p-10 h-[200px]">
+
+                <h3 className="text-white text-[20px] font-bold leading-tight">
+
+                  Referral Program
+
+                </h3>
+
+                <p className="mt-3 text-white/90 text-[20px] leading-[1.6]">
+
+                  Helping members grow their network and unlock achievements.
+
+                </p>
+
+              </div>
+
+            </div>
+
+            {/* CARD 4 */}
+
+            <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
+
+              <div className="h-[330px] relative">
+
+                <Image
+                  src="/images/about/app-icon.png"
+                  alt=""
+                  fill
+                  className="object-cover p-3 rounded-[30px]"
+                />
+
+              </div>
+
+              <div className="p-10 h-[200px]">
+
+                <h3 className="text-white text-[20px] font-bold">
+
+                  Member Services
+
+                </h3>
+
+                <p className="mt-3 text-white/90 text-[15px] leading-[1.6]">
+
+                  Offering digital tools to manage referrals, payments and memberships.
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
 
-        <div className="p-10 h-[200px]">
-
-          <h3 className="text-white text-[20px] font-bold leading-tight ">
-            Builders & Developers
-          </h3>
-
-          <p className="mt-3 text-white/90 text-[20px] leading-[1.6]">
-
-            Creating premium residential and commercial developments.
-
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* CARD 2 */}
-
-      <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
-
-        <div className="h-[330px] relative">
-
-          <Image
-            src="/images/about/business-card.png"
-            alt=""
-            fill
-            className="object-cover p-3 rounded-[30px]"
-          />
-
-        </div>
-
-        <div className="p-10 h-[200px]">
-
-          <h3 className="text-white text-[20px] font-bold leading-tight">
-
-            Property Investment
-
-          </h3>
-
-          <p className="mt-3 text-white/90 text-[20px] leading-[1.6]">
-
-            Providing carefully selected investment opportunities.
-
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* CARD 3 */}
-
-      <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
-
-        <div className="h-[330px] relative">
-
-          <Image
-            src="/images/about/mobile.png"
-            alt=""
-            fill
-            className="object-cover p-3 rounded-[30px]"
-          />
-
-        </div>
-
-        <div className="p-10 h-[200px]">
-
-          <h3 className="text-white text-[20px] font-bold leading-tight">
-
-            Referral Program
-
-          </h3>
-
-          <p className="mt-3 text-white/90 text-[20px] leading-[1.6]">
-
-            Helping members grow their network and unlock achievements.
-
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* CARD 4 */}
-
-      <div className="rounded-[30px] overflow-hidden bg-[#B89C12] shadow-xl hover:-translate-y-3 transition-all duration-300">
-
-        <div className="h-[330px] relative">
-
-          <Image
-            src="/images/about/app-icon.png"
-            alt=""
-            fill
-            className="object-cover p-3 rounded-[30px]"
-          />
-
-        </div>
-
-        <div className="p-10 h-[200px]">
-
-          <h3 className="text-white text-[20px] font-bold">
-
-            Member Services
-
-          </h3>
-
-          <p className="mt-3 text-white/90 text-[15px] leading-[1.6]">
-
-            Offering digital tools to manage referrals, payments and memberships.
-
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+      </section>
 
 
- {/* ====================================== */}
-{/* VISION & MISSION */}
-{/* ====================================== */}
+      {/* ====================================== */}
+      {/* VISION & MISSION */}
+      {/* ====================================== */}
 
-<section className="bg-[#0F0F0F] py-24 overflow-hidden">
+      <section className="bg-[#0F0F0F] py-24 overflow-hidden">
 
-  <div className="max-w-[1600px] mx-auto px-10">
+        <div className="max-w-[1600px] mx-auto px-10">
 
-    <div className="grid lg:grid-cols-2 gap-24 items-center">
+          <div className="grid lg:grid-cols-2 gap-24 items-center">
 
-      {/* LEFT IMAGE */}
+            {/* LEFT IMAGE */}
 
-      <div className="relative flex justify-center">
+            <div className="relative flex justify-center">
 
-        {/* Glow */}
+              {/* Glow */}
 
-        <div className="
+              <div className="
           absolute
           w-[520px]
           h-[520px]
@@ -345,141 +345,77 @@ export default function AboutPage() {
           opacity-20
         " />
 
-        <Image
-          src="/images/about/vision.png"
-          alt="Vision"
-          width={700}
-          height={900}
-          className="
+              <Image
+                src="/images/about/vision.png"
+                alt="Vision"
+                width={700}
+                height={900}
+                className="
             relative
             z-10
             object-contain
           "
-        />
+              />
 
-      </div>
+            </div>
 
-      {/* RIGHT CONTENT */}
+            {/* RIGHT CONTENT */}
 
-      <div>
+            <div>
 
-        {/* Vision */}
+              {/* Vision */}
 
-        <h2 className="
+              <h2 className="
           text-[#D4AF11]
           text-[54px]
           font-bold
           mb-10
         ">
-          Our Vision
-        </h2>
+                Our Vision
+              </h2>
 
-        <p className="
+              <p className="
           text-white/90
           text-[24px]
           leading-[1.8]
           mb-24
         ">
-          To become a leading real estate and community-driven
-          platform that empowers individuals through trusted
-          property developments, innovative investment
-          opportunities, and a rewarding referral ecosystem.
+                To become a leading real estate and community-driven
+                platform that empowers individuals through trusted
+                property developments, innovative investment
+                opportunities, and a rewarding referral ecosystem.
 
-          We aspire to build lasting relationships where every
-          member can achieve financial growth, create valuable
-          connections, and contribute to a stronger, thriving
-          community.
-        </p>
+                We aspire to build lasting relationships where every
+                member can achieve financial growth, create valuable
+                connections, and contribute to a stronger, thriving
+                community.
+              </p>
 
-        {/* Mission */}
+              {/* Mission */}
 
-        <h2 className="
+              <h2 className="
           text-[#D4AF11]
           text-[54px]
           font-bold
           mb-10
         ">
-          Our Mission
-        </h2>
+                Our Mission
+              </h2>
 
-        <p className="
+              <p className="
           text-white/90
           text-[24px]
           leading-[1.8]
         ">
-          Our mission is to deliver high-quality, sustainable
-          residential and commercial developments while creating
-          a transparent and customer-focused experience.
+                Our mission is to deliver high-quality, sustainable
+                residential and commercial developments while creating
+                a transparent and customer-focused experience.
 
-          Through our innovative referral program, we aim to
-          connect people, encourage community growth, and provide
-          rewarding opportunities that enable members to expand
-          their network, unlock achievements, and build a
-          brighter future together.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-{/* ===================================== */}
-{/* CONTACT US */}
-{/* ===================================== */}
-
-<section className="bg-[#F8F8F8] py-28">
-
-  <div className="max-w-[1500px] mx-auto px-10">
-
-    <div className="text-center mb-20">
-
-      <p className="text-[#D4AF11] font-semibold tracking-[4px] uppercase">
-        Get In Touch
-      </p>
-
-      <h2 className="mt-5 text-[56px] font-bold text-[#222]">
-        Contact Us
-      </h2>
-
-      <p className="mt-6 text-[22px] text-gray-500 max-w-[750px] mx-auto leading-9">
-        We'd love to hear from you. Fill in the form below and our
-        team will get back to you as soon as possible.
-      </p>
-
-    </div>
-
-    <div className="grid lg:grid-cols-[40%_60%] gap-20">
-
-      {/* LEFT */}
-
-      <div>
-
-        {/* Address */}
-
-        <div className="mb-12">
-
-          <div className="flex items-center gap-5">
-
-            <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
-
-              📍
-
-            </div>
-
-            <div>
-
-              <h3 className="font-bold text-black text-2xl">
-                Address
-              </h3>
-
-              <p className="text-gray-500 leading-8">
-                4-A East Cross Road,
-                <br />
-                Gandhi Nagar,
-                <br />
-                Vellore - 632006
+                Through our innovative referral program, we aim to
+                connect people, encourage community growth, and provide
+                rewarding opportunities that enable members to expand
+                their network, unlock achievements, and build a
+                brighter future together.
               </p>
 
             </div>
@@ -488,106 +424,170 @@ export default function AboutPage() {
 
         </div>
 
-        {/* Phone */}
+      </section>
+      {/* ===================================== */}
+      {/* CONTACT US */}
+      {/* ===================================== */}
 
-        <div className="mb-12">
+      <section className="bg-[#F8F8F8] py-28">
 
-          <div className="flex items-center gap-5">
+        <div className="max-w-[1500px] mx-auto px-10">
 
-            <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
+          <div className="text-center mb-20">
 
-              📞
+            <p className="text-[#D4AF11] font-semibold tracking-[4px] uppercase">
+              Get In Touch
+            </p>
 
-            </div>
+            <h2 className="mt-5 text-[56px] font-bold text-[#222]">
+              Contact Us
+            </h2>
 
-            <div>
-
-              <h3 className="font-bold text-black text-2xl">
-                Phone
-              </h3>
-
-              <p className="text-gray-500">
-                +91 77320 05003
-                <br />
-                +91 98417 68255
-              </p>
-
-            </div>
+            <p className="mt-6 text-[22px] text-gray-500 max-w-[750px] mx-auto leading-9">
+              We'd love to hear from you. Fill in the form below and our
+              team will get back to you as soon as possible.
+            </p>
 
           </div>
 
-        </div>
+          <div className="grid lg:grid-cols-[40%_60%] gap-20">
 
-        {/* Email */}
-
-        <div>
-
-          <div className="flex items-center gap-5">
-
-            <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
-
-              ✉️
-
-            </div>
+            {/* LEFT */}
 
             <div>
 
-              <h3 className="font-bold text-black text-2xl">
-                Email
-              </h3>
+              {/* Address */}
 
-              <p className="text-gray-500">
-                bzb000777@gmail.com
-              </p>
+              <div className="mb-12">
+
+                <div className="flex items-center gap-5">
+
+                  <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
+
+                    📍
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-bold text-black text-2xl">
+                      Address
+                    </h3>
+
+                    <p className="text-gray-500 leading-8">
+                      4-A East Cross Road,
+                      <br />
+                      Gandhi Nagar,
+                      <br />
+                      Vellore - 632006
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Phone */}
+
+              <div className="mb-12">
+
+                <div className="flex items-center gap-5">
+
+                  <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
+
+                    📞
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-bold text-black text-2xl">
+                      Phone
+                    </h3>
+
+                    <p className="text-gray-500">
+                      +91 77320 05003
+                      <br />
+                      +91 98417 68255
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Email */}
+
+              <div>
+
+                <div className="flex items-center gap-5">
+
+                  <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
+
+                    ✉️
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-bold text-black text-2xl">
+                      Email
+                    </h3>
+
+                    <p className="text-gray-500">
+                      bzb000777@gmail.com
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
 
             </div>
 
-          </div>
+            {/* RIGHT */}
 
-        </div>
+            <div className="bg-white rounded-[30px] shadow-xl p-12">
 
-      </div>
+              <div className="grid md:grid-cols-2 gap-8">
 
-      {/* RIGHT */}
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  className="h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
+                />
 
-      <div className="bg-white rounded-[30px] shadow-xl p-12">
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  className="h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
+                />
 
-        <div className="grid md:grid-cols-2 gap-8">
+              </div>
 
-          <input
-            type="text"
-            placeholder="First Name"
-            className="h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
-          />
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="mt-8 w-full h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
+              />
 
-          <input
-            type="text"
-            placeholder="Last Name"
-            className="h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
-          />
+              <input
+                type="text"
+                placeholder="Phone Number"
+                className="mt-8 w-full h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
+              />
 
-        </div>
+              <textarea
+                rows={6}
+                placeholder="Your Message"
+                className="mt-8 w-full rounded-xl border border-gray-300 p-6 outline-none focus:border-[#D4AF11]"
+              />
 
-        <input
-          type="email"
-          placeholder="Email Address"
-          className="mt-8 w-full h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
-        />
-
-        <input
-          type="text"
-          placeholder="Phone Number"
-          className="mt-8 w-full h-16 rounded-xl border border-gray-300 px-6 outline-none focus:border-[#D4AF11]"
-        />
-
-        <textarea
-          rows={6}
-          placeholder="Your Message"
-          className="mt-8 w-full rounded-xl border border-gray-300 p-6 outline-none focus:border-[#D4AF11]"
-        />
-
-        <Button
-          className="
+              <Button
+                className="
           mt-10
           bg-[#D4AF11]
           hover:bg-[#E7C41B]
@@ -597,18 +597,18 @@ export default function AboutPage() {
           px-12
           font-semibold
           "
-        >
-          Send Message
-        </Button>
+              >
+                Send Message
+              </Button>
 
-      </div>
+            </div>
 
-    </div>
+          </div>
 
-  </div>
+        </div>
 
-</section>
-  
+      </section>
+
     </>
   );
 }
