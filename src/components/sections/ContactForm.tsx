@@ -4,7 +4,6 @@ import type { FC } from 'react';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import TextArea from '@/components/common/TextArea';
-import { Mail } from 'lucide-react';
 import { useState } from 'react';
 
 const ContactForm: FC = () => {
