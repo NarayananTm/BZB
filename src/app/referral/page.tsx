@@ -1,7 +1,7 @@
 
 
 import type { Metadata } from 'next';
-import { ArrowRight, Share2, Users, Trophy, Gift, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components';
 import Image from 'next/image';
 
@@ -12,109 +12,6 @@ export const metadata: Metadata = {
     'Join BZB referral program. Refer friends, grow your network, complete levels, and earn exclusive rewards.',
   keywords: ['referral program', 'earn money', 'referral rewards', 'network growth'],
 };
-
-const _steps = [
-  {
-    number: 1,
-    title: 'Become a Member',
-    description: 'Register as a BZB member and activate your membership to get your unique Referral ID.',
-  },
-  {
-    number: 2,
-    title: 'Share Your Referral',
-    description: 'Share your referral link or QR Code through WhatsApp, Facebook, Instagram, or Email.',
-  },
-  {
-    number: 3,
-    title: 'Grow Your Team',
-    description: 'Every successful registration through your referral becomes part of your growing network.',
-  },
-  {
-    number: 4,
-    title: 'Complete Referral Levels',
-    description: 'Achieve referral milestones to unlock higher levels and exciting rewards.',
-  },
-  {
-    number: 5,
-    title: 'Earn Recognition',
-    description: 'As your team grows, unlock exclusive benefits and future opportunities.',
-  },
-];
-
-const _benefits = [
-  {
-    icon: Share2,
-    title: 'Easy to Share',
-    description: 'Share your personalized QR Code or referral link with anyone.',
-  },
-  {
-    icon: Zap,
-    title: 'Real Time Tracking',
-    description: 'Monitor your referrals, team members, and progress directly from your dashboard.',
-  },
-  {
-    icon: Trophy,
-    title: 'Level Based Growth',
-    description: 'Advance through multiple referral levels and unlock new achievements.',
-  },
-  {
-    icon: Gift,
-    title: 'Exclusive Rewards',
-    description: 'Complete milestones to become eligible for exciting member rewards.',
-  },
-  {
-    icon: Users,
-    title: 'Strong Community',
-    description: 'Grow together with thousands of members across the BZB network.',
-  },
-  {
-    icon: Zap,
-    title: 'Premium Benefits',
-    description: 'Access to special offers and exclusive opportunities as you grow.',
-  },
-];
-
-const _faqItems = [
-  {
-    question: 'Is joining the referral program free?',
-    answer: 'Yes! The referral program is available for registered BZB members at no additional cost.',
-  },
-  {
-    question: 'How do I share my referral?',
-    answer:
-      'Once you register, you get a unique Referral ID and QR Code. Share these through any platform - WhatsApp, Facebook, Instagram, Email, or any social network.',
-  },
-  {
-    question: 'Can I track my referrals?',
-    answer:
-      'Absolutely! Your member dashboard provides real-time tracking of all your referrals, team members, and progress towards the next level.',
-  },
-  {
-    question: 'When do I receive rewards?',
-    answer:
-      'Rewards are credited when you complete referral milestones. The more your network grows, the more rewards you unlock.',
-  },
-  {
-    question: 'What happens if I reach a level?',
-    answer:
-      'When you complete a referral level, you unlock higher achievements, access to exclusive benefits, and eligibility for premium member rewards.',
-  },
-  {
-    question: 'Is there a limit to how many people I can refer?',
-    answer:
-      'No limit! The more you refer, the more your network grows and the more rewards you can earn. Keep sharing and growing!',
-  },
-];
-
-const _levels = [
-  { level: 'Bronze', members: '5+', reward: 'Initial Benefits' },
-  { level: 'Silver', members: '10+', reward: 'Premium Access' },
-  { level: 'Gold', members: '25+', reward: 'Exclusive Rewards' },
-  { level: 'Platinum', members: '50+', reward: 'VIP Benefits' },
-  { level: 'Diamond', members: '100+', reward: 'Elite Status' },
-];
-
-
 
 export default function ReferralPage() {
   return (
