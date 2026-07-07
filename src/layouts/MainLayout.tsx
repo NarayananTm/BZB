@@ -1,7 +1,6 @@
 'use client';
 
 import type { FC, ReactNode } from 'react';
-import { useState, useEffect } from 'react';
 import Navigation from '@/components/common/Navigation';
 import Footer from '@/components/common/Footer';
 
