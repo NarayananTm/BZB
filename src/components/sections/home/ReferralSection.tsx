@@ -1,53 +1,93 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "@/components";
-
+import "@/styles/animations.css";
 export default function ReferralSection() {
   return (
-    <section className="relative overflow-hidden bg-dark-900 py-16 lg:py-24">
-      {/* Background Grid */}
-      <div className="absolute inset-0 opacity-5">
-        {/* <svg
-          width="100%"
-          height="100%"
-          xmlns="http://www.w3.org/2000/svg"
+    <section
+      className="
+        relative
+
+        overflow-hidden
+
+        bg-dark-900
+
+        py-14
+        sm:py-16
+        lg:py-24
+      "
+    >
+
+      {/* Background */}
+
+      <div
+        className="
+          absolute
+          inset-0
+
+          opacity-[0.04]
+
+          animate-[bzbPulseGlow_8s_ease-in-out_infinite]
+        "
+      />
+
+      <div
+        className="
+          relative
+
+          mx-auto
+
+          max-w-[1500px]
+
+          px-5
+          sm:px-8
+          lg:px-12
+        "
+      >
+
+        <div
+          className="
+            grid
+
+            grid-cols-1
+            xl:grid-cols-2
+
+            items-center
+
+            gap-10
+            lg:gap-16
+          "
         >
-          <defs>
-            <pattern
-              id="grid2"
-              width="40"
-              height="40"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M40 0L0 0 0 40"
-                fill="none"
-                stroke="white"
-                strokeWidth="1"
-              />
-            </pattern>
-          </defs>
 
-          <rect width="100%" height="100%" fill="url(#grid2)" />
-        </svg> */}
-      </div>
+          {/* ================= LEFT ================= */}
 
-      <div className="relative mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-12">
+          <div
+            className="
+              order-2
+              xl:order-1
 
-        <div className="grid items-center gap-16 lg:grid-cols-2">
+              text-center
+              xl:text-left
 
-          {/* Left Content */}
-
-          <div className="order-2 text-center lg:order-1 lg:text-left">
+              animate-[bzbFadeLeft_1s_ease]
+            "
+          >
 
             <p
               className="
-                mb-5
+                mb-4
+
                 font-semibold
+
                 uppercase
+
                 tracking-widest
+
                 text-primary-500
 
                 text-[18px]
+                sm:text-[22px]
                 lg:text-[30px]
               "
             >
@@ -57,11 +97,14 @@ export default function ReferralSection() {
             <h2
               className="
                 font-semibold
+
                 leading-tight
+
                 text-white
 
-                text-[34px]
-                sm:text-[42px]
+                text-[32px]
+                sm:text-[40px]
+                md:text-[46px]
                 lg:text-[50px]
               "
             >
@@ -72,12 +115,15 @@ export default function ReferralSection() {
 
             <p
               className="
-                mt-8
-                leading-7
+                mt-6
+
+                leading-8
+                lg:leading-9
+
                 text-gray-400
 
-                text-[17px]
-                sm:text-[19px]
+                text-[16px]
+                sm:text-[18px]
                 lg:text-[22px]
               "
             >
@@ -97,64 +143,198 @@ export default function ReferralSection() {
               opportunities become.
             </p>
 
-            <Button
-              href="/referral"
+            <div
               className="
                 mt-10
 
-                w-full
-                sm:w-auto
+                flex
 
-                h-14
-                rounded-lg
+                justify-center
+                xl:justify-start
 
-                bg-[#BEA311]
-                px-10
-
-                text-lg
-                font-semibold
-                text-white
-
-                hover:bg-primary-800
+                animate-[bzbFadeUp_1.3s_ease]
               "
             >
-              Start Referring
-            </Button>
+
+              <Button
+                href="/referral"
+                className="
+                  h-14
+
+                  w-full
+                  sm:w-auto
+
+                  rounded-lg
+
+                  bg-[#BEA311]
+
+                  px-10
+
+                  text-lg
+
+                  font-semibold
+
+                  text-white
+
+                  transition-all
+                  duration-500
+
+                  hover:bg-primary-800
+                  hover:scale-105
+
+                  active:scale-95
+                "
+              >
+                Start Referring
+              </Button>
+
+            </div>
 
           </div>
 
-          {/* Right Mobile */}
+          {/* ================= RIGHT ================= */}
 
-          <div className="order-1 flex justify-center lg:order-2">
+          <div
+            className="
+              order-1
+              xl:order-2
 
-            <Image
-              src="/images/hero/Referral-Program-iPhone-14.png"
-              alt="Referral Program"
+              flex
 
-              width={420}
-              height={640}
+              justify-center
 
-              priority
-              quality={100}
-
+              animate-[bzbFadeRight_1.2s_ease]
+            "
+          >
+                        <div
               className="
-                h-auto
+                relative
 
-                w-[440px]
-                sm:w-[360px]
-                md:w-[400px]
-                lg:w-[540px]
-                xl:w-[750px]
+                flex
+                items-center
+                justify-center
 
-                drop-shadow-[0_25px_50px_rgba(0,0,0,.45)]
+                w-full
               "
-            />
+            >
+
+              {/* Background Glow */}
+
+              <div
+                className="
+                  absolute
+
+                  h-[220px]
+                  w-[220px]
+
+                  sm:h-[300px]
+                  sm:w-[300px]
+
+                  lg:h-[420px]
+                  lg:w-[420px]
+
+                  rounded-full
+
+                  bg-[#BEA311]/20
+
+                  blur-[90px]
+
+                  animate-[bzbPulseGlow_6s_ease-in-out_infinite]
+                "
+              />
+
+              {/* Phone Image */}
+
+              <Image
+                src="/images/hero/Referral-Program-iPhone-14.png"
+                alt="Referral Program"
+
+                width={750}
+                height={900}
+
+                priority
+                quality={100}
+
+                className="
+                  relative
+                  z-20
+
+                  h-auto
+
+                  w-[240px]
+                  sm:w-[300px]
+                  md:w-[360px]
+                  lg:w-[460px]
+                  xl:w-[650px]
+
+                  object-contain
+
+                  drop-shadow-[0_35px_70px_rgba(0,0,0,.45)]
+
+                  transition-all
+                  duration-700
+                  ease-out
+
+                  hover:scale-[1.03]
+
+                  will-change-transform
+
+                  animate-[bzbFloat_6s_ease-in-out_infinite]
+                "
+              />
+
+              {/* Decorative Ring */}
+
+              <div
+                className="
+                  absolute
+
+                  bottom-8
+                  right-6
+
+                  hidden
+                  lg:block
+
+                  h-28
+                  w-28
+
+                  rounded-full
+
+                  border
+                  border-[#BEA311]/30
+
+                  animate-[bzbRotateSlow_25s_linear_infinite]
+                "
+              />
+
+            </div>
 
           </div>
-
-        </div>
+                  </div>
 
       </div>
+
+      {/* Bottom Decorative Gradient */}
+
+      <div
+        className="
+          absolute
+
+          bottom-0
+          left-0
+
+          h-24
+          w-full
+
+          bg-gradient-to-t
+
+          from-black/20
+          to-transparent
+
+          pointer-events-none
+        "
+      />
+
     </section>
   );
 }
