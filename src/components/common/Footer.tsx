@@ -12,7 +12,7 @@ export default function Footer() {
     { label: 'BZB', href: ROUTES.BZB },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About', href: ROUTES.ABOUT },
-    { label: 'Contact Us', href: ROUTES.CONTACT },
+    // { label: 'Contact Us', href: ROUTES.CONTACT },
   ];
 
   const contact = {
@@ -25,7 +25,7 @@ export default function Footer() {
     <footer className="bg-dark-900 text-white">
       {/* Main Footer Content */}
       <div className="container mx-auto px-6 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
           {/* Brand Section */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="ml-72">
             <h3 className="text-white font-bold mb-6 text-sm">Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (

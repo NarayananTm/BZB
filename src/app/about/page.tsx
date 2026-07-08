@@ -55,7 +55,7 @@ export default function AboutPage() {
 
           <div className="max-w-[900px] py-48">
 
-            <h1 className="font-black leading-[1.15] text-[55px]">
+            <h1 className="font-black leading-[1.15] text-[40px]">
 
               <span className="text-white">
                 Building
@@ -103,7 +103,7 @@ export default function AboutPage() {
 
           <div className="max-w-[1200px]">
 
-            <h2 className="text-[52px] font-bold text-black mb-12">
+            <h2 className="text-[40px] font-bold text-black mb-12">
               Who We Are
             </h2>
 
@@ -139,7 +139,7 @@ export default function AboutPage() {
 
           <div className="max-w-[1250px]">
 
-            <h2 className="text-[52px] font-bold text-black mb-12">
+            <h2 className="text-[40px] font-bold text-black mb-12">
 
               Our Story
 
@@ -174,7 +174,7 @@ export default function AboutPage() {
 
         <div className="max-w-[1600px] mx-auto px-10">
 
-          <h2 className="text-center text-[52px] font-bold text-black mb-20">
+          <h2 className="text-center text-[40px] font-bold text-black mb-20">
             What We Do
           </h2>
 
@@ -367,7 +367,7 @@ export default function AboutPage() {
 
               <h2 className="
           text-[#D4AF11]
-          text-[54px]
+          text-[40px]
           font-bold
           mb-10
         ">
@@ -395,7 +395,7 @@ export default function AboutPage() {
 
               <h2 className="
           text-[#D4AF11]
-          text-[54px]
+          text-[40px]
           font-bold
           mb-10
         ">
@@ -439,7 +439,7 @@ export default function AboutPage() {
               Get In Touch
             </p>
 
-            <h2 className="mt-5 text-[56px] font-bold text-[#222]">
+            <h2 className="mt-5 text-[40px] font-bold text-[#222]">
               Contact Us
             </h2>
 
@@ -450,103 +450,10 @@ export default function AboutPage() {
 
           </div>
 
-          <div className="grid lg:grid-cols-[40%_60%] gap-20">
+          <div className="grid lg:grid-cols-1 gap-20">
 
             {/* LEFT */}
 
-            <div>
-
-              {/* Address */}
-
-              <div className="mb-12">
-
-                <div className="flex items-center gap-5">
-
-                  <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
-
-                    📍
-
-                  </div>
-
-                  <div>
-
-                    <h3 className="font-bold text-black text-2xl">
-                      Address
-                    </h3>
-
-                    <p className="text-gray-500 leading-8">
-                      4-A East Cross Road,
-                      <br />
-                      Gandhi Nagar,
-                      <br />
-                      Vellore - 632006
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* Phone */}
-
-              <div className="mb-12">
-
-                <div className="flex items-center gap-5">
-
-                  <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
-
-                    📞
-
-                  </div>
-
-                  <div>
-
-                    <h3 className="font-bold text-black text-2xl">
-                      Phone
-                    </h3>
-
-                    <p className="text-gray-500">
-                      +91 77320 05003
-                      <br />
-                      +91 98417 68255
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* Email */}
-
-              <div>
-
-                <div className="flex items-center gap-5">
-
-                  <div className="w-14 h-14 rounded-full bg-[#D4AF11] flex items-center justify-center">
-
-                    ✉️
-
-                  </div>
-
-                  <div>
-
-                    <h3 className="font-bold text-black text-2xl">
-                      Email
-                    </h3>
-
-                    <p className="text-gray-500">
-                      bzb000777@gmail.com
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
 
             {/* RIGHT */}
 

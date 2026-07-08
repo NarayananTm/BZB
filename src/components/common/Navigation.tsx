@@ -24,7 +24,7 @@ export default function Navigation() {
     { label: 'BZB', href: ROUTES.BZB },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About Us', href: ROUTES.ABOUT },
-    { label: 'Contact', href: ROUTES.CONTACT },
+    // { label: 'Contact', href: ROUTES.CONTACT },
   ];
 
   return (
@@ -50,11 +50,11 @@ export default function Navigation() {
     />
 
     <div className="flex flex-col leading-none">
-      <span className="text-white text-[42px] font-bold tracking-tight">
+      <span className="text-white text-[47px] font-bold tracking-tight">
         BZB
       </span>
 
-      <span className="text-gray-300 uppercase tracking-[0.45em] text-[9px] mt-1">
+      <span className="text-gray-300 uppercase tracking-[0.45em] text-[7px] mt-1">
         Born To Win
       </span>
     </div>
@@ -67,7 +67,7 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-[#FFD31A] font-medium text-[17px] hover:text-white transition duration-300"
+                className="text-[#FFD31A] font-medium text-[25px] hover:text-white transition duration-300"
               >
                 {item.label}
               </Link>
@@ -105,7 +105,7 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-[#FFD31A] text-lg hover:text-white transition"
+                className="block text-[#FFD31A] text-[25px] hover:text-white transition"
               >
                 {item.label}
               </Link>
@@ -113,7 +113,7 @@ export default function Navigation() {
 
             <Link
               href="/member"
-              className="block w-full text-center bg-white text-black font-semibold rounded-xl py-4 hover:bg-[#FFD31A] transition"
+              className="block w-full text-center text-[20px] bg-white text-black font-semibold rounded-xl py-4 hover:bg-[#FFD31A] transition"
             >
               Become a Member
             </Link>

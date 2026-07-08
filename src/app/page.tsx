@@ -66,18 +66,18 @@ export default function HomePage() {
 
             <div className="flex flex-col justify-center pl-16">
 
-              <h1 className="text-white font-black leading-[1.05] text-[72px]">
+              <h1 className="text-white font-black leading-[1.05] text-[64px]">
                 Build Your
                 <br />
                 Future with
-                <span className="text-[#F3C300]"> BZB</span>
+                <span className="text-[#F3C300] text-[64px] "> BZB</span>
               </h1>
 
-              <h2 className="mt-6 text-[#F3C300] text-[26px] font-semibold">
+              <h2 className="mt-6 text-[#F3C300] text-[34px] font-semibold">
                 Invest. Refer. Grow. Reward.
               </h2>
 
-              <p className="mt-8 max-w-[500px] text-[18px] leading-9 text-gray-300">
+              <p className="mt-8 max-w-[500px] text-[20px] leading-9 text-gray-300">
                 Join BZB and become part of a community where real estate
                 opportunities meet rewarding referrals. Explore trusted
                 projects, grow your network, unlock exclusive rewards,
@@ -88,15 +88,14 @@ export default function HomePage() {
                 href="/member/dashboard"
                 className="
             mt-10
-            bg-[#C9A400]
-            hover:bg-[#F3C300]
-            text-white
+          bg-primary-700 text-white hover:bg-primary-800
             rounded-xl
             h-14
             px-10
             text-lg
             font-semibold
-            w-[35%]
+            w-[30%]
+            
           "
               >
                 Get Started →
@@ -138,7 +137,7 @@ export default function HomePage() {
 
         <div className="max-w-[1650px] mx-auto px-12">
 
-          <div className="grid lg:grid-cols-[620px_1fr] gap-28 items-center">
+          <div className="grid lg:grid-cols-[720px_1fr] gap-28 items-center">
 
             {/* LEFT */}
 
@@ -146,7 +145,7 @@ export default function HomePage() {
 
               {/* Yellow Card */}
 
-              <div className="relative w-[560px] h-[660px] bg-[#D8B300] overflow-hidden">
+              <div className="relative w-[760px] h-[960px] bg-[#D8B300] overflow-hidden button-shadow-[0_25px_50px_rgba(0,0,0,.45)] rounded-b-[40px]" >
 
                 {/* Background */}
 
@@ -160,13 +159,13 @@ export default function HomePage() {
 
                 {/* Watermark */}
 
-                <div className="absolute inset-0 flex justify-center pt-2 opacity-15">
+                <div className="absolute inset-0 flex justify-center pt-2  opacity-15">
 
                   <Image
                     src="/images/hero/Vector94.svg"
                     alt=""
-                    width={340}
-                    height={340}
+                    width={660}
+                    height={660}
                   />
 
                 </div>
@@ -176,12 +175,13 @@ export default function HomePage() {
                 <Image
                   src="/images/hero/MaskGroup.svg"
                   alt=""
-                  width={560}
-                  height={520}
+                  width={660}
+                  height={620}
                   className="
               absolute
               bottom-0
               left-1/2
+              right-0
               -translate-x-1/2
             "
                 />
@@ -194,11 +194,11 @@ export default function HomePage() {
 
             <div className="max-w-[760px] py-28">
 
-              <p className="text-black text-[18px] font-semibold">
+              <p className="text-black text-[30px] font-semibold">
                 About BZB
               </p>
 
-              <h2 className="mt-7 text-[72px] font-bold leading-[1.05] text-[#707070]">
+              <h2 className="mt-7 text-[45px] font-bold leading-[1.05] text-[#707070]">
                 Building Dreams.
                 <br />
                 Creating Opportunities.
@@ -230,10 +230,11 @@ export default function HomePage() {
             h-[58px]
             px-10
             rounded-lg
-            bg-[#CBA800]
-            hover:bg-[#E6C000]
-            text-white
+            bg-primary-700
+             text-white
+             hover:bg-primary-800
             font-semibold
+            text-[20px] 
           "
               >
                 Get Started
@@ -266,16 +267,16 @@ export default function HomePage() {
 
           {/* Left Content */}
           <div className="z-10">
-            <p className="text-sm font-semibold text-primary-500 uppercase tracking-wider mb-3">
+            <p className="font-semibold text-[20px] text-primary-500 uppercase tracking-wider mb-2">
               Referral Program
               <br />
               <br />
             </p>
-            <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+            <h2 className="text-4xl lg:text-5xl font-bold text-[40px] text-white leading-tight mb-4">
               Refer. Grow.<br />
               Earn Together.
             </h2>
-            <p className="text-gray-400 text-lg leading-relaxed mb-6">
+            <p className="text-gray-400 text-[22px] leading-relaxed mb-6">
               <br />
               Invite your friends and family to join the BZB community.
               <br />
@@ -317,21 +318,21 @@ export default function HomePage() {
         <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-dark-900 leading-tight mb-6">
+            <h2 className=" text-[25px] font-bold text-dark-900 leading-tight mb-6">
               About Us
             </h2>
-            <h3 className="text-2xl font-bold text-dark-900 mb-6">
+            <h3 className="text-[40px] font-bold text-dark-400 mb-6">
               Building Trust.<br />
               Creating Opportunities.
             </h3>
-            <p className="text-gray-700 text-lg leading-relaxed mb-4">
+            <p className="text-gray-700  text-[22px] leading-relaxed mb-4">
               BZB is a trusted platform that combines Builders &
               <br />
               Developers with a dynamic referral-based membership
               <br />
               ecosystem.
             </p>
-            <p className="text-gray-600 text-base leading-relaxed mb-8">
+            <p className="text-gray-600 text-[20px] leading-relaxed mb-8">
               Our goal is to make real estate opportunities more
               <br />
               accessible while empowering members to grow through
@@ -365,7 +366,7 @@ export default function HomePage() {
       {/* Contact Section */}
       <section className="bg-white py-16 lg:py-24">
         <div className="container mx-auto px-6 lg:px-12 max-w-2xl">
-          <h2 className="text-4xl font-bold text-dark-900 mb-12 text-center">
+          <h2 className=" text-[40px] font-bold text-dark-900 mb-12 text-center">
             Contact
           </h2>
           <ContactForm />
