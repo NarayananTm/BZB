@@ -21,32 +21,30 @@ export default function BZBPage() {
     <>
 
 
-<HeroLayout />
+      <HeroLayout />
 
-<section className="relative bg-white">
+      <section className="relative bg-white">
 
-  {/* Floating Cards */}
+        {/* Floating Cards */}
 
-  <FeatureCards />
+        <FeatureCards />
 
-  {/* About Company */}
+        {/* About Company */}
 
-  <AboutCompany />
+        <AboutCompany />
 
-  {/* Vision Mission */}
+        {/* Vision Mission */}
 
-  <VisionMission />
+        <VisionMission />
 
-</section>
+      </section>
 
-<WhyChoose />
+      <WhyChoose />
 
-<OurServices />
-<ContactSection />
+      <OurServices />
+      <ContactSection />
 
-    
-
-    <FAQSection />
+      <FAQSection />
     </>
   );
 }

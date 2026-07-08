@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 
-export default function ContactSection() {
+export default function   ContactSection() {
   return (
     <section className="bg-[#FAFAFA] py-28">
 
@@ -12,10 +12,11 @@ export default function ContactSection() {
 
         <h2
           className="
-            text-[64px]
-            font-black
+            text-[50px]
+            font-semibold
             text-[#111]
             leading-tight
+
           "
         >
           Let's Build Your Future Together
@@ -23,10 +24,10 @@ export default function ContactSection() {
 
         <p
           className="
-            mt-8
+            mt-6
             max-w-[760px]
-            text-[22px]
-            leading-10
+            text-[20px]
+            leading-6
             text-[#666]
           "
         >
@@ -37,9 +38,9 @@ export default function ContactSection() {
 
         {/* Form */}
 
-        <form className="mt-20">
+        <form className="mt-8">
 
-          <div className="grid lg:grid-cols-2 gap-x-20 gap-y-12">
+          <div className="grid lg:grid-cols-2 gap-x-20 gap-y-10">
 
             {/* First Name */}
 

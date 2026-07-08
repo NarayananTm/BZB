@@ -25,65 +25,97 @@ const services = [
 
 export default function OurServices() {
   return (
-    <section className="bg-[#F8F8F8] py-24">
-
-      <div className="max-w-[1600px] mx-auto px-10">
+    <section className="bg-[#F8F8F8] py-16 lg:py-24 overflow-hidden">
+      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-10">
 
         {/* Heading */}
 
-        <h2
-          className="
-            text-[44px]
-            font-bold
-            text-[#111]
-            mb-16
-          "
-        >
-          Our Services
-        </h2>
+        <div className="mb-10 lg:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#111] animate-[fadeInLeft_.8s_ease]">
+            Our Services
+          </h2>
+        </div>
 
         {/* Cards */}
 
-        <div className="grid lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 sm:gap-6 lg:gap-8">
 
-          {services.map((service) => (
+          {services.map((service, index) => (
             <div
               key={service.title}
+              style={{
+                animationDelay: `${index * 150}ms`,
+              }}
               className="
-                bg-white
-                rounded-[34px]
+                group
+                flex
+                flex-col
+
                 overflow-hidden
+
+                rounded-[32px]
+
                 border
-                border-[#D8D8D8]
-                shadow-[0_12px_28px_rgba(0,0,0,.12)]
-                hover:-translate-y-2
+                border-[#E6E6E6]
+
+                bg-white
+
+                shadow-[0_12px_30px_rgba(0,0,0,.08)]
+
                 transition-all
-                duration-300
+                duration-500
+
+                hover:-translate-y-2
+                hover:shadow-[0_24px_50px_rgba(0,0,0,.12)]
+
+                opacity-0
+                animate-[fadeInUp_.8s_ease_forwards]
               "
             >
 
               {/* Image */}
 
-              <div className="relative h-[330px]">
+              <div className="relative w-full aspect-[16/10] overflow-hidden">
 
                 <Image
                   src={service.image}
                   alt={service.title}
                   fill
-                  className="object-cover"
+                  priority
+                  quality={100}
+                  sizes="(max-width:768px)100vw,(max-width:1280px)50vw,33vw"
+                  className="
+                    object-cover
+                    object-center
+
+                    transition-transform
+                    duration-700
+
+                    group-hover:scale-105
+                  "
                 />
 
               </div>
 
               {/* Content */}
 
-              <div className="p-10">
+              <div className="flex flex-1 flex-col p-6 lg:p-8">
 
                 <h3
                   className="
-                    text-[34px]
-                    font-bold
+                    text-[25px]
+                    lg:text-[25px]
+
+                    font-semibold
+
+                    leading-tight
+
                     text-[#111]
+
+                    transition-colors
+                    duration-300
+
+                    group-hover:text-[#D8B300]
                   "
                 >
                   {service.title}
@@ -91,14 +123,38 @@ export default function OurServices() {
 
                 <p
                   className="
-                    mt-6
-                    text-[20px]
-                    leading-9
-                    text-[#666]
+                    mt-5
+
+                    flex-1
+
+                    text-[17px]
+                    lg:text-[18px]
+
+                    leading-8
+
+                    text-[#666666]
                   "
                 >
                   {service.description}
                 </p>
+
+                <div
+                  className="
+                    mt-8
+
+                    h-[3px]
+                    w-0
+
+                    rounded-full
+
+                    bg-[#D8B300]
+
+                    transition-all
+                    duration-500
+
+                    group-hover:w-20
+                  "
+                />
 
               </div>
 
@@ -106,9 +162,7 @@ export default function OurServices() {
           ))}
 
         </div>
-
       </div>
-
     </section>
   );
 }
