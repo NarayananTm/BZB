@@ -365,11 +365,11 @@ xl:w-[460px]
                   duration-700
 
                   hover:scale-105
-
-                  animate-[float_6s_ease-in-out_infinite]
+ animate-[bzbFloat_6s_ease-in-out_infinite]
                 "
               />
 
+                   {/* animate-[bzbFloat_6s_ease-in-out_infinite] */}
               {/* Decorative Ring */}
 
               <div
