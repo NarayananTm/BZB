@@ -132,15 +132,15 @@ export default function AboutCompany() {
 
               <p
                 className="
-                  mt-4
+                  mt-8
 
                   text-white/95
 
                   leading-8
                   lg:leading-10
 
-                  text-[17px]
-                  sm:text-[18px]
+                  text-[25px]
+                  sm:text-[25px]
                   lg:text-[25px]
                 "
               >
@@ -159,8 +159,8 @@ export default function AboutCompany() {
                   leading-8
                   lg:leading-10
 
-                  text-[17px]
-                  sm:text-[18px]
+                  text-[25px]
+                  sm:text-[25px]
                   lg:text-[25px]
                 "
               >

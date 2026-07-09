@@ -68,7 +68,7 @@ export default function FAQSection() {
               >
                 <div className="text-left">
 
-                  <h3 className="text-[30px] font-semibold text-black">
+                  <h3 className="text-[25px] font-semibold text-black">
                     {item.question}
                   </h3>
 

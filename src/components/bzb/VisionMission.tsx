@@ -66,10 +66,10 @@ export default function VisionMission() {
               <ul
                 className="
                   mt-5
-                  space-y-5
+                  space-y-4
                   text-white/90
                   text-[20px]
-                  leading-6
+                  leading-5
                   list-disc
                   pl-7
                 "

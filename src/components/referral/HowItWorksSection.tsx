@@ -35,11 +35,11 @@ export default function HowItWorksSection() {
           className="
             mb-14
 
-            text-[32px]
-            sm:text-[38px]
-            lg:text-[42px]
+            text-[30px]
+            sm:text-[30px]
+            lg:text-[30px]
 
-            font-bold
+            font-semibold
 
             text-[#222]
 
@@ -94,8 +94,11 @@ export default function HowItWorksSection() {
                 opacity-20
 
                 top-0
-
-                animate-[float_7s_ease-in-out_infinite]
+                mt-[-80px]
+                sm:mt-[-100px]
+                lg:mt-[-130px]
+                mr-[-100px]
+              
               "
             />
 
@@ -211,11 +214,11 @@ export default function HowItWorksSection() {
 
                   <h3
                     className="
-                      text-[22px]
+                      text-[25px]
                       sm:text-[24px]
-                      lg:text-[28px]
+                      lg:text-[25px]
 
-                      font-bold
+                      font-semibold
 
                       text-[#222]
 
@@ -230,7 +233,7 @@ export default function HowItWorksSection() {
 
                   <p
                     className="
-                      mt-3
+                      mt-2
 
                       max-w-[560px]
 
@@ -238,9 +241,9 @@ export default function HowItWorksSection() {
 
                       leading-8
 
-                      text-[16px]
+                      text-[20px]
                       sm:text-[17px]
-                      lg:text-[18px]
+                      lg:text-[20px]
                     "
                   >
                     {step.text}

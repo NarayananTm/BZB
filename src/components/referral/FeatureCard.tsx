@@ -96,11 +96,11 @@ export default function FeatureCard({
 
           text-[#222]
 
-          font-bold
+          font-semibold
 
-          text-[22px]
-          sm:text-[24px]
-          lg:text-[26px]
+          text-[25px]
+          sm:text-[25px]
+          lg:text-[25px]
 
           transition-colors
           duration-300
@@ -121,11 +121,11 @@ export default function FeatureCard({
 
           text-[#666]
 
-          leading-8
+          leading-6
 
-          text-[16px]
-          sm:text-[17px]
-          lg:text-[18px]
+          text-[20px]
+          sm:text-[20px]
+          lg:text-[20px]
         "
       >
         {text}

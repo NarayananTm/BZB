@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components";
 
+
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-[#171515] min-h-screen flex items-center">
@@ -11,7 +12,7 @@ export default function HeroSection() {
       {/* Background */}
 
       <Image
-        src="/images/referral/Layer1.png"
+        src="/images/referral/referral-bg.svg"
         alt=""
         fill
         priority
@@ -33,7 +34,7 @@ export default function HeroSection() {
             grid-cols-1
             lg:grid-cols-[48%_52%]
             items-center
-            gap-12
+            gap-4
           "
         >
 
@@ -118,7 +119,7 @@ export default function HeroSection() {
 
                 </div>
 
-              ))}
+              ))}c
 
             </div>
 
@@ -142,7 +143,7 @@ export default function HeroSection() {
 
                 drop-shadow-[0_25px_60px_rgba(0,0,0,.45)]
 
-                animate-[float_5s_ease-in-out_infinite]
+                animate-[bzbFloat_6s_ease-in-out_infinite]
 
                 transition-all
                 duration-700
@@ -163,7 +164,7 @@ export default function HeroSection() {
               text-center
               lg:text-left
 
-              lg:pl-10
+              lg:pl-6
 
               animate-[fadeInRight_1s_ease]
             "
@@ -173,9 +174,9 @@ export default function HeroSection() {
               className="
                 text-white
 
-                font-black
+                font-medium
 
-                leading-tight
+                leading-[1.1]
 
                 text-[34px]
                 sm:text-[42px]
@@ -203,12 +204,12 @@ export default function HeroSection() {
 
                 text-gray-300
 
-                text-[17px]
-                sm:text-[18px]
-                lg:text-[21px]
+                text-[20px]
+                sm:text-[24px]
+                lg:text-[24px]
 
-                leading-8
-                lg:leading-10
+                leading-7
+                lg:leading-8
               "
             >
               At BZB, every referral is an opportunity to grow.
@@ -232,7 +233,7 @@ export default function HeroSection() {
 
                 rounded-lg
 
-                bg-primary-700
+                bg-[#BEA311]
 
                 text-white
 

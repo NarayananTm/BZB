@@ -38,13 +38,13 @@ export default function FAQSection() {
 
           <h2
             className="
-              font-bold
+              font-semibold
 
               text-[#222]
 
-              text-[32px]
-              sm:text-[38px]
-              lg:text-[42px]
+              text-[30px]
+              sm:text-[30px]
+              lg:text-[30px]
 
               animate-[fadeInLeft_1s_ease]
             "

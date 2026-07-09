@@ -37,7 +37,7 @@ export default function WhyChoose() {
                 Why Choose BZB ?
               </h2>
 
-              <div className="space-y-8">
+              <div className="space-y-5">
 
                 {reasons.map((item) => (
                   <div

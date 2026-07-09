@@ -23,12 +23,12 @@ export default function ContactSection() {
           <h2
             className="
               mt-3
-              font-bold
+              font-semibold
               text-dark-900
 
-              text-[34px]
-              sm:text-[40px]
-              lg:text-[48px]
+              text-[50px]
+              sm:text-[50px]
+              lg:text-[50px]
             "
           >
             Contact Us

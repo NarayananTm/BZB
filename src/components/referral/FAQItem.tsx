@@ -70,9 +70,9 @@ export default function FAQItem({
 
             text-[#222]
 
-            text-[18px]
-            sm:text-[20px]
-            lg:text-[22px]
+            text-[25px]
+            sm:text-[25px]
+            lg:text-[25px]
           "
         >
           {question}
@@ -105,11 +105,11 @@ export default function FAQItem({
 
             text-[#666]
 
-            leading-8
+            leading-7
 
-            text-[16px]
-            sm:text-[17px]
-            lg:text-[18px]
+            text-[20px]
+            sm:text-[20px]
+            lg:text-[20px]
           "
         >
           {answer}

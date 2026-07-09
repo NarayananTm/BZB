@@ -10,12 +10,12 @@ const levels = [
 
 export default function ReferralLevelsSection() {
   return (
-    <section className="relative overflow-hidden bg-[#B5970C] py-16 lg:py-24">
+    <section className="relative overflow-hidden bg-[#AE9614] py-16 lg:py-24">
 
       {/* Background Shape */}
 
       <Image
-        src="/images/referral/Level Shape.png"
+        src="/images/referral/Group 2057.svg"
         alt=""
         width={700}
         height={500}
@@ -32,11 +32,10 @@ export default function ReferralLevelsSection() {
 
           h-auto
 
-          opacity-20
+          opacity-2
 
           pointer-events-none
 
-          animate-[float_8s_ease-in-out_infinite]
         "
       />
 
@@ -47,9 +46,10 @@ export default function ReferralLevelsSection() {
             text-white
 
             font-semibold
-
-            text-lg
-            lg:text-xl
+               
+            text-[30px]
+            sm:text-[30px]
+            lg:text-[30px]
 
             animate-[fadeInLeft_1s_ease]
           "
@@ -59,17 +59,17 @@ export default function ReferralLevelsSection() {
 
         <h2
           className="
-            mt-4
+            mt-2
 
             text-white
 
-            font-bold
+            font-semibold
 
             leading-tight
 
-            text-[34px]
-            sm:text-[44px]
-            lg:text-[58px]
+            text-[50px]
+            sm:text-[50px]
+            lg:text-[50px]
 
             animate-[fadeInLeft_1s_ease]
           "
@@ -77,7 +77,7 @@ export default function ReferralLevelsSection() {
           Grow Step by Step
         </h2>
 
-        <div className="mt-10 space-y-6">
+        <div className="mt-6 space-y-4">
 
           {levels.map((item, index) => (
 
@@ -119,8 +119,8 @@ export default function ReferralLevelsSection() {
                   leading-8
                   lg:leading-9
 
-                  text-[18px]
-                  lg:text-[24px]
+                  text-[30px]
+                  lg:text-[30px]
                 "
               >
                 {item}

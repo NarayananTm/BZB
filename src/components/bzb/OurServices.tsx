@@ -31,7 +31,8 @@ export default function OurServices() {
         {/* Heading */}
 
         <div className="mb-10 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#111] animate-[fadeInLeft_.8s_ease]">
+          <h2 className=" text-[30px]
+                    lg:text-[30px]  font-semibold text-[#111] animate-[fadeInLeft_.8s_ease]">
             Our Services
           </h2>
         </div>
@@ -127,8 +128,8 @@ export default function OurServices() {
 
                     flex-1
 
-                    text-[17px]
-                    lg:text-[18px]
+                    text-[20px]
+                    lg:text-[20px]
 
                     leading-8
 
