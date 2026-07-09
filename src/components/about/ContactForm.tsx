@@ -239,7 +239,7 @@ export default function ContactForm() {
 
             rounded-xl
 
-            bg-[#B69E14]
+            
 
             px-10
             lg:px-12
@@ -251,7 +251,7 @@ export default function ContactForm() {
 
             transition-all
             duration-500
-
+            bg-primary-700
             hover:bg-primary-800
             hover:scale-105
             hover:-translate-y-1
