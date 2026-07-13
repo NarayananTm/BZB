@@ -5,6 +5,7 @@ import AboutSection from "@/components/sections/home/AboutSection";
 import ReferralSection from "@/components/sections/home/ReferralSection";
 import AboutPreviewSection from "@/components/sections/home/AboutPreviewSection";
 import ContactSection from "@/components/sections/home/ContactSection";
+import '@/styles/home-animations.css';
 
 export const metadata: Metadata = {
   title: "Home | BZB - Born to Win",

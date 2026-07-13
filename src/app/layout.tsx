@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Navigation from '@/components/common/Navigation';
 import Footer from '@/components/common/Footer';
 import '@/styles/globals.css';
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: 'BZB - Born to Win | Real Estate & Referral Platform',
@@ -20,6 +21,12 @@ export default function RootLayout({
         <Navigation />
         {children}
         <Footer />
+         <Toaster
+      position="bottom-right"
+      richColors
+      closeButton
+      duration={3000}
+    />
       </body>
     </html>
   );

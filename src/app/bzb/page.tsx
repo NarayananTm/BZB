@@ -1,8 +1,10 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
-import HeroLayout from "@/components/bzb/HeroLayout";
-import ContactSection from "@/components/bzb/ContactSection";
-import FAQSection from "@/components/bzb/FAQSection";
+import HeroLayout from '@/components/bzb/HeroLayout';
+import ContactSection from '@/components/bzb/ContactSection';
+import FAQSection from '@/components/bzb/FAQSection';
 import OurServices from '@/components/bzb/OurServices';
 import WhyChoose from '@/components/bzb/WhyChoose';
 import VisionMission from '@/components/bzb/VisionMission';
@@ -17,33 +19,25 @@ export const metadata: Metadata = {
 };
 
 export default function BZBPage() {
+  const token = cookies().get('bzb_token')?.value;
+
+  if (!token) {
+    redirect('/login');
+  }
+
   return (
     <>
-
-
       <HeroLayout />
 
       <section className="relative bg-white">
-
-        {/* Floating Cards */}
-
         <FeatureCards />
-
-        {/* About Company */}
-
         <AboutCompany />
-
-        {/* Vision Mission */}
-
         <VisionMission />
-
       </section>
 
       <WhyChoose />
-
       <OurServices />
       <ContactSection />
-
       <FAQSection />
     </>
   );

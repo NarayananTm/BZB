@@ -39,9 +39,7 @@ pb-10
         className="
           object-cover
           object-center
-
           scale-105
-
           animate-[slowZoom_18s_linear_infinite_alternate]
         "
       />
@@ -52,13 +50,12 @@ pb-10
         className="
           absolute
           inset-0
-
           bg-gradient-to-r
-
-          from-black/75
-          via-black/45
-          to-black/10
+         
         "
+         // from-black/75
+          // via-black/45
+          // to-black/10
       />
 
       {/* Polygon */}
@@ -231,7 +228,7 @@ sm:mt-10
             >
 
               <Button
-                href="/member/dashboard"
+                href="/bzb"
                 className="
                   h-14
 
@@ -329,7 +326,6 @@ xl:w-[460px]
                 "
               />
 
-              {/* Mobile App */}
 
               <Image
                 src="/images/hero/BZB Mobile App.png"
@@ -347,7 +343,7 @@ xl:w-[460px]
 
                   h-auto
 
-                  w-[220px]
+                  w-[70px]
                   sm:w-[280px]
                   md:w-[340px]
                   lg:w-[420px]
@@ -369,8 +365,6 @@ xl:w-[460px]
                 "
               />
 
-                   {/* animate-[bzbFloat_6s_ease-in-out_infinite] */}
-              {/* Decorative Ring */}
 
               <div
                 className="

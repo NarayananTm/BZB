@@ -3,9 +3,12 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components";
+import { useState } from "react";
+import ReferralModal from "./ReferralModal";
 
 
 export default function HeroSection() {
+  const [open,setOpen]=useState(false);
   return (
     <section className="relative overflow-hidden bg-[#171515] min-h-screen flex items-center">
 
@@ -223,7 +226,7 @@ export default function HeroSection() {
             </p>
 
             <Button
-              href="/member/dashboard"
+      
               className="
                 mt-10
 
@@ -245,6 +248,7 @@ export default function HeroSection() {
                 hover:bg-primary-800
                 hover:scale-105
               "
+              onClick={()=>setOpen(true)}
             >
 
               Start Referring
@@ -252,7 +256,10 @@ export default function HeroSection() {
               <ArrowRight className="ml-2 h-5 w-5" />
 
             </Button>
-
+<ReferralModal
+open={open}
+onClose={()=>setOpen(false)}
+/>
           </div>
                   
 

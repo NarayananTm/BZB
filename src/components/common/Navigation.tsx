@@ -1,19 +1,40 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import {
+  Menu,
+  X,
+  UserCircle2,
+  LogOut,
+  ChevronDown,
+  LayoutDashboard,
+} from "lucide-react";
 import { ROUTES } from '@/utils/constants';
 
 export default function Navigation() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [userName, setUserName] = useState('');
+const [userEmail, setUserEmail] = useState('');
+const [showProfileMenu, setShowProfileMenu] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
+
+    const storedUser = localStorage.getItem('bzb_user');
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setUserName(parsed.fullName || parsed.name || parsed.email || 'Member');
+      } catch {
+        setUserName('Member');
+      }
+    }
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -26,6 +47,14 @@ export default function Navigation() {
     { label: 'About Us', href: ROUTES.ABOUT },
     // { label: 'Contact', href: ROUTES.CONTACT },
   ];
+
+  const handleLogout = async () => {
+    localStorage.removeItem('bzb_token');
+    localStorage.removeItem('bzb_user');
+    await fetch('/api/logout', { method: 'POST' });
+    setUserName('');
+    router.push('/login');
+  };
 
   return (
     <nav
@@ -75,12 +104,182 @@ export default function Navigation() {
 
         {/* Desktop Button */}
         <div className="hidden lg:flex">
-          <Link
-            href="/member"
-            className="bg-white text-black font-semibold rounded-xl px-8 py-4 hover:bg-[#FFD31A] transition-all duration-300"
-          >
-            Login / Register
-          </Link>
+       {userName ? (
+
+  <div className="relative">
+
+    <button
+      onClick={() => setShowProfileMenu(!showProfileMenu)}
+      className="
+      flex
+      items-center
+      gap-3
+
+      rounded-xl
+
+      border
+      border-white/20
+
+      bg-white/10
+
+      px-4
+      py-3
+
+      backdrop-blur-lg
+
+      transition-all
+
+      hover:bg-white/20
+      "
+    >
+
+      <UserCircle2
+        className="text-[#FFD31A]"
+        size={36}
+      />
+
+      <div className="text-left">
+
+        <p className="text-white text-sm font-semibold">
+          {userName}
+        </p>
+
+        <p className="text-gray-300 text-xs">
+          Member
+        </p>
+
+      </div>
+
+      <ChevronDown
+        size={18}
+        className={`text-white transition-transform ${
+          showProfileMenu ? "rotate-180" : ""
+        }`}
+      />
+
+    </button>
+
+    {showProfileMenu && (
+
+      <div
+        className="
+        absolute
+        right-0
+        mt-3
+
+        w-72
+
+        rounded-2xl
+
+        bg-[#181818]
+
+        border
+        border-white/10
+
+        shadow-2xl
+
+        overflow-hidden
+
+        z-50
+        "
+      >
+
+        <div className="p-5 border-b border-white/10">
+
+          <div className="flex items-center gap-3">
+
+            <UserCircle2
+              size={46}
+              className="text-[#FFD31A]"
+            />
+
+            <div>
+
+              <h4 className="text-white font-semibold">
+                {userName}
+              </h4>
+
+              <p className="text-gray-400 text-sm">
+                {userEmail}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <Link
+          href="/member/dashboard"
+          className="
+          flex
+          items-center
+          gap-3
+
+          px-5
+          py-4
+
+          text-white
+
+          hover:bg-white/10
+          "
+        >
+          <LayoutDashboard size={20} />
+          Dashboard
+        </Link>
+
+        <button
+          onClick={handleLogout}
+          className="
+          w-full
+
+          flex
+          items-center
+          gap-3
+
+          px-5
+          py-4
+
+          text-red-400
+
+          hover:bg-red-500/10
+          "
+        >
+          <LogOut size={20} />
+          Logout
+        </button>
+
+      </div>
+
+    )}
+
+  </div>
+
+) : (
+
+  <Link
+    href="/login"
+    className="
+    bg-white
+    text-black
+
+    font-semibold
+
+    rounded-xl
+
+    px-8
+    py-4
+
+    hover:bg-[#FFD31A]
+
+    transition-all
+    duration-300
+    "
+  >
+    Login / Register
+  </Link>
+
+)}
         </div>
 
         {/* Mobile Menu Button */}
@@ -109,12 +308,26 @@ export default function Navigation() {
             </Link>
           ))}
 
-          <Link
-            href="/member"
-            className="block w-full text-center text-[20px] bg-white text-black font-semibold rounded-xl py-4 hover:bg-[#FFD31A] transition"
-          >
-            Login / Register
-          </Link>
+          {userName ? (
+            <div className="space-y-3">
+              <div className="text-[#FFD31A] text-[18px]">Welcome, {userName}</div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="block w-full text-center text-[20px] bg-white text-black font-semibold rounded-xl py-4 hover:bg-[#FFD31A] transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="block w-full text-center text-[20px] bg-white text-black font-semibold rounded-xl py-4 hover:bg-[#FFD31A] transition"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Login / Register
+            </Link>
+          )}
         </div>
       </div>
     </nav>
