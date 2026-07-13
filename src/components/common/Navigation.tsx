@@ -21,24 +21,42 @@ export default function Navigation() {
   const [userName, setUserName] = useState('');
 const [userEmail, setUserEmail] = useState('');
 const [showProfileMenu, setShowProfileMenu] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
 
-    const storedUser = localStorage.getItem('bzb_user');
+ useEffect(() => {
+  const handleScroll = () => {
+    setIsScrolled(window.scrollY > 10);
+  };
+
+  const loadUser = () => {
+    const storedUser = localStorage.getItem("bzb_user");
+
     if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        setUserName(parsed.fullName || parsed.name || parsed.email || 'Member');
-      } catch {
-        setUserName('Member');
-      }
+      const user = JSON.parse(storedUser);
+      setUserName(
+        user.fullName ||
+        user.name ||
+        user.email ||
+        "Member"
+      );
+      setUserEmail(user.email || "");
+    } else {
+      setUserName("");
     }
+  };
+console.log("Navigation component mounted and event listeners added.");
+  loadUser();
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("userChanged", loadUser);
+  setShowProfileMenu(false);
+  console.log("Navigation component mounted and event listeners added.");
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("userChanged", loadUser);
+   
+  };
+}, []);
 
   const links = [
     { label: 'Home', href: ROUTES.HOME },
@@ -210,7 +228,7 @@ const [showProfileMenu, setShowProfileMenu] = useState(false);
         </div>
 
         <Link
-          href="/member/dashboard"
+          href="bzb"
           className="
           flex
           items-center

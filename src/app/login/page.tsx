@@ -42,6 +42,7 @@ export default function LoginPage() {
                     mobile: data.user.mobile,
                 })
             );
+            window.dispatchEvent(new Event("userChanged"));
             setMessage('Login Successful');
             router.push('/bzb');
         } catch (error) {
