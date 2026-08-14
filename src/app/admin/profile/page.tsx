@@ -9,7 +9,7 @@ export default function AdminProfilePage() {
 
   return (
     <AdminLayout title="Profile">
-      <div className="space-y-8 mt-6">
+      <div className="space-y-6 mt-2">
          <section className="">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center justify-between">
