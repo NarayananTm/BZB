@@ -10,7 +10,7 @@ type Referral = {
   level?: string;
 };
 
-export default function ProfileInteractive({ member, referrals }: { member: any; referrals: Referral[] }) {
+export default function ProfileInteractive({ referrals }: { referrals: Referral[] }) {
   const [active, setActive] = useState<string>('direct');
 
   const menu = [

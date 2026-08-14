@@ -5,13 +5,9 @@ import ReferGrowCard from '@/components/admin/referral/ReferGrowCard';
 import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCard';
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
 import { adminMembers } from '@/data/admin/members';
-import { adminReferrals } from '@/data/admin/referrals';
 
 export default function AdminReferralsPage() {
-  const activeReferrals = adminReferrals.filter((referral) => referral.status === 'Active').length;
-  const pendingReferrals = adminReferrals.filter((referral) => referral.status === 'Pending').length;
-  const approvedReferrals = adminReferrals.filter((referral) => referral.status === 'Approved').length;
-  const selectedMember = adminMembers[0];
+    const selectedMember = adminMembers[0];
   const progress = Math.min(100, Math.round((selectedMember.referralCount / 9) * 100));
 
   return (
@@ -59,7 +55,6 @@ export default function AdminReferralsPage() {
               sponsor={selectedMember.sponsor}
               mobile={selectedMember.mobile}
               joinDate={selectedMember.joiningDate}
-              memberName={selectedMember.name}
               memberId={selectedMember.id}
             />
           </div>

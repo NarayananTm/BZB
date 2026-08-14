@@ -23,7 +23,7 @@ export default function AdminProfilePage() {
           </div>
           </div>
         </section>
-      <ProfileInteractive member={member} referrals={adminReferrals} />
+      <ProfileInteractive referrals={adminReferrals} />
 </div>
     </AdminLayout>
   );

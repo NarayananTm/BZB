@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function AdminProfileTabs() {
   const [tab, setTab] = useState< 'edit' | 'password' | 'kyc'>('edit');
