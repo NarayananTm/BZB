@@ -10,7 +10,7 @@ import InviteMembersCard from '@/components/admin/InviteMembersCard';
 export default function AdminPage() {
   return (
     <AdminLayout title="Dashboard">
-      <div className="mx-auto  px-2 py-1 sm:px-2 lg:px-2">
+      <div className="mx-2  px-1 py-1 sm:px-2 lg:px-1">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -36,7 +36,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.7fr_0.9fr]">
+          <div className="grid gap-6 lg:grid-cols-[1.7fr_0.9fr]  min-h-[150px]">
             <RewardsBanner />
             <InviteMembersCard />
           </div>

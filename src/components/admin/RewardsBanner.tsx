@@ -15,20 +15,20 @@ export default function RewardsBanner() {
   ];
 
   return (
-    <div className="w-full rounded-[8px] bg-[#404040] px-[28px] py-[12px]">
-      <div className="flex min-h-[200px] w-full items-center">
+    <div className="w-full rounded-[8px] min-h-[150px]  bg-[#404040] px-[28px] py-[12px]">
+      <div className="flex min-h-[150px] w-full items-center">
 
         {/* LEFT */}
         <div className="w-[260px] shrink-0">
-          <p className="mb-[6px] text-[16px] font-semibold leading-[16px] text-[#E5C500]">Reward's</p>
+          <p className="mb-[2px] text-[16px] font-semibold leading-[16px] text-[#E5C500]">Reward's</p>
 
-          <p className="text-[14px] font-medium leading-[14px] text-white">
+          <p className="text-[14px] mt-2 font-medium leading-[14px] text-white">
             Upgrade your life to
             <br />
             Levels Complete!
           </p>
 
-          <p className="mt-[6px] text-[14px] font-normal leading-[14px] text-[#E2E2E2]">
+          <p className="mt-4 text-[14px]  font-normal leading-[14px] text-[#E2E2E2]">
             Invest in real estate, grow your referrals and unlock exclusive rewards — including
             <span className="font-semibold text-[#E5C500]"> Bike</span>,
             <span className="font-semibold text-[#E5C500]"> Car</span>, and

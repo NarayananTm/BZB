@@ -10,10 +10,10 @@ function Card({ title, desc, value, action }: { title: string; desc?: string; va
       {value && !action && <p className="mt-4 text-3xl font-semibold text-[#111111]">{value}</p>}
 
       {action && (
-        <div className="mt-4 flex items-center justify-between gap-3">
-      {value && <p className="mt-4 text-3xl font-semibold text-[#111111]">{value}</p>}
+        <div className="mt-2 flex items-center justify-between gap-3">
+      {value && <p className="mt-2 text-3xl font-semibold text-[#111111]">{value}</p>}
 
-          <button className="inline-flex items-center justify-between rounded-[14px] w-full bg-[#AC992E] px-4 py-3 text-sm font-medium text-white">{action}
+          <button className="inline-flex items-center justify-between rounded-[14px] w-full bg-[#AC992E] px-4 py-2 text-sm font-medium text-white">{action}
             <div className="inline-flex h-10 w-10 ml-2 items-center justify-center rounded-full bg-white shadow-sm">
             <ArrowRight className="h-4 w-4 text-black" />
           </div>

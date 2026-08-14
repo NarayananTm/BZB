@@ -2,7 +2,7 @@
 
 export default function LevelProgress() {
   return (
-    <div className="mt-4 flex flex-col gap-3">
+    <div className="mt-2 flex flex-col gap-3">
       <div className="flex items-center gap-6">
         <div className="w-48">
           <div className="text-sm text-[#111111]">Level 1 Complete</div>
