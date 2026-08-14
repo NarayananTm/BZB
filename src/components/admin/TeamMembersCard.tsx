@@ -13,7 +13,7 @@ export default function TeamMembersCard() {
         <button className="text-sm font-semibold text-[#111111]">See All</button>
       </div>
       <div className="mt-4 space-y-4 overflow-hidden rounded-[12px] border border-[#E5E5E5] bg-[#F9F9F9] p-3">
-        <div className="max-h-[360px] space-y-3 overflow-y-auto pr-2">
+        <div className="max-h-[420px] space-y-3 overflow-y-auto pr-2">
           {adminMembers.map((member, index) => (
             <div key={member.id + index} className="flex items-center justify-between rounded-[12px] bg-white px-4 py-3 shadow-sm">
               <div className="flex items-center gap-3">

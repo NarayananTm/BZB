@@ -4,7 +4,7 @@ export default function InviteMembersCard() {
   return (
     <div className="rounded-[24px] bg-[#E5C500] p-6 text-[#181818]">
       <div className="flex items-center gap-3">
-        <div className="rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-[#181818]">Referral</div>
+        <div className="rounded-[5px]  bg-[#FFF3B2] px-3 py-1 text-sm font-semibold text-black">Referral</div>
         <div className="text-sm font-medium">Grow your network</div>
       </div>
       <h2 className="mt-4 text-3xl font-semibold text-white">Invite 5 Members</h2>

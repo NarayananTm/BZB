@@ -27,7 +27,7 @@ export default function AdminReferralsPage() {
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[42%_18%_37%]">
+        <section className="grid gap-6 lg:grid-cols-[42%_15%_40%]">
           <div className="space-y-6">
             <MemberAnalyticsCard data={[5, 12, 8, 20, 35, 22, 28]} />
             <ReferGrowCard direct={selectedMember.referralCount} referrals={selectedMember.teamCount} total={selectedMember.referralCount + selectedMember.teamCount} />

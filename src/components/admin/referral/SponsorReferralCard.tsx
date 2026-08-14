@@ -28,18 +28,12 @@ export default function SponsorReferralCard({
 
   return (
     <div className="rounded-[24px] bg-[#171717] p-6 text-white shadow-xl shadow-black/10">
-      <div className="flex flex-col gap-3 rounded-[20px] bg-white/5 p-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/60">Sponsor Name</p>
-            <p className="mt-2 text-base font-semibold text-white">{sponsor}</p>
-          </div>
-          <div className="rounded-full bg-[#E5C500]/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#E5C500]">
-            Active
-          </div>
-        </div>
-
+      <div className="flex flex-col gap-3  p-4">
         <div className="grid gap-3 sm:grid-cols-3 text-sm text-white/80">
+          <div>
+            <p className="text-xs text-white/60">Sponsor Name</p>
+            <p className="mt-1 font-semibold text-white">{sponsor}</p>
+          </div>
           <div>
             <p className="text-xs text-white/60">Mobile Number</p>
             <p className="mt-1 font-semibold text-white">{mobile}</p>
@@ -48,28 +42,25 @@ export default function SponsorReferralCard({
             <p className="text-xs text-white/60">Join Date</p>
             <p className="mt-1 font-semibold text-white">{joinDate}</p>
           </div>
-          <div>
-            <p className="text-xs text-white/60">Member ID</p>
-            <p className="mt-1 font-semibold text-white">{memberId}</p>
-          </div>
         </div>
       </div>
 
-      <div className="mt-6 rounded-[24px] border border-white/10 bg-white/5 p-5 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-white/60">Your referral QR</p>
+      <div className="mt-2 rounded-[24px]  p-5 pt-0 text-center">
+            <p className="text-sm text-[#F2D325]">Vetrivel N | BZB9601381 </p>
+        {/* <p className="text-xs uppercase tracking-[0.3em] text-white/60">Your referral QR</p> */}
         <div className="mt-5 inline-flex rounded-[22px] bg-white p-3">
           <Image
-            src="/images/referral/Referral Program QR Code.png"
+            src="/images/admin/referral/QR Code.svg"
             alt="Referral QR Code"
             width={220}
             height={220}
-            className="h-[220px] w-[220px] object-cover"
+            className="h-[300px] w-[300px] object-cover"
           />
         </div>
-        <p className="mt-4 text-sm text-white/70">Use this QR code or copy your referral link to share with your network.</p>
+        <p className="mt-10 text-sm text-white/70">Use this QR code or copy your referral link to share with your network.</p>
       </div>
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-8 space-y-5">
         <button
           type="button"
           onClick={handleCopyLink}

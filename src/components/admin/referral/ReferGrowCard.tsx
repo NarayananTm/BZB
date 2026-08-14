@@ -1,74 +1,234 @@
 'use client';
 
-import { Users } from 'lucide-react';
+import { UserRoundPlus, Users } from 'lucide-react';
 
-function Donut({ percent = 25 }: { percent?: number }) {
-  const r = 48;
-  const c = 2 * Math.PI * r;
-  const offset = c - (percent / 100) * c;
+type ReferGrowCardProps = {
+  direct?: number;
+  referrals?: number;
+  total?: number;
+};
+
+function Donut() {
+  /*
+    This SVG is intentionally designed to match
+    the reference image.
+
+    Outer radius 84
+    Inner radius 50
+    Yellow section = 25%
+    Blue outline around both circles
+  */
+
+  const cx = 105;
+  const cy = 105;
+
+  const outerRadius = 84;
+  const innerRadius = 50;
+
+  // Yellow segment starts at 0 degrees
+  // and covers 25% of the circle.
+  const startAngle = 0;
+  const endAngle = 90;
+
+  const polarToCartesian = (
+    centerX: number,
+    centerY: number,
+    radius: number,
+    angle: number
+  ) => {
+    const angleInRadians = ((angle - 90) * Math.PI) / 180;
+
+    return {
+      x: centerX + radius * Math.cos(angleInRadians),
+      y: centerY + radius * Math.sin(angleInRadians),
+    };
+  };
+
+  const outerStart = polarToCartesian(
+    cx,
+    cy,
+    outerRadius,
+    startAngle
+  );
+
+  const outerEnd = polarToCartesian(
+    cx,
+    cy,
+    outerRadius,
+    endAngle
+  );
+
+  const innerStart = polarToCartesian(
+    cx,
+    cy,
+    innerRadius,
+    startAngle
+  );
+
+  const innerEnd = polarToCartesian(
+    cx,
+    cy,
+    innerRadius,
+    endAngle
+  );
+
+  const yellowPath = `
+    M ${outerStart.x} ${outerStart.y}
+    A ${outerRadius} ${outerRadius} 0 0 1 ${outerEnd.x} ${outerEnd.y}
+    L ${innerEnd.x} ${innerEnd.y}
+    A ${innerRadius} ${innerRadius} 0 0 0 ${innerStart.x} ${innerStart.y}
+    Z
+  `;
 
   return (
-    <svg width={120} height={120} viewBox="0 0 120 120">
-      <g transform="translate(60,60)">
-        <circle r={r} cx={0} cy={0} fill="none" stroke="#EDEDED" strokeWidth={16} />
+    <div className="relative h-[190px] w-[190px]">
+      <svg
+        width="190"
+        height="190"
+        viewBox="0 0 210 210"
+        className="absolute inset-0"
+      >
+        {/* Grey donut area */}
         <circle
-          r={r}
-          cx={0}
-          cy={0}
-          fill="none"
-          stroke="#E5C500"
-          strokeWidth={16}
-          strokeDasharray={`${c} ${c}`}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          transform="rotate(-90)"
+          cx={cx}
+          cy={cy}
+          r={outerRadius}
+          fill="#EDEDED"
         />
-        <g transform="translate(-12,-8)">
-          <Users className="text-[#777777]" />
-        </g>
-      </g>
-    </svg>
+
+        {/* White center */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={innerRadius}
+          fill="#FFFFFF"
+        />
+
+        {/* Yellow 25% segment */}
+        <path
+          d={yellowPath}
+          fill="#E5C500"
+        />
+
+        {/* Outer blue circle */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={outerRadius}
+          fill="none"
+          // stroke="#0A8FEF"
+          strokeWidth="2.5"
+        />
+
+        {/* Inner blue circle */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={innerRadius}
+          fill="none"
+          // stroke="#0A8FEF"
+          strokeWidth="2.5"
+        />
+      </svg>
+
+      {/* Center users icon */}
+      <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+        <Users
+          size={47}
+          strokeWidth={1.8}
+          className="text-[#A7A7A7]"
+        />
+      </div>
+
+      {/* 25% */}
+      <span className="absolute right-[0px] top-[94px] text-[10px] font-medium text-[#111111]">
+        25%
+      </span>
+
+      {/* 5% */}
+      <span className="absolute bottom-[1px] left-[71px] text-[10px] font-medium text-[#111111]">
+        5%
+      </span>
+    </div>
   );
 }
 
-export default function ReferGrowCard({ direct = 5, referrals = 25, total = 30 }: { direct?: number; referrals?: number; total?: number }) {
-  const completion = Math.min(100, Math.round((direct / Math.max(referrals, 1)) * 100));
-
+export default function ReferGrowCard({
+  direct = 5,
+  referrals = 25,
+  total = 30,
+}: ReferGrowCardProps) {
   return (
-    <div className="rounded-[20px] border border-[#F1F1F1] bg-white p-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h3 className="text-sm font-semibold text-[#E5C500]">Refer & Grow</h3>
-          <p className="mt-2 text-sm text-[#777777]">Your referral contribution and growth progress.</p>
-        </div>
-        <div className="rounded-full bg-[#F7F7F7] px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[#777777]">
-          {completion}% complete
-        </div>
-      </div>
+    <div className="h-[238px] w-[600px] rounded-[8px] border border-[#E5E5E5] bg-white">
+      <div className="flex h-full">
 
-      <div className="mt-5 grid gap-5 sm:grid-cols-[auto_1fr] sm:items-center">
-        <Donut percent={completion} />
-        <div className="rounded-[18px] bg-[#F7F7F7] p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm text-[#777777] flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#E5C500]/20 text-[#E5C500]">👥</span>
+        {/* LEFT */}
+        <div className="relative w-[228px]">
+
+          {/* Title */}
+          <div className="absolute left-[15px] top-[13px]">
+            <h3 className="text-[13px] font-semibold text-[#A38F00]">
+              Refer &amp; Grow
+            </h3>
+          </div>
+
+          {/* Donut */}
+          <div className="absolute left-[18px] top-[29px]">
+            <Donut />
+          </div>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="my-[10px] ml-[35px] h-[218px] w-[288px] overflow-hidden rounded-[8px] bg-[#EEEEEE]">
+
+          {/* DIRECT */}
+          <div className="h-[76px] border-b border-[#D9D9D9] px-[13px] pt-[8px]">
+            <div className="flex items-center gap-[9px]">
+              <UserRoundPlus
+                size={24}
+                strokeWidth={1.8}
+                className="text-[#C8A900]"
+              />
+
+              <span className="text-[14px] font-medium text-[#222222]">
                 Direct
-              </p>
-              <p className="mt-2 text-3xl font-semibold text-[#111111]">{String(direct).padStart(2, '0')}</p>
+              </span>
+            </div>
+
+            <div className="-mt-[1px] text-center text-[29px] font-medium leading-none text-[#111111]">
+              {String(direct).padStart(2, '0')}
             </div>
           </div>
 
-          <div className="mt-5 space-y-3 text-sm text-[#777777]">
-            <div className="rounded-[14px] bg-white p-3 shadow-sm">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#999999]">Referrals</p>
-              <p className="mt-2 font-semibold text-[#111111]">{referrals}</p>
+          {/* REFERRALS */}
+          <div className="h-[76px] border-b border-[#D9D9D9] px-[13px] pt-[8px]">
+            <div className="flex items-center gap-[9px]">
+              <Users
+                size={24}
+                strokeWidth={1.8}
+                className="text-[#C8A900]"
+              />
+
+              <span className="text-[14px] font-medium text-[#222222]">
+                Referrals
+              </span>
             </div>
-            <div className="rounded-[14px] bg-white p-3 shadow-sm">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#999999]">Total Members</p>
-              <p className="mt-2 font-semibold text-[#111111]">{total}</p>
+
+            <div className="-mt-[1px] text-center text-[29px] font-medium leading-none text-[#111111]">
+              {referrals}
             </div>
           </div>
+
+          {/* TOTAL MEMBERS */}
+          <div className="flex h-[66px] items-center justify-center">
+            <p className="whitespace-nowrap text-[13px] font-normal text-[#222222]">
+              Total Members :{' '}
+              <span className="text-[22px] font-medium text-[#111111]">
+                {total}
+              </span>
+            </p>
+          </div>
+
         </div>
       </div>
     </div>

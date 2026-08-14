@@ -1,43 +1,143 @@
 'use client';
 
-function LevelItem({ label, status }: { label: string; status: string }) {
+import {
+  Bike,
+  CarFront,
+  Home,
+  type LucideIcon,
+} from 'lucide-react';
+
+type LevelItemProps = {
+  label: string;
+  icon: LucideIcon;
+  status: string;
+  statusColor?: string;
+};
+
+function LevelItem({
+  label,
+  icon: Icon,
+  status,
+  statusColor = '#333333',
+}: LevelItemProps) {
   return (
-    <div className="flex items-center gap-3 rounded-[18px] border border-[#F1F1F1] bg-[#F8F8F8] p-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#111111] text-base font-semibold text-white">✓</div>
-      <div>
-        <p className="text-sm font-semibold text-[#111111]">{label}</p>
-        <p className="text-xs text-[#777777]">{status}</p>
+    <div className="flex w-[80px] ml-8 flex-col items-center">
+      {/* Icon */}
+      <div className="flex h-[55px] w-[60px] items-center justify-center rounded-[8px] bg-[#414141]">
+        <Icon
+          className="h-[27px] w-[27px] text-white"
+          strokeWidth={1.6}
+          aria-hidden="true"
+        />
       </div>
+
+      {/* Level */}
+      <p className="mt-[5px] text-center text-[9px] font-medium leading-[11px] text-[#333333]">
+        {label}
+      </p>
+
+      {/* Status */}
+      <p
+        className="text-center text-[9px] leading-[11px]"
+        style={{ color: statusColor }}
+      >
+        {status}
+      </p>
     </div>
   );
 }
 
-export default function ReferralProgressCard({ percent = 60 }: { percent?: number }) {
+type ReferralProgressCardProps = {
+  percent?: number;
+};
+
+export default function ReferralProgressCard({
+  percent = 60,
+}: ReferralProgressCardProps) {
+  const safePercent = Math.min(100, Math.max(0, percent));
+
   return (
-    <div className="rounded-[20px] border border-[#F1F1F1] bg-white p-5 h-full">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h3 className="text-sm font-semibold text-[#E5C500]">Progress</h3>
-          <p className="mt-2 text-xs text-[#777777]">Referral level performance</p>
+    <div className="relative h-full min-h-[678px] w-full overflow-hidden rounded-[8px] border border-[#E5E5E5] bg-white px-[20px] pt-[14px]">
+
+      {/* Header */}
+      <h3 className="text-[14px] font-semibold text-[#A98F00]">
+        Progress
+      </h3>
+
+      {/* Main Section */}
+      <div className="relative mt-[12px] h-[550px]">
+
+        {/* Background Progress Bar */}
+        <div className="absolute left-[8px] top-0 h-[553px] w-[50px] overflow-hidden rounded-t-[20px] bg-[#F5EFD5]">
+
+          {/* Progress */}
+          <div
+            className="absolute bottom-0 left-0 w-full bg-[#E5C500] transition-all duration-500"
+            style={{
+              height: `${safePercent}%`,
+            }}
+          />
+
+          {/* Current Progress Highlight */}
+          {safePercent > 0 && safePercent < 100 && (
+            <div
+              className="absolute left-0 ml-4 w-full bg-[#B9A52D]"
+              style={{
+                bottom: `${safePercent}%`,
+                height: '48px',
+              }}
+            />
+          )}
         </div>
-        <div className="rounded-full bg-[#F7F7F7] px-4 py-2 text-sm font-semibold text-[#111111]">{percent}%</div>
+
+        {/* Percentage */}
+        <div className="absolute bottom-[35px] left-[15px] w-[36px] text-center">
+          <span className="text-[9px] font-medium text-[#777777]">
+            {safePercent}%
+          </span>
+        </div>
+
+        {/* Level 3 */}
+        <div className="absolute left-[52px] top-[34px]">
+          <LevelItem
+            label="Level 3"
+            icon={Home}
+            status="Complete"
+            statusColor="#333333"
+          />
+        </div>
+
+        {/* Level 2 */}
+        <div className="absolute left-[52px] top-[243px]">
+          <LevelItem
+            label="Level 2"
+            icon={CarFront}
+            status="Complete"
+            statusColor="#333333"
+          />
+        </div>
+
+        {/* Level 1 */}
+        <div className="absolute left-[52px] top-[468px]">
+          <LevelItem
+            label="Level 1"
+            icon={Bike}
+            status="Complete"
+            statusColor="#333333"
+          />
+        </div>
       </div>
 
-      <div className="mt-6 flex items-end gap-4 ">
-        <div className="h-64 w-14 rounded-full bg-[#F4F0E0] p-1">
-          <div className="h-full rounded-full bg-[#E5C500] transition-all" style={{ height: `${percent}%` }} />
-        </div>
-        <div className="flex-1 space-y-4 ">
-          <LevelItem label="Level 3" status="Completed" />
-          <LevelItem label="Level 2" status="In progress" />
-          <LevelItem label="Level 1" status="Available" />
-        </div>
-      </div>
+      {/* Bottom Text */}
+      <div className="absolute bottom-[36px] left-0 w-full text-center">
+        <p className="text-[10px] text-[#777777]">
+          3 to 5 referrals
+        </p>
 
-      {/* <div className="mt-6 rounded-[18px] bg-[#F7F7F7] p-4 text-sm text-[#555555]">
-        <p className="font-semibold text-[#111111]">Referral status</p>
-        <p className="mt-2 leading-6">You are {percent}% of the way toward your next reward milestone. Keep sharing your referral link to unlock the next level.</p>
-      </div> */}
+        <p className="mt-[6px] text-[10px] text-[#555555]">
+          2 more to unlock next reward
+        </p>
+      </div>
     </div>
   );
 }

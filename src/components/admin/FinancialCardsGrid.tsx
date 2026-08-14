@@ -13,10 +13,12 @@ function Card({ title, desc, value, action }: { title: string; desc?: string; va
         <div className="mt-4 flex items-center justify-between gap-3">
       {value && <p className="mt-4 text-3xl font-semibold text-[#111111]">{value}</p>}
 
-          <button className="inline-flex items-center justify-between rounded-[14px] bg-[#E5C500] px-4 py-3 text-sm font-semibold text-black">{action}</button>
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
-            <ArrowRight className="h-4 w-4" />
+          <button className="inline-flex items-center justify-between rounded-[14px] w-full bg-[#AC992E] px-4 py-3 text-sm font-medium text-white">{action}
+            <div className="inline-flex h-10 w-10 ml-2 items-center justify-center rounded-full bg-white shadow-sm">
+            <ArrowRight className="h-4 w-4 text-black" />
           </div>
+          </button>
+          
         </div>
       )}
     </div>
