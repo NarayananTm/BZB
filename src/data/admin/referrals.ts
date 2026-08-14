@@ -108,4 +108,22 @@ export const adminReferrals: AdminReferral[] = [
     status: 'Active',
     reward: 'Rs. 850',
   },
+  {
+    id: 'REF-20260718-004',
+    sponsor: 'Kavi',
+    memberName: 'Anil Kumar',
+    level: 'Direct',
+    joinDate: '2026-07-18',
+    status: 'Active',
+    reward: 'Rs. 850',
+  },
+  {
+    id: 'REF-20260718-004',
+    sponsor: 'Kavi',
+    memberName: 'Anil Kumar',
+    level: 'Direct',
+    joinDate: '2026-07-18',
+    status: 'Active',
+    reward: 'Rs. 850',
+  },
 ];

@@ -105,6 +105,7 @@ export default function AdminProfileTabs() {
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="Branch" />
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="IFSC Code" />
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="PAN" />
+                  <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="GPAY Number | UPI ID" />
 
                   <div className="mt-4">
                     <button className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900">Update Bank</button>
