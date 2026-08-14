@@ -52,15 +52,15 @@ export default function SponsorReferralCard({
           <Image
             src="/images/admin/referral/QR Code.svg"
             alt="Referral QR Code"
-            width={220}
-            height={220}
-            className="h-[300px] w-[300px] object-cover"
+            width={170}
+            height={170}
+            className="h-[215px] w-[215px] object-cover"
           />
         </div>
-        <p className="mt-10 text-sm text-white/70">Use this QR code or copy your referral link to share with your network.</p>
+        <p className="mt-2 text-sm text-white/70">Use this QR code or copy your referral link to share with your network.</p>
       </div>
 
-      <div className="mt-8 space-y-5">
+      <div className="mt-2 space-y-2">
         <button
           type="button"
           onClick={handleCopyLink}

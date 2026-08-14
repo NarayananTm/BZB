@@ -12,8 +12,8 @@ export default function AdminReferralsPage() {
 
   return (
     <AdminLayout title="Referrals">
-      <div className="space-y-8 mt-6">
-        <section className="rounded-[32px] border border-slate-200/70 bg-white p-6 shadow-sm">
+      <div className="space-y-1 mt-0">
+        <section className="rounded-[32px]  p-6 ">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -27,7 +27,7 @@ export default function AdminReferralsPage() {
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[42%_15%_40%]">
+        <section className="grid gap-5 lg:grid-cols-[42%_15%_40%]">
           <div className="space-y-6">
             <MemberAnalyticsCard data={[5, 12, 8, 20, 35, 22, 28]} />
             <ReferGrowCard direct={selectedMember.referralCount} referrals={selectedMember.teamCount} total={selectedMember.referralCount + selectedMember.teamCount} />

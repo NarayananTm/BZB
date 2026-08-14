@@ -57,7 +57,7 @@ export default function ReferralProgressCard({
   const safePercent = Math.min(100, Math.max(0, percent));
 
   return (
-    <div className="relative h-full min-h-[678px] w-full overflow-hidden rounded-[8px] border border-[#E5E5E5] bg-white px-[20px] pt-[14px]">
+    <div className="relative  min-h-[560px] w-full overflow-hidden rounded-[8px] border border-[#E5E5E5] bg-white px-[20px] pt-[14px]">
 
       {/* Header */}
       <h3 className="text-[14px] font-semibold text-[#A98F00]">
@@ -65,10 +65,10 @@ export default function ReferralProgressCard({
       </h3>
 
       {/* Main Section */}
-      <div className="relative mt-[12px] h-[550px]">
+      <div className="relative mt-[12px] h-[430px]">
 
         {/* Background Progress Bar */}
-        <div className="absolute left-[8px] top-0 h-[553px] w-[50px] overflow-hidden rounded-t-[20px] bg-[#F5EFD5]">
+        <div className="absolute left-[8px] top-0 h-[430px] w-[50px] overflow-hidden rounded-t-[20px] bg-[#F5EFD5]">
 
           {/* Progress */}
           <div
@@ -108,7 +108,7 @@ export default function ReferralProgressCard({
         </div>
 
         {/* Level 2 */}
-        <div className="absolute left-[52px] top-[243px]">
+        <div className="absolute left-[52px] top-[185px]">
           <LevelItem
             label="Level 2"
             icon={CarFront}
@@ -118,7 +118,7 @@ export default function ReferralProgressCard({
         </div>
 
         {/* Level 1 */}
-        <div className="absolute left-[52px] top-[468px]">
+        <div className="absolute left-[52px] top-[340px]">
           <LevelItem
             label="Level 1"
             icon={Bike}

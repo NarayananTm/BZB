@@ -5,7 +5,7 @@ import React from 'react';
 export default function MemberAnalyticsCard({ data = [5, 12, 8, 20, 35, 22, 28] }: { data?: number[] }) {
   // simple SVG area chart rendering from data
   const width = 400;
-  const height = 350;
+  const height = 200;
   const max = Math.max(...data, 100);
   const points = data.map((d, i) => `${(i / (data.length - 1)) * width},${height - (d / max) * height}`).join(' ');
   const areaPath = `M0,${height} L${points} L${width},${height} Z`;

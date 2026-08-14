@@ -7,7 +7,7 @@ export default function AdminProfileTabs() {
   const [tab, setTab] = useState< 'edit' | 'password' | 'kyc'>('edit');
 
   return (
-    <div className="mx-0 px-1 py-2">
+    <div className="mx-0 px-1 py-1">
       <div className="grid grid-cols-[260px_1fr] gap-6">
         {/* LEFT MENU + Avatar */}
         <div className="space-y-3">
@@ -42,11 +42,11 @@ export default function AdminProfileTabs() {
         <div>
           {tab === 'edit' && (
             <div className="grid grid-cols-3 gap-6">
-              <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] bg-white p-6">
+              <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] max-h-[calc(100vh-220px)]  bg-white p-6">
                 <h3 className="text-lg font-semibold">Profile Details</h3>
                 <p className="text-sm text-slate-500">Your Profile</p>
 
-                <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="mt-1 grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-slate-500">Date of Birth (DD/MM/YYYY)</label>
                     <input className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="Date of Birth (DD/MM/YYYY)" />
@@ -89,16 +89,16 @@ export default function AdminProfileTabs() {
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4">
                   <button className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900">Update</button>
                 </div>
               </div>
 
-              <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
+              <div className="rounded-[10px] border border-[#EFEFEF] max-h-[calc(100vh-220px)] overflow-auto bg-white p-6">
                 <h3 className="text-lg font-semibold">Bank Details</h3>
                 <p className="text-sm text-slate-500">Fill your bank account details</p>
 
-                <div className="mt-6 space-y-4">
+                <div className="mt-2 space-y-3">
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="Name of Bank" />
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="Bank Account No" />
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="Account Holder Name" />
@@ -107,7 +107,7 @@ export default function AdminProfileTabs() {
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="PAN" />
                   <input className="w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm" placeholder="GPAY Number | UPI ID" />
 
-                  <div className="mt-4">
+                  <div className="mt-2">
                     <button className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900">Update Bank</button>
                   </div>
                 </div>

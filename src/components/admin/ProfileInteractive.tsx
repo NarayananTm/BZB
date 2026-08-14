@@ -120,7 +120,7 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
   }, [active, referrals]);
 
   return (
-    <div className=" px-3 py-8">
+    <div className=" px-3 py-2">
       <div className="flex items-start gap-8">
         <aside className="w-[260px]">
           <div className="rounded-[12px] border border-[#F0F0F0] bg-white p-4">
@@ -153,7 +153,7 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
             <h2 className="text-lg font-semibold text-slate-900">{tableConfig.title}</h2>
             {tableConfig.subtitle && <p className="mt-2 text-sm text-slate-500">{tableConfig.subtitle}</p>}
 
-            <div className="mt-6 overflow-auto max-h-[58vh]">
+            <div className="mt-6 overflow-auto max-h-[53vh]">
               <table className="min-w-full table-auto text-sm text-slate-700">
                 <thead>
                   <tr className="text-left">
