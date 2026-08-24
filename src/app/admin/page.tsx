@@ -6,15 +6,36 @@ import FinancialCardsGrid from '@/components/admin/FinancialCardsGrid';
 import TeamMembersCard from '@/components/admin/TeamMembersCard';
 import RewardsBanner from '@/components/admin/RewardsBanner';
 import InviteMembersCard from '@/components/admin/InviteMembersCard';
+import { getAdminMembers } from '@/services/adminMemberService';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { verifyToken } from '@/lib/jwt';
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const members = await getAdminMembers();
+  const token = cookies().get('bzb_token')?.value;
+  let user = null;
+
+  if (token) {
+    try {
+      user = verifyToken(token);
+    } catch {
+      redirect('/admin/login');
+    }
+  }
+
   return (
     <AdminLayout title="Dashboard">
       <div className="mx-2  px-1 py-1 sm:px-2 lg:px-1">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <DashboardHeader />
+              <DashboardHeader userName={user?.name} />
+              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500">
+                <span>ID: {user?.id}</span>
+                <span>{user?.email}</span>
+                {user?.mobile ? <span>{user.mobile}</span> : null}
+              </div>
               <LevelProgress />
             </div>
             <div className="ml-6">
@@ -32,7 +53,7 @@ export default function AdminPage() {
             </div>
 
             <div className="col-span-1">
-              <TeamMembersCard />
+              <TeamMembersCard members={members} />
             </div>
           </div>
 

@@ -1,16 +1,13 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminMembers } from '@/data/admin/members';
+import { getAdminMembers } from '@/services/adminMemberService';
 
-const sponsorMap = adminMembers.reduce<Record<string, number>>((acc, member) => {
-  acc[member.sponsor] = (acc[member.sponsor] || 0) + 1;
-  return acc;
-}, {});
-
-const topPerformers = [...adminMembers]
-  .sort((a, b) => b.teamCount - a.teamCount)
-  .slice(0, 4);
-
-export default function AdminTeamPage() {
+export default async function AdminTeamPage() {
+  const adminMembers = await getAdminMembers();
+  const sponsorMap = adminMembers.reduce<Record<string, number>>((acc, member) => {
+    acc[member.sponsor] = (acc[member.sponsor] || 0) + 1;
+    return acc;
+  }, {});
+  const topPerformers = [...adminMembers].sort((a, b) => b.teamCount - a.teamCount).slice(0, 4);
   return (
     <AdminLayout title="Team">
       <div className="space-y-8">

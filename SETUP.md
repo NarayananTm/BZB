@@ -102,11 +102,17 @@ Create a file named `.env.local` in the project root:
 NEXT_PUBLIC_SITE_NAME=BZB Platform
 NEXT_PUBLIC_API_URL=https://api.bzb.com
 
+# Database (required for persistent users and production data)
+TURSO_DATABASE_URL=libsql://your-database.turso.io
+TURSO_AUTH_TOKEN=your-turso-auth-token
+JWT_SECRET=replace-with-a-long-random-secret
+
 # Optional: Analytics, CDN, etc.
 # NEXT_PUBLIC_GA_ID=
 ```
 
 ⚠️ **Note**: Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser.
+When Turso variables are omitted, collection-backed pages such as `/admin` use seeded in-memory data for local UI development. Configure both Turso variables before using registration, login, or any persistent data flow.
 
 ---
 

@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminTopups } from '@/data/admin/topups';
+import { getAdminTopups } from '@/services/adminTopupService';
 
-export default function AdminTopupsPage() {
+export default async function AdminTopupsPage() {
+  const adminTopups = await getAdminTopups();
   const completed = adminTopups.filter((topup) => topup.status === 'Completed').length;
   const pending = adminTopups.filter((topup) => topup.status === 'Pending').length;
   const failed = adminTopups.filter((topup) => topup.status === 'Failed').length;

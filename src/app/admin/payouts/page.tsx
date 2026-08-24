@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminPayouts } from '@/data/admin/payouts';
+import { getAdminPayouts } from '@/services/adminFinanceService';
 
-export default function AdminPayoutsPage() {
+export default async function AdminPayoutsPage() {
+  const adminPayouts = await getAdminPayouts();
   const completed = adminPayouts.filter((payout) => payout.status === 'Completed').length;
   const scheduled = adminPayouts.filter((payout) => payout.status === 'Scheduled').length;
   const failed = adminPayouts.filter((payout) => payout.status === 'Failed').length;

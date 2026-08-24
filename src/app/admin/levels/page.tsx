@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminLevels } from '@/data/admin/levels';
+import { getAdminLevels } from '@/services/adminLevelService';
 
-export default function AdminLevelsPage() {
+export default async function AdminLevelsPage() {
+  const adminLevels = await getAdminLevels();
   return (
     <AdminLayout title="Levels">
       <div className="space-y-8">

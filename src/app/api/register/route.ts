@@ -22,8 +22,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Passwords do not match' }, { status: 400 });
     }
 
-    createExcelIfNotExists();
-    const users = readUsers();
+    await createExcelIfNotExists();
+    const users = await readUsers();
 
     if (users.some((user) => user.Email.toLowerCase() === email.toLowerCase())) {
       return NextResponse.json({ success: false, message: 'Email already exists' }, { status: 409 });
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = hashPassword(password);
-    saveUser({
+    await saveUser({
       FullName: fullName,
       Email: email,
       Mobile: mobile,

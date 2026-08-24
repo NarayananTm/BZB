@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicRoutes = ['/login', '/register', '/api/login', '/api/register', '/api/logout'];
+const publicRoutes = ['/login', '/register', '/admin/login', '/api/login', '/api/register', '/api/logout'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,6 +14,10 @@ export function middleware(request: NextRequest) {
 
   if (!token && pathname.startsWith('/bzb')) {
     return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  if (!token && pathname.startsWith('/admin')) {
+    return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
   return NextResponse.next();

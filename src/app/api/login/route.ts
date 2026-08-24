@@ -11,7 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Email and password are required' }, { status: 400 });
     }
 
-    const users = readUsers();
+    const users = await readUsers();
     const user = users.find((item) => item.Email.toLowerCase() === email.toLowerCase() || item.Mobile === email);
 
     if (!user) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Invalid password' }, { status: 401 });
     }
 
-    const token = signToken({ id: user.ID, email: user.Email, name: user.FullName });
+    const token = signToken({ id: user.ID, email: user.Email, name: user.FullName, mobile: user.Mobile });
     const response = NextResponse.json({
       success: true,
       message: 'Login Successful',

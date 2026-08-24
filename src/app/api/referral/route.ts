@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import { readCollection, writeCollection } from "@/lib/db";
 
-interface ReferralData {
+export interface ReferralData {
   id: number;
   fullName: string;
   email: string;
@@ -45,29 +44,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Data folder
-    const dataFolder = path.join(process.cwd(), "data");
-
-    // Create data folder if it doesn't exist
-    await fs.mkdir(dataFolder, {
-      recursive: true,
-    });
-
-    const filePath = path.join(
-      dataFolder,
-      "referrals.json"
-    );
-
-    let referrals: ReferralData[] = [];
-
-    try {
-      const file = await fs.readFile(filePath, "utf8");
-      referrals = JSON.parse(file);
-    } catch {
-      // File doesn't exist yet
-      referrals = [];
-    }
-
+    const referrals = await readCollection<ReferralData[]>("referral_submissions", []);
     const newReferral: ReferralData = {
       id: Date.now(),
       fullName,
@@ -81,11 +58,7 @@ export async function POST(request: NextRequest) {
 
     referrals.push(newReferral);
 
-    await fs.writeFile(
-      filePath,
-      JSON.stringify(referrals, null, 2),
-      "utf8"
-    );
+    await writeCollection("referral_submissions", referrals);
 
     return NextResponse.json({
       success: true,

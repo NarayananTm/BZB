@@ -1,9 +1,10 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminMembers } from '@/data/admin/members';
+import { getAdminMembers } from '@/services/adminMemberService';
 import AdminProfileTabs from '@/components/admin/AdminProfileTabs';
 import DashboardHeader from '@/components/admin/DashboardHeader';
 
-export default function AdminProfilePage() {
+export default async function AdminProfilePage() {
+  const adminMembers = await getAdminMembers();
   const member = adminMembers[0];
 
   return (

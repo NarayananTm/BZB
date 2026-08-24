@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminEarnings } from '@/data/admin/earnings';
+import { getAdminEarnings } from '@/services/adminEarningsService';
 
-export default function AdminEarningsPage() {
+export default async function AdminEarningsPage() {
+  const adminEarnings = await getAdminEarnings();
   const totalTransactions = adminEarnings.length;
   const completed = adminEarnings.filter((earning) => earning.status === 'Completed').length;
   const pending = adminEarnings.filter((earning) => earning.status === 'Pending').length;

@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminMembers } from '@/data/admin/members';
+import { getAdminMembers } from '@/services/adminMemberService';
 
-export default function AdminMembersPage() {
+export default async function AdminMembersPage() {
+  const adminMembers = await getAdminMembers();
   const activeCount = adminMembers.filter((member) => member.status === 'Active').length;
   const pendingCount = adminMembers.filter((member) => member.status === 'Pending').length;
   const totalEarnings = adminMembers.length > 0 ? adminMembers.reduce((sum, member) => sum + Number(member.totalEarnings.replace(/[^0-9]/g, '')), 0) : 0;

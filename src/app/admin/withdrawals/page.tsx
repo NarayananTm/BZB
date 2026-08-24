@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminWithdrawals } from '@/data/admin/withdrawals';
+import { getAdminWithdrawals } from '@/services/adminFinanceService';
 
-export default function AdminWithdrawalsPage() {
+export default async function AdminWithdrawalsPage() {
+  const adminWithdrawals = await getAdminWithdrawals();
   const approved = adminWithdrawals.filter((withdrawal) => withdrawal.status === 'Approved').length;
   const pending = adminWithdrawals.filter((withdrawal) => withdrawal.status === 'Pending').length;
   const rejected = adminWithdrawals.filter((withdrawal) => withdrawal.status === 'Rejected').length;

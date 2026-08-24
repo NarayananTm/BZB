@@ -4,10 +4,12 @@ import MemberAnalyticsCard from '@/components/admin/referral/MemberAnalyticsCard
 import ReferGrowCard from '@/components/admin/referral/ReferGrowCard';
 import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCard';
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
-import { adminMembers } from '@/data/admin/members';
+import { getAdminMembers } from '@/services/adminMemberService';
+import { getAdminReferrals } from '@/services/adminReferralService';
 
-export default function AdminReferralsPage() {
-    const selectedMember = adminMembers[0];
+export default async function AdminReferralsPage() {
+  const [adminMembers, adminReferrals] = await Promise.all([getAdminMembers(), getAdminReferrals()]);
+  const selectedMember = adminMembers[0];
   const progress = Math.min(100, Math.round((selectedMember.referralCount / 9) * 100));
 
   return (
@@ -20,6 +22,7 @@ export default function AdminReferralsPage() {
               <DashboardHeader />
                 <div>
             <div className="mt-2 text-sm text-slate-500">{selectedMember?.id} <a className="ml-2 text-slate-500" href="#">↗</a></div>
+            <div className="mt-2 text-sm text-slate-500">{adminReferrals.length} referrals</div>
           </div>
             </div>
           

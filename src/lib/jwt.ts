@@ -6,6 +6,7 @@ export interface AuthTokenPayload {
   id: number;
   email: string;
   name: string;
+  mobile?: string;
 }
 
 export function signToken(payload: AuthTokenPayload) {

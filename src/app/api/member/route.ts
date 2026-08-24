@@ -3,7 +3,7 @@ import { readUsers } from '@/lib/excel';
 
 export async function GET() {
   try {
-    const users = readUsers();
+    const users = await readUsers();
 
     return NextResponse.json({
       success: true,

@@ -1,5 +1,6 @@
 import { adminTopups, AdminTopup } from '@/data/admin/topups';
+import { readCollection } from '@/lib/db';
 
 export function getAdminTopups(): Promise<AdminTopup[]> {
-  return Promise.resolve(adminTopups);
+  return readCollection('admin_topups', adminTopups);
 }

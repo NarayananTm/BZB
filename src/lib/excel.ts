@@ -1,8 +1,5 @@
-import path from 'path';
-import fs from 'fs';
 import bcrypt from 'bcryptjs';
-
-const DATA_FILE = path.join(process.cwd(), 'data', 'users.json');
+import { ensureSchema, getDb } from '@/lib/db';
 
 export interface UserRecord {
   ID: number;
@@ -13,68 +10,43 @@ export interface UserRecord {
   CreatedDate: string;
 }
 
-function ensureDataDir() {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+export async function createExcelIfNotExists() {
+  await ensureSchema();
 }
 
-function ensureDataFile() {
-  ensureDataDir();
+export async function readUsers(): Promise<UserRecord[]> {
+  await ensureSchema();
+  const result = await getDb().execute(
+    'SELECT id AS ID, full_name AS FullName, email AS Email, mobile AS Mobile, password AS Password, created_date AS CreatedDate FROM users ORDER BY id'
+  );
 
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2), 'utf8');
-  }
+  return result.rows as unknown as UserRecord[];
 }
 
-export function createExcelIfNotExists() {
-  ensureDataFile();
+export async function saveUser(user: Omit<UserRecord, 'ID'> & { ID?: number }) {
+  await ensureSchema();
+  await getDb().execute({
+    sql: 'INSERT INTO users (full_name, email, mobile, password, created_date) VALUES (?, ?, ?, ?, ?)',
+    args: [user.FullName, user.Email, user.Mobile, user.Password, user.CreatedDate],
+  });
 }
 
-export function readUsers(): UserRecord[] {
-  ensureDataFile();
-
-  try {
-    const raw = fs.readFileSync(DATA_FILE, 'utf8').trim();
-    if (!raw) {
-      return [];
-    }
-
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed)
-      ? parsed.filter((row: Partial<UserRecord>) => row?.Email || row?.Mobile)
-      : [];
-  } catch {
-    fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2), 'utf8');
-    return [];
-  }
+export async function findUserByEmail(email: string) {
+  await ensureSchema();
+  const result = await getDb().execute({
+    sql: 'SELECT id AS ID, full_name AS FullName, email AS Email, mobile AS Mobile, password AS Password, created_date AS CreatedDate FROM users WHERE lower(email) = lower(?) LIMIT 1',
+    args: [email],
+  });
+  return result.rows[0] as unknown as UserRecord | undefined;
 }
 
-export function saveUser(user: Omit<UserRecord, 'ID'> & { ID?: number }) {
-  ensureDataFile();
-
-  const users = readUsers();
-  const nextId = users.length > 0 ? Math.max(...users.map((item) => item.ID || 0)) + 1 : 1;
-
-  const newUser: UserRecord = {
-    ID: user.ID ?? nextId,
-    FullName: user.FullName,
-    Email: user.Email,
-    Mobile: user.Mobile,
-    Password: user.Password,
-    CreatedDate: user.CreatedDate,
-  };
-
-  const updatedUsers = [...users, newUser];
-  fs.writeFileSync(DATA_FILE, JSON.stringify(updatedUsers, null, 2), 'utf8');
-}
-
-export function findUserByEmail(email: string) {
-  const users = readUsers();
-  return users.find((user) => user.Email.toLowerCase() === email.toLowerCase());
-}
-
-export function findUserByMobile(mobile: string) {
-  const users = readUsers();
-  return users.find((user) => user.Mobile === mobile);
+export async function findUserByMobile(mobile: string) {
+  await ensureSchema();
+  const result = await getDb().execute({
+    sql: 'SELECT id AS ID, full_name AS FullName, email AS Email, mobile AS Mobile, password AS Password, created_date AS CreatedDate FROM users WHERE mobile = ? LIMIT 1',
+    args: [mobile],
+  });
+  return result.rows[0] as unknown as UserRecord | undefined;
 }
 
 export function hashPassword(password: string) {

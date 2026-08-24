@@ -1,10 +1,11 @@
 ﻿import AdminLayout from '@/components/admin/AdminLayout';
-import { adminMembers } from '@/data/admin/members';
-import { adminReferrals } from '@/data/admin/referrals';
+import { getAdminMembers } from '@/services/adminMemberService';
+import { getAdminReferrals } from '@/services/adminReferralService';
 import ProfileInteractive from '@/components/admin/ProfileInteractive';
 import DashboardHeader from '@/components/admin/DashboardHeader';
 
-export default function AdminProfilePage() {
+export default async function AdminProfilePage() {
+  const [adminMembers, adminReferrals] = await Promise.all([getAdminMembers(), getAdminReferrals()]);
   const member = adminMembers[0];
 
   return (

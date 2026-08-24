@@ -6,8 +6,10 @@ import FinancialCardsGrid from '@/components/admin/FinancialCardsGrid';
 import TeamMembersCard from '@/components/admin/TeamMembersCard';
 import RewardsBanner from '@/components/admin/RewardsBanner';
 import InviteMembersCard from '@/components/admin/InviteMembersCard';
+import { getAdminMembers } from '@/services/adminMemberService';
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const members = await getAdminMembers();
   return (
     <AdminLayout title="Dashboard">
       <div className="mx-auto  px-4 py-8 sm:px-6 lg:px-8">
@@ -32,7 +34,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="col-span-1">
-              <TeamMembersCard />
+              <TeamMembersCard members={members} />
             </div>
           </div>
 
