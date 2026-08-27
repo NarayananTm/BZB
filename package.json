@@ -1,0 +1,51 @@
+{
+  "name": "bzb-platform",
+  "version": "1.0.0",
+  "description": "BZB - Born to Win: Real Estate & Referral Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\"",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.0.0",
+    "framer-motion": "^10.16.0",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.294.0",
+    "next": "^14.0.0",
+    "pg": "^8.23.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.0.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "^14.0.0",
+    "postcss": "^8.4.0",
+    "prettier": "^3.1.0",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": "24.x",
+    "npm": ">=9.0.0"
+  }
+}
