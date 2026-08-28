@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
-import { getAllReports, getReportById, createReport, updateReportStatus, deleteReport } from '@/services/reportService';
+import { getAllReports, createReport, updateReportStatus, deleteReport } from '@/services/reportService';
 import type { CreateReportDto } from '@/models';
 
 export async function listReports(request: NextRequest) {
