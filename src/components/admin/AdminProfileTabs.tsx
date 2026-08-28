@@ -149,6 +149,7 @@ export default function AdminProfileTabs() {
 
         <div>
           {/* {message && <p className="mb-3 text-sm text-slate-500">{message}</p>} */}
+          {message && <p className="mb-3 text-sm text-slate-500">{}</p>}
           {tab === 'edit' && <div className="grid grid-cols-3 gap-6">
             <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] bg-white p-6">
               <h3 className="text-lg font-semibold">Profile Details</h3><p className="text-sm text-slate-500">{profile.name} · {profile.mobile}</p>
