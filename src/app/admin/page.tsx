@@ -32,7 +32,7 @@ export default function AdminPage() {
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [error, setError] = useState('Loading dashboard...');
+  // const [error, setError] = useState('Loading dashboard...');
 
   useEffect(() => {
     Promise.all([fetch('/api/admin/dashboard'), fetch('/api/admin/members'), fetch('/api/admin/profile')]).then(async ([statsResponse, membersResponse, profileResponse]) => {
