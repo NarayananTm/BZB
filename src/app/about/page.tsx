@@ -1,10 +1,5 @@
 import type { Metadata } from 'next';
-import { ArrowRight, Target, Heart, Lightbulb, Users, Building2, Award, Zap } from 'lucide-react';
-import Hero from '@/components/sections/Hero';
 import { Button } from '@/components';
-import Section from '@/layouts/Section';
-import ContactForm from '@/components/sections/ContactForm';
-import Link from 'next/link';
 import Image from 'next/image';
 export const metadata: Metadata = {
   title: 'About Us | BZB - Born to Win',

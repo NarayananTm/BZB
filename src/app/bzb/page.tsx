@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
-import { ArrowRight, Target, Heart, Zap, Building2, Award, Check } from 'lucide-react';
-import Hero from '@/components/sections/Hero';
-import { Button, FeatureCard, FAQ } from '@/components';
-import Section from '@/layouts/Section';
-import Container from '@/layouts/Container';
-import Link from 'next/link';
-import Image from 'next/image';
+import HeroLayout from "@/components/bzb/HeroLayout";
+import ContactSection from "@/components/bzb/ContactSection";
+import FAQSection from "@/components/bzb/FAQSection";
+import OurServices from '@/components/bzb/OurServices';
+import WhyChoose from '@/components/bzb/WhyChoose';
+import VisionMission from '@/components/bzb/VisionMission';
+import AboutCompany from '@/components/bzb/AboutCompany';
+import FeatureCards from '@/components/bzb/FeatureCards';
 
 import HeroLayout from "@/components/bzb/HeroLayout";
 import ContactSection from "@/components/bzb/ContactSection";
