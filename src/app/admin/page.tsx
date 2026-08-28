@@ -32,7 +32,7 @@ export default function AdminPage() {
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  // const [error, setError] = useState('Loading dashboard...');
+  const [error, setError] = useState('Loading dashboard...');
 
   useEffect(() => {
     Promise.all([fetch('/api/admin/dashboard'), fetch('/api/admin/members'), fetch('/api/admin/profile')]).then(async ([statsResponse, membersResponse, profileResponse]) => {
@@ -61,6 +61,7 @@ export default function AdminPage() {
   return (
     <AdminLayout title="Dashboard">
       <div className="mx-2 px-1 py-1 sm:px-2 lg:px-1">
+        {error && <p className="mb-3 text-sm text-slate-500">{}</p>}
         {/* {error && <p className="mb-3 text-sm text-slate-500">{error}</p>} */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
