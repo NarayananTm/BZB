@@ -39,3 +39,29 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     total_topups: 0, pending_topups: 0, unread_notifications: 0,
   }), levels: levels.map((level) => ({ name: level.name, pct: Number(level.completion_pct) })) };
 }
+
+export async function getMemberDashboardStats(memberId: string): Promise<DashboardStats> {
+  const row = await queryOne<DashboardStats>(
+    `SELECT
+       (SELECT COUNT(*) FROM members WHERE sponsor_id = $1)                       AS total_members,
+       (SELECT COUNT(*) FROM members WHERE sponsor_id = $1 AND status = 'Active') AS active_members,
+       (SELECT COUNT(*) FROM members WHERE sponsor_id = $1 AND status = 'Pending') AS pending_members,
+       (SELECT COUNT(*) FROM referrals WHERE sponsor_id = $1)                     AS total_referrals,
+       (SELECT COUNT(*) FROM referrals WHERE sponsor_id = $1 AND status = 'Pending') AS pending_referrals,
+       (SELECT COALESCE(SUM(amount), 0) FROM earnings WHERE member_id = $1 AND status = 'Completed') AS total_earnings,
+       (SELECT COALESCE(SUM(amount), 0) FROM withdrawals WHERE member_id = $1)    AS total_withdrawals,
+       (SELECT COALESCE(SUM(amount), 0) FROM withdrawals WHERE member_id = $1 AND status = 'Pending') AS pending_withdrawals,
+       (SELECT COALESCE(SUM(amount), 0) FROM topups WHERE member_id = $1 AND status = 'Completed') AS total_topups,
+       (SELECT COALESCE(SUM(amount), 0) FROM topups WHERE member_id = $1 AND status = 'Pending') AS pending_topups,
+       0 AS unread_notifications`,
+    [memberId],
+  );
+  const levels = await query<{ name: string; completion_pct: number }>(
+    'SELECT name, completion_pct FROM levels ORDER BY required_referrals ASC',
+  );
+  return { ...(row ?? {
+    total_members: 0, active_members: 0, pending_members: 0, total_referrals: 0,
+    pending_referrals: 0, total_earnings: 0, total_withdrawals: 0, pending_withdrawals: 0,
+    total_topups: 0, pending_topups: 0, unread_notifications: 0,
+  }), levels: levels.map((level) => ({ name: level.name, pct: Number(level.completion_pct) })) };
+}

@@ -6,9 +6,10 @@ import { getAdminFromRequest } from '@/lib/adminAuth';
 import { getMemberProfile, updateMemberAvatar } from '@/lib/postgres';
 
 export async function POST(request: NextRequest) {
-  if (!getAdminFromRequest(request)) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  const admin = getAdminFromRequest(request);
+  if (!admin) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   try {
-    const profile = await getMemberProfile();
+    const profile = await getMemberProfile(admin.email);
     const file = (await request.formData()).get('file');
     if (!profile || !(file instanceof File)) return NextResponse.json({ success: false, message: 'Profile and image are required' }, { status: 400 });
     if (!file.type.startsWith('image/')) return NextResponse.json({ success: false, message: 'Only image files are allowed' }, { status: 400 });

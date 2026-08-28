@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ShieldCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function AdminRegisterPage() {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ export default function AdminRegisterPage() {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -56,6 +58,7 @@ export default function AdminRegisterPage() {
       setForm({ username: '', email: '', password: '', confirmPassword: '', role: 'admin' });
       setSuccess(true);
       setMessage('Admin account created successfully');
+      router.replace('/admin/login')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Admin registration failed');
     } finally {

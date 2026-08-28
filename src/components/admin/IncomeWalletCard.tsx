@@ -10,10 +10,12 @@ interface Props {
 }
 
 export default function IncomeWalletCard({ memberName, memberGroup, totalEarnings, avatar }: Props) {
+  const imageSource = avatar || '/images/admin/Mask_group.svg';
+
   return (
     <div className="relative overflow-hidden rounded-[20px] bg-slate-100 shadow-sm">
-      {avatar && <div className="absolute inset-0"><Image src={avatar} alt="Member profile" fill className="object-cover" sizes="(max-width: 1120px) 100vw, 1120px" /><div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/90 to-transparent" /></div>}
-      <div className={`relative flex h-full min-h-[500px] flex-col justify-between p-6 pt-5 ${avatar ? 'text-white' : 'text-[#111111]'}`}>
+      <div className="absolute inset-0"><Image src={imageSource} alt="Member profile" fill className="object-cover" sizes="(max-width: 1120px) 100vw, 1120px" /><div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/90 to-transparent" /></div>
+      <div className="relative flex h-full min-h-[500px] flex-col justify-between p-6 pt-5 text-white">
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-white/80">My Income Wallet</p>
         </div>

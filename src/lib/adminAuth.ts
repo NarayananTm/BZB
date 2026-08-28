@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/jwt';
 
 export interface AdminTokenPayload {
@@ -18,6 +19,16 @@ export function getAdminFromRequest(request: NextRequest): AdminTokenPayload | n
 
   if (!token) return null;
 
+  try {
+    return verifyToken(token) as unknown as AdminTokenPayload;
+  } catch {
+    return null;
+  }
+}
+
+export async function getAdminSessionUser(): Promise<AdminTokenPayload | null> {
+  const token = (await cookies()).get('bzb_admin_token')?.value;
+  if (!token) return null;
   try {
     return verifyToken(token) as unknown as AdminTokenPayload;
   } catch {

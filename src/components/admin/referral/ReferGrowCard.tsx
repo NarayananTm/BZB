@@ -8,27 +8,14 @@ type ReferGrowCardProps = {
   total?: number;
 };
 
-function Donut() {
-  /*
-    This SVG is intentionally designed to match
-    the reference image.
-
-    Outer radius 84
-    Inner radius 50
-    Yellow section = 25%
-    Blue outline around both circles
-  */
-
+function Donut({ direct = 0, total = 0 }: Pick<ReferGrowCardProps, 'direct' | 'total'>) {
   const cx = 105;
   const cy = 105;
-
   const outerRadius = 84;
   const innerRadius = 50;
-
-  // Yellow segment starts at 0 degrees
-  // and covers 25% of the circle.
+  const directPercent = total > 0 ? Math.round((direct / total) * 100) : 0;
   const startAngle = 0;
-  const endAngle = 90;
+  const endAngle = (directPercent / 100) * 360;
 
   const polarToCartesian = (
     centerX: number,
@@ -72,7 +59,7 @@ function Donut() {
     endAngle
   );
 
-  const yellowPath = `
+  const yellowPath = directPercent === 0 ? '' : `
     M ${outerStart.x} ${outerStart.y}
     A ${outerRadius} ${outerRadius} 0 0 1 ${outerEnd.x} ${outerEnd.y}
     L ${innerEnd.x} ${innerEnd.y}
@@ -88,7 +75,6 @@ function Donut() {
         viewBox="0 0 210 210"
         className="absolute inset-0"
       >
-        {/* Grey donut area */}
         <circle
           cx={cx}
           cy={cy}
@@ -96,7 +82,6 @@ function Donut() {
           fill="#EDEDED"
         />
 
-        {/* White center */}
         <circle
           cx={cx}
           cy={cy}
@@ -104,34 +89,28 @@ function Donut() {
           fill="#FFFFFF"
         />
 
-        {/* Yellow 25% segment */}
         <path
           d={yellowPath}
           fill="#E5C500"
         />
 
-        {/* Outer blue circle */}
         <circle
           cx={cx}
           cy={cy}
           r={outerRadius}
           fill="none"
-          // stroke="#0A8FEF"
           strokeWidth="2.5"
         />
 
-        {/* Inner blue circle */}
         <circle
           cx={cx}
           cy={cy}
           r={innerRadius}
           fill="none"
-          // stroke="#0A8FEF"
           strokeWidth="2.5"
         />
       </svg>
 
-      {/* Center users icon */}
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
         <Users
           size={47}
@@ -140,14 +119,12 @@ function Donut() {
         />
       </div>
 
-      {/* 25% */}
       <span className="absolute right-[0px] top-[94px] text-[10px] font-medium text-[#111111]">
-        25%
+        {directPercent}%
       </span>
 
-      {/* 5% */}
       <span className="absolute bottom-[1px] left-[71px] text-[10px] font-medium text-[#111111]">
-        5%
+        {100 - directPercent}%
       </span>
     </div>
   );
@@ -165,23 +142,20 @@ export default function ReferGrowCard({
         {/* LEFT */}
         <div className="relative w-[228px]">
 
-          {/* Title */}
           <div className="absolute left-[15px] top-[13px]">
             <h3 className="text-[13px] font-semibold text-[#A38F00]">
               Refer &amp; Grow
             </h3>
           </div>
 
-          {/* Donut */}
           <div className="absolute left-[18px] top-[29px]">
-            <Donut />
+            <Donut direct={direct} total={total} />
           </div>
         </div>
 
         {/* RIGHT PANEL */}
         <div className="my-[10px] ml-[35px] h-[218px] w-[288px] overflow-hidden rounded-[8px] bg-[#EEEEEE]">
 
-          {/* DIRECT */}
           <div className="h-[76px] border-b border-[#D9D9D9] px-[13px] pt-[8px]">
             <div className="flex items-center gap-[9px]">
               <UserRoundPlus
@@ -200,7 +174,6 @@ export default function ReferGrowCard({
             </div>
           </div>
 
-          {/* REFERRALS */}
           <div className="h-[76px] border-b border-[#D9D9D9] px-[13px] pt-[8px]">
             <div className="flex items-center gap-[9px]">
               <Users
@@ -219,7 +192,6 @@ export default function ReferGrowCard({
             </div>
           </div>
 
-          {/* TOTAL MEMBERS */}
           <div className="flex h-[66px] items-center justify-center">
             <p className="whitespace-nowrap text-[13px] font-normal text-[#222222]">
               Total Members :{' '}

@@ -4,7 +4,7 @@ import AdminProfileTabs from '@/components/admin/AdminProfileTabs';
 export default async function AdminProfilePage() {
   return (
     <AdminLayout title="Profile">
-      <div className="space-y-1 mt-1 max-h-[calc(100vh-150px)] ">
+      <div className="space-y-1 mt-1 max-h-[calc(100vh-10px)] ">
         <section className="">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center justify-between">

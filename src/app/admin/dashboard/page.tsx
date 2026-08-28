@@ -10,10 +10,10 @@ import { getMemberByEmail, getTeamMembers } from '@/services/memberService';
 import { getAllLevels } from '@/services/levelService';
 import { getTopupsByMember } from '@/services/topupService';
 import { getEarningsByMember } from '@/services/earningService';
-import { getSessionUser } from '@/lib/session';
+import { getAdminSessionUser } from '@/lib/adminAuth';
 
 export default async function AdminDashboardPage() {
-  const session = await getSessionUser();
+  const session = await getAdminSessionUser();
   const me = session?.email ? await getMemberByEmail(session.email) : null;
 
   const [levels, topups, earnings, teamMembers] = me

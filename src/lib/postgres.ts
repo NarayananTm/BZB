@@ -114,6 +114,13 @@ export interface MemberProfile {
   upiId: string | null;
 }
 
+export interface MemberDocument {
+  id: string;
+  documentType: string;
+  documentUrl: string | null;
+  isVerified: boolean;
+}
+
 async function ensureMemberProfilesTable() {
   await getPool().query(`
     CREATE TABLE IF NOT EXISTS member_profiles (
@@ -125,6 +132,14 @@ async function ensureMemberProfilesTable() {
     )
   `);
   await getPool().query('ALTER TABLE bank_accounts ADD COLUMN IF NOT EXISTS branch VARCHAR(255), ADD COLUMN IF NOT EXISTS pan VARCHAR(50), ADD COLUMN IF NOT EXISTS upi_id VARCHAR(255)');
+  await getPool().query(`
+    CREATE TABLE IF NOT EXISTS member_documents (
+      id VARCHAR(50) PRIMARY KEY, member_id VARCHAR(50) NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+      document_type VARCHAR(50) NOT NULL, document_number VARCHAR(50) NOT NULL DEFAULT '', document_url VARCHAR(500),
+      is_verified BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (member_id, document_type)
+    )
+  `);
 }
 
 const memberProfileSelect = `
@@ -137,12 +152,13 @@ const memberProfileSelect = `
   FROM members m
   LEFT JOIN member_profiles p ON p.member_id = m.id
   LEFT JOIN LATERAL (SELECT * FROM bank_accounts WHERE member_id = m.id ORDER BY is_primary DESC, id LIMIT 1) b ON TRUE
-  ORDER BY m.id LIMIT 1`;
+  WHERE LOWER(m.email) = LOWER($1)
+  LIMIT 1`;
 
-export async function getMemberProfile(): Promise<MemberProfile | null> {
+export async function getMemberProfile(email: string): Promise<MemberProfile | null> {
   if (!isDbConfigured()) return null;
   await ensureMemberProfilesTable();
-  return queryOne<MemberProfile>(memberProfileSelect);
+  return queryOne<MemberProfile>(memberProfileSelect, [email]);
 }
 
 export async function updateMemberProfile(profile: Partial<MemberProfile> & { id: string }) {
@@ -164,12 +180,33 @@ export async function updateMemberProfile(profile: Partial<MemberProfile> & { id
      pan = EXCLUDED.pan, upi_id = EXCLUDED.upi_id, updated_at = NOW()`,
     [`BANK-${profile.id}`, profile.id, profile.accountHolder ?? '', profile.bankName ?? '', profile.accountNumber ?? '', profile.ifscCode, profile.branch, profile.pan, profile.upiId],
   );
-  return getMemberProfile();
+  return queryOne<MemberProfile>(memberProfileSelect.replace('WHERE LOWER(m.email) = LOWER($1)', 'WHERE m.id = $1'), [profile.id]);
 }
 
 export async function updateMemberAvatar(id: string, avatar: string) {
   await getPool().query('UPDATE members SET avatar = $1, updated_at = NOW() WHERE id = $2', [avatar, id]);
-  return getMemberProfile();
+  return queryOne<MemberProfile>(memberProfileSelect.replace('WHERE LOWER(m.email) = LOWER($1)', 'WHERE m.id = $1'), [id]);
+}
+
+export async function getMemberDocuments(memberId: string): Promise<MemberDocument[]> {
+  if (!isDbConfigured()) return [];
+  await ensureMemberProfilesTable();
+  return query<MemberDocument>(
+    'SELECT id, document_type AS "documentType", document_url AS "documentUrl", is_verified AS "isVerified" FROM member_documents WHERE member_id = $1 ORDER BY created_at',
+    [memberId],
+  );
+}
+
+export async function saveMemberDocument(memberId: string, documentType: string, documentUrl: string): Promise<MemberDocument> {
+  await ensureMemberProfilesTable();
+  const result = await getPool().query<MemberDocument>(
+    `INSERT INTO member_documents (id, member_id, document_type, document_url)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (member_id, document_type) DO UPDATE SET document_url = EXCLUDED.document_url, is_verified = FALSE, updated_at = NOW()
+     RETURNING id, document_type AS "documentType", document_url AS "documentUrl", is_verified AS "isVerified"`,
+    [`DOC-${memberId}-${documentType.replace(/[^a-z0-9]/gi, '-').toUpperCase()}`, memberId, documentType, documentUrl],
+  );
+  return result.rows[0];
 }
 
 export async function withTransaction<T>(fn: (client: PoolClient) => Promise<T>): Promise<T> {

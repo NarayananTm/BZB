@@ -7,10 +7,10 @@ import { getWithdrawalsByMember } from '@/services/withdrawalService';
 import { getPayoutsByMember } from '@/services/payoutService';
 import ProfileInteractive from '@/components/admin/ProfileInteractive';
 import DashboardHeader from '@/components/admin/DashboardHeader';
-import { getSessionUser } from '@/lib/session';
+import { getAdminSessionUser } from '@/lib/adminAuth';
 
 export default async function AdminProfilePage() {
-  const session = await getSessionUser();
+  const session = await getAdminSessionUser();
   const member = session?.email ? await getMemberByEmail(session.email) : null;
 
   const [referrals, earnings, topups, withdrawals, payouts] = member

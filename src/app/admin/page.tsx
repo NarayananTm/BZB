@@ -61,7 +61,7 @@ export default function AdminPage() {
   return (
     <AdminLayout title="Dashboard">
       <div className="mx-2 px-1 py-1 sm:px-2 lg:px-1">
-        {error && <p className="mb-3 text-sm text-slate-500">{error}</p>}
+        {/* {error && <p className="mb-3 text-sm text-slate-500">{error}</p>} */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex-1">
