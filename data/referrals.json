@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1783930010612,
+    "fullName": "Narayanan T",
+    "email": "narayanan2600@gmail.com",
+    "phone": "09965461270",
+    "city": "chennai",
+    "referralCode": "12343",
+    "message": "1111",
+    "createdAt": "2026-07-13T08:06:50.612Z"
+  },
+  {
+    "id": 1783930289459,
+    "fullName": "Narayanan T",
+    "email": "narayanan2600@gmail.com",
+    "phone": "09965461270",
+    "city": "chennai",
+    "referralCode": "122",
+    "message": "112",
+    "createdAt": "2026-07-13T08:11:29.459Z"
+  }
+]

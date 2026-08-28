@@ -23,8 +23,8 @@ export default function VisionMission() {
               <h2
                 className="
                   text-white
-                  text-[40px]
-                  font-bold
+                  text-[30px]
+                  font-semibold
                 "
               >
                 Our Vision
@@ -32,10 +32,10 @@ export default function VisionMission() {
 
               <p
                 className="
-                  mt-8
+                  mt-5
                   text-white/90
                   text-[20px]
-                  leading-10
+                  leading-8
                 "
               >
                 To become one of the most trusted real estate
@@ -56,8 +56,8 @@ export default function VisionMission() {
               <h2
                 className="
                   text-white
-                  text-[40px]
-                  font-bold
+                  text-[30px]
+                  font-semibold
                 "
               >
                 Our Mission
@@ -65,11 +65,11 @@ export default function VisionMission() {
 
               <ul
                 className="
-                  mt-8
-                  space-y-5
+                  mt-5
+                  space-y-4
                   text-white/90
                   text-[20px]
-                  leading-9
+                  leading-5
                   list-disc
                   pl-7
                 "

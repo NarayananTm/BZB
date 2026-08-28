@@ -245,7 +245,7 @@ export default function ContactPage() {
             <Link href="#contact-form">
               <Button>Send Message</Button>
             </Link>
-            <Link href="/member/dashboard">
+            <Link href="/bzb">
               <Button variant="secondary">Become a Member</Button>
             </Link>
           </div>

@@ -29,15 +29,15 @@ export default function WhyChoose() {
               <h2
                 className="
                   text-white
-                  text-[52px]
-                  font-bold
+                  text-[30px]
+                  font-semibold
                   mb-24
                 "
               >
                 Why Choose BZB ?
               </h2>
 
-              <div className="space-y-10">
+              <div className="space-y-5">
 
                 {reasons.map((item) => (
                   <div
@@ -65,8 +65,8 @@ export default function WhyChoose() {
                     <span
                       className="
                         text-white
-                        text-[34px]
-                        font-medium
+                        text-[30px]
+                        font-normal
                       "
                     >
                       {item}
@@ -90,6 +90,7 @@ export default function WhyChoose() {
               src="/images/bzb/helmet.png"
               alt=""
               fill
+              quality={100}
               priority
               className="
                 object-cover

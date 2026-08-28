@@ -5,8 +5,11 @@ export const ROUTES = {
   ABOUT: '/about',
   CONTACT: '/contact',
   MEMBER: '/member',
-  MEMBER_DASHBOARD: '/member/dashboard',
-  MEMBER_PROFILE: '/member/profile',
+  ADMIN: '/admin',
+  MEMBER_DASHBOARD: '/bzb',
+  // MEMBER_DASHBOARD: '/member/dashboard',
+  // MEMBER_PROFILE: '/member/profile',
+  MEMBER_PROFILE: '/bzb',
 } as const;
 
 export const NAVIGATION_LINKS = [

@@ -1,0 +1,18 @@
+[
+  {
+    "ID": 1,
+    "FullName": "Json User",
+    "Email": "json@example.com",
+    "Mobile": "1111111111",
+    "Password": "hashed",
+    "CreatedDate": "2026-07-13T06:56:02.360Z"
+  },
+  {
+    "ID": 2,
+    "FullName": "Narayanan T",
+    "Email": "narayanan2600@gmail.com",
+    "Mobile": "09965461270",
+    "Password": "$2b$10$i/0BcMozSo3Jt0NObZC7m.AFcqocP/VvXtQq0i2Tl5vzKu1ZCUK2.",
+    "CreatedDate": "2026-07-13T06:59:11.724Z"
+  }
+]

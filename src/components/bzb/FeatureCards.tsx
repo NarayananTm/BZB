@@ -31,87 +31,161 @@ const features = [
 
 export default function FeatureCards() {
   return (
-    <div className="relative z-30 -mt-28 ">
+    <section className="relative z-30 -mt-12 sm:-mt-16 lg:-mt-28">
+      <div className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-10">
 
-      <div className="max-w-[1500px] mx-auto px-6 ">
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4 lg:gap-8">
 
           {features.map((item, index) => (
             <div
               key={index}
+              style={{
+                animationDelay: `${index * 150}ms`,
+              }}
               className="
-                bg-white
+                group
+
                 rounded-[28px]
                 border
                 border-[#E9E9E9]
-                shadow-[0_10px_30px_rgba(0,0,0,0.08)]
-                px-8
-                py-9
+
+                bg-white
+
+                px-6
+                py-7
+
+                sm:px-7
+                sm:py-8
+
+                lg:px-8
+                lg:py-9
+
+                shadow-[0_10px_30px_rgba(0,0,0,.08)]
+
                 transition-all
-                duration-300
-                hover:-translate-y-2
-                hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
+                duration-500
+
+                hover:-translate-y-3
+                hover:shadow-[0_25px_50px_rgba(0,0,0,.12)]
+
+                
+                animate-[fadeInUp_.8s_ease_forwards]
+                opacity-0
               "
             >
               {/* Icon */}
+{/* Header */}
 
-              <div
-                className="
-                  w-14
-                  h-14
-                  rounded-2xl
-                  bg-white
-                  border
-                  border-[#ECECEC]
-                  flex
-                  items-center
-                  justify-center
-                  shadow-md
-                "
-              >
-                <Image
-                  src={item.icon}
-                  alt={item.title}
-                  width={28}
-                  height={28}
-                />
-              </div>
+<div className="flex items-start gap-5">
 
-              {/* Title */}
+  {/* Icon */}
 
-              <h3
-                className="
-                  mt-6
-                  whitespace-pre-line
-                  text-[34px]
-                  leading-[1.2]
-                  font-bold
-                  text-[#111]
-                "
-              >
-                {item.title}
-              </h3>
+  <div
+    className="
+      flex
+      h-16
+      w-16
+      shrink-0
+      items-center
+      justify-center
 
+      rounded-2xl
+
+      border
+      border-[#ECECEC]
+
+      bg-white
+
+      shadow-md
+
+      transition-all
+      duration-500
+
+      group-hover:scale-110
+      group-hover:rotate-6
+    "
+  >
+    <Image
+      src={item.icon}
+      alt={item.title}
+      width={32}
+      height={32}
+      priority
+      quality={100}
+      className="object-contain"
+    />
+  </div>
+
+  {/* Title */}
+
+  <h3
+    className="
+      whitespace-pre-line
+
+      font-semibold
+
+      leading-[1.15]
+
+      text-[#111]
+
+      text-[25px]
+      lg:text-[25px]
+
+      transition-colors
+      duration-300
+
+      group-hover:text-[#D8B300]
+    "
+  >
+    {item.title}
+  </h3>
+
+</div>
+              
               {/* Description */}
 
               <p
                 className="
-                  mt-6
-                  text-[18px]
-                  leading-8
+                  mt-5
+
                   text-[#666666]
+
+                  leading-7
+
+                  text-[16px]
+                  sm:text-[17px]
+                  lg:text-[18px]
                 "
               >
                 {item.description}
               </p>
+
+              {/* Bottom Line Animation */}
+
+              <div
+                className="
+                  mt-7
+
+                  h-[3px]
+                  w-0
+
+                  rounded-full
+
+                  bg-[#D8B300]
+
+                  transition-all
+                  duration-500
+
+                  group-hover:w-20
+                "
+              />
+
             </div>
           ))}
 
         </div>
 
       </div>
-
-    </div>
+    </section>
   );
 }

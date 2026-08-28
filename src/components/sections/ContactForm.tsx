@@ -1,14 +1,22 @@
 'use client';
 
-import type { FC } from 'react';
-import Button from '@/components/common/Button';
-import Input from '@/components/common/Input';
-import TextArea from '@/components/common/TextArea';
-import { Mail } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FC, type FormEvent } from 'react';
+import { ChevronRight } from 'lucide-react';
+import { toast } from "sonner";
+
+interface ContactFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+}
 
 const ContactForm: FC = () => {
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState<ContactFormData>({
     firstName: '',
     lastName: '',
     email: '',
@@ -17,94 +25,428 @@ const ContactForm: FC = () => {
     message: '',
   });
 
-  const [submitted, setSubmitted] = useState(false);
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const resetForm = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      subject: '',
+      message: '',
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success('Enquiry submitted successfully.');
+        resetForm();
+      } else {
+        toast.error(result.message || 'Unable to submit enquiry.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Input
-          label="First Name"
-          name="firstName"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Last Name"
-          name="lastName"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
+    <form
+      onSubmit={handleSubmit}
+      className="mt-5"
+    >
+
+      <div className="grid lg:grid-cols-2 gap-x-20 gap-y-12">
+                {/* ================= First Name ================= */}
+
+        <div>
+
+          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+            First Name
+          </label>
+
+          <input
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            className="
+              w-full
+              h-[72px]
+
+              rounded-xl
+
+              bg-[#353535]
+
+              text-white
+
+              px-8
+
+              text-[20px]
+
+              placeholder:text-gray-400
+
+              outline-none
+
+              border
+              border-transparent
+
+              transition-all
+              duration-300
+
+              focus:border-[#D4AF11]
+            "
+          />
+
+        </div>
+
+        {/* ================= Last Name ================= */}
+
+        <div>
+
+          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+            Last Name
+          </label>
+
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+            className="
+              w-full
+              h-[72px]
+
+              rounded-xl
+
+              bg-[#353535]
+
+              text-white
+
+              px-8
+
+              text-[20px]
+
+              placeholder:text-gray-400
+
+              outline-none
+
+              border
+              border-transparent
+
+              transition-all
+              duration-300
+
+              focus:border-[#D4AF11]
+            "
+          />
+
+        </div>
+
+        {/* ================= Email ================= */}
+
+        <div>
+
+          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+            Email Address
+          </label>
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="
+              w-full
+              h-[72px]
+
+              rounded-xl
+
+              bg-[#353535]
+
+              text-white
+
+              px-8
+
+              text-[20px]
+
+              placeholder:text-gray-400
+
+              outline-none
+
+              border
+              border-transparent
+
+              transition-all
+              duration-300
+
+              focus:border-[#D4AF11]
+            "
+          />
+
+        </div>
+
+        {/* ================= Phone ================= */}
+
+        <div>
+
+          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+            Phone Number
+          </label>
+
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone Number"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className="
+              w-full
+              h-[72px]
+
+              rounded-xl
+
+              bg-[#353535]
+
+              text-white
+
+              px-8
+
+              text-[20px]
+
+              placeholder:text-gray-400
+
+              outline-none
+
+              border
+              border-transparent
+
+              transition-all
+              duration-300
+
+              focus:border-[#D4AF11]
+            "
+          />
+
+        </div>
+                {/* ================= Subject ================= */}
+
+        <div>
+
+          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+            Subject
+          </label>
+
+          <div className="relative">
+
+            <select
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              required
+              className="
+                appearance-none
+
+                w-full
+                h-[72px]
+
+                rounded-xl
+
+                bg-[#353535]
+
+                text-white
+
+                px-8
+
+                text-[20px]
+
+                outline-none
+
+                border
+                border-transparent
+
+                transition-all
+                duration-300
+
+                focus:border-[#D4AF11]
+              "
+            >
+
+              <option value="">
+                Choose your enquiry topic
+              </option>
+
+              <option value="Residential Projects">
+                Residential Projects
+              </option>
+
+              <option value="Commercial Developments">
+                Commercial Developments
+              </option>
+
+              <option value="Land Development">
+                Land Development
+              </option>
+
+              <option value="Investment">
+                Investment
+              </option>
+
+              <option value="Referral">
+                Referral
+              </option>
+
+              <option value="General">
+                General
+              </option>
+
+            </select>
+
+            <ChevronRight
+              size={28}
+              className="
+                absolute
+                right-6
+                top-1/2
+                -translate-y-1/2
+
+                rotate-90
+
+                text-white
+
+                pointer-events-none
+              "
+            />
+
+          </div>
+
+        </div>
+
+        {/* ================= Message ================= */}
+
+        <div>
+
+          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+            Message
+          </label>
+
+          <textarea
+            name="message"
+            rows={6}
+            placeholder="Write your enquiry..."
+
+            value={formData.message}
+
+            onChange={handleChange}
+
+            required
+
+            className="
+              w-full
+
+              rounded-xl
+
+              bg-[#353535]
+
+              text-white
+
+              px-8
+              py-6
+
+              text-[20px]
+
+              placeholder:text-gray-400
+
+              outline-none
+
+              resize-none
+
+              border
+              border-transparent
+
+              transition-all
+              duration-300
+
+              focus:border-[#D4AF11]
+            "
+          />
+
+        </div>
+
+        {/* ================= Submit ================= */}
+
+        <div className="lg:col-span-2 flex justify-center lg:justify-end">
+
+          <button
+            type="submit"
+
+            disabled={loading}
+
+            className="
+              h-[72px]
+
+              min-w-[260px]
+
+              rounded-xl
+
+              bg-[#BEA311]
+
+              text-white
+
+              text-[20px]
+
+              font-semibold
+
+              transition-all
+              duration-300
+
+              hover:bg-[#E1BE16]
+
+              hover:scale-105
+
+              disabled:cursor-not-allowed
+              disabled:opacity-70
+            "
+          >
+            {loading ? "Submitting..." : "Submit Enquiry"}
+          </button>
+
+        </div>
+
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Input
-          label="Email Address"
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Phone Number"
-          name="phone"
-          type="tel"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-dark-900 mb-2">Subject</label>
-        <select
-          name="subject"
-          value={formData.subject}
-          onChange={handleChange}
-          className="w-full px-4 py-3 bg-dark-900 border-2 border-dark-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors"
-          required
-        >
-          <option value="">Choose your enquiry topic</option>
-          <option value="property">Property Inquiry</option>
-          <option value="referral">Referral Program</option>
-          <option value="investment">Investment</option>
-          <option value="general">General Inquiry</option>
-        </select>
-      </div>
-
-      <TextArea
-        label="Message"
-        name="message"
-        placeholder="Message"
-        value={formData.message}
-        onChange={handleChange}
-        maxChars={1000}
-        required
-      />
-
-      <Button type="submit" fullWidth className="py-3 bg-primary-500 text-dark-900 hover:bg-primary-600">
-        {submitted ? 'Message Sent! ✓' : 'Submit Enquiry'}
-      </Button>
     </form>
   );
 };

@@ -12,121 +12,277 @@ export default function Footer() {
     { label: 'BZB', href: ROUTES.BZB },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About', href: ROUTES.ABOUT },
-    { label: 'Contact Us', href: ROUTES.CONTACT },
+    // { label: 'Contact Us', href: ROUTES.CONTACT },
   ];
 
   const contact = {
-    address: 'Head Office - 4-A East Cross Street, Vellore - 632007',
-    phones: ['+91 77320 05003', '+8847 95232'],
+    address: 'Head Office : 4-A East Cross Road, Gandhi Nagar, Vellore - 632007',
+    phones: ['77320 05003', '98417 68255'],
     email: 'bzb000777@gmail.com',
   };
 
   return (
-    <footer className="bg-dark-900 text-white">
-      {/* Main Footer Content */}
-      <div className="container mx-auto px-6 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand Section */}
+    <footer className="bg-[#181616] text-white overflow-hidden">
+
+      <div className="mx-auto max-w-[1450px] px-6 lg:px-10 py-16 lg:py-20">
+
+        <div className="grid grid-cols-1 md:grid-cols-[1.3fr_0.8fr_1fr] gap-12 lg:gap-24">
+
+          {/* ================= Left ================= */}
+
           <div>
-            <div className="flex items-center gap-2 mb-4">
+
+            <div className="flex items-center gap-3">
+
               <Image
                 src="/images/logo/BZB Logo.png"
                 alt="BZB Logo"
-                width={32}
-                height={32}
+                width={46}
+                height={46}
+                priority
                 className="object-contain"
               />
-              <div className="flex flex-col leading-none">
-                <span className="text-white text-[20px] font-bold tracking-tight">
-                  BZB
-                </span>
 
-                <span className="text-gray-300 uppercase tracking-[0.45em] text-[6px] mt-1">
+              <div className="leading-none">
+
+                <h2 className="text-[22px] font-bold tracking-tight">
+                  BZB
+                </h2>
+
+                <p className="mt-1 text-[6px] uppercase tracking-[0.45em] text-gray-400">
                   Born To Win
-                </span>
+                </p>
+
               </div>
 
-
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Let&apos;s build your future together. Whether you&apos;re looking for your next
-              property or want to leverage business
-              opportunity to grow and scale your network,
-              BZB is here to support your dreams.
+
+            <h3 className="mt-8 text-[24px] font-semibold leading-tight">
+              Let's Build Your Future Together
+            </h3>
+
+            <p className="mt-5 max-w-[330px] text-sm leading-8 text-gray-400">
+              Whether you're looking for your dream property,
+              a trusted investment, or an opportunity to grow
+              with our referral program, BZB is here to
+              support your journey.
             </p>
+
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-white font-bold mb-6 text-sm">Quick Links</h3>
-            <ul className="space-y-3">
+          {/* ================= Quick Links ================= */}
+
+          <div className="md:justify-self-center">
+
+            <h3 className="mb-8 text-sm font-semibold">
+              Quick links
+            </h3>
+
+            <ul className="space-y-5">
+
               {quickLinks.map((link) => (
+
                 <li key={link.href}>
+
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-primary-500 transition-colors text-sm"
+                    className="
+                      text-sm
+                      text-gray-400
+
+                      transition-colors
+                      duration-300
+
+                      hover:text-primary-500
+                    "
                   >
                     {link.label}
                   </Link>
+
                 </li>
+
               ))}
+
             </ul>
+
           </div>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-white font-bold mb-6 text-sm">Contact Us</h3>
-            <ul className="space-y-4">
-              <li className="flex gap-3">
-                <MapPin className="w-4 h-4 text-primary-500 flex-shrink-0 mt-1" />
-                <span className="text-gray-400 text-sm">{contact.address}</span>
+          {/* ================= Contact ================= */}
+
+          <div className="md:justify-self-end">
+                        <h3 className="mb-8 text-sm font-semibold">
+              Contact Us
+            </h3>
+
+            <ul className="space-y-5">
+
+              <li className="flex items-start gap-3">
+
+                <MapPin
+                  className="
+                    mt-1
+                    h-4
+                    w-4
+                    flex-shrink-0
+                    text-primary-500
+                  "
+                />
+
+                <span
+                  className="
+                    text-sm
+                    leading-7
+                    text-gray-400
+                  "
+                >
+                  {contact.address}
+                </span>
+
               </li>
+
               {contact.phones.map((phone) => (
-                <li key={phone} className="flex gap-3">
-                  <Phone className="w-4 h-4 text-primary-500 flex-shrink-0 mt-1" />
+
+                <li
+                  key={phone}
+                  className="flex items-center gap-3"
+                >
+
+                  <Phone
+                    className="
+                      h-4
+                      w-4
+                      flex-shrink-0
+                      text-primary-500
+                    "
+                  />
+
                   <a
                     href={`tel:${phone.replace(/\s/g, '')}`}
-                    className="text-gray-400 hover:text-primary-500 transition-colors text-sm"
+                    className="
+                      text-sm
+                      text-gray-400
+
+                      transition-colors
+                      duration-300
+
+                      hover:text-primary-500
+                    "
                   >
                     {phone}
                   </a>
+
                 </li>
+
               ))}
-              <li className="flex gap-3">
-                <Mail className="w-4 h-4 text-primary-500 flex-shrink-0 mt-1" />
+
+              <li className="flex items-center gap-3">
+
+                <Mail
+                  className="
+                    h-4
+                    w-4
+                    flex-shrink-0
+                    text-primary-500
+                  "
+                />
+
                 <a
                   href={`mailto:${contact.email}`}
-                  className="text-gray-400 hover:text-primary-500 transition-colors text-sm"
+                  className="
+                    text-sm
+                    text-gray-400
+
+                    transition-colors
+                    duration-300
+
+                    hover:text-primary-500
+                  "
                 >
                   {contact.email}
                 </a>
+
               </li>
+
             </ul>
+
           </div>
 
-          {/* Empty column for spacing on larger screens */}
-          <div></div>
         </div>
 
-        {/* Bottom Footer */}
-        <div className="border-t border-dark-700 pt-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-xs">
-              &copy; {currentYear} BZB. All rights reserved.
+        {/* ================= Bottom Footer ================= */}
+
+        <div
+          className="
+            mt-16
+
+            border-t
+            border-white/10
+
+            pt-6
+          "
+        >
+
+          <div
+            className="
+              flex
+
+              flex-col
+              items-center
+              justify-between
+
+              gap-4
+
+              text-center
+
+              md:flex-row
+              md:text-left
+            "
+          >
+
+            <p className="text-xs text-gray-500">
+              © {currentYear} BZB. All Rights Reserved.
             </p>
-            <div className="flex gap-6">
-              <Link href="/" className="text-gray-500 hover:text-primary-500 text-xs transition-colors">
+
+            <div className="flex flex-wrap justify-center gap-6">
+
+              <Link
+                href="/"
+                className="
+                  text-xs
+                  text-gray-500
+
+                  transition-colors
+                  duration-300
+
+                  hover:text-primary-500
+                "
+              >
                 Privacy Policy
               </Link>
-              <Link href="/" className="text-gray-500 hover:text-primary-500 text-xs transition-colors">
+
+              <Link
+                href="/"
+                className="
+                  text-xs
+                  text-gray-500
+
+                  transition-colors
+                  duration-300
+
+                  hover:text-primary-500
+                "
+              >
                 Terms & Conditions
               </Link>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
     </footer>
   );
 }
-
-
