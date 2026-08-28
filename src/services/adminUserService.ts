@@ -34,7 +34,7 @@ export async function validateAdminCredentials(
     (await findAdminByEmail(emailOrUsername)) ??
     (await findAdminByUsername(emailOrUsername));
     
-console.log('Validating admin credentials for:', emailOrUsername, 'Admin found:', admin);
+
   if (!admin) return null;
 
   const valid = await bcrypt.compare(password, admin.password);
