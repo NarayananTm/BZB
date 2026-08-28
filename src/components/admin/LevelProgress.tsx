@@ -2,13 +2,7 @@
 
 interface LevelItem { name: string; pct: number; }
 
-const DEFAULTS: LevelItem[] = [
-  { name: 'Level 1 Complete', pct: 0 },
-  { name: 'Level 2 Complete', pct: 0 },
-  { name: 'Level 3 Complete', pct: 0 },
-];
-
-export default function LevelProgress({ levels = DEFAULTS }: { levels?: LevelItem[] }) {
+export default function LevelProgress({ levels = [] }: { levels?: LevelItem[] }) {
   return (
     <div className="mt-2 flex flex-col gap-3">
       <div className="flex items-center gap-6">

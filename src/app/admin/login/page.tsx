@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -26,7 +27,7 @@ export default function AdminLoginPage() {
 
       if (!res.ok || !data.success) throw new Error(data.message ?? 'Login failed');
 
-      router.push('/admin/dashboard');
+      router.push('/admin');
       router.refresh();
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Login failed');
@@ -124,6 +125,13 @@ export default function AdminLoginPage() {
               )}
             </button>
           </form>
+
+          <div className="mt-6 border-t border-white/10 pt-5 text-center text-sm text-slate-400">
+            Need a member account?{' '}
+            <Link href="/admin/register" className="font-semibold text-[#E5C500] hover:underline">
+              Register here
+            </Link>
+          </div>
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-600">

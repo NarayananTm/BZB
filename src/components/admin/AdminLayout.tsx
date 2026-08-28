@@ -56,6 +56,13 @@ export default function AdminLayout({ children }: { children: ReactNode; title: 
                   >
                     Profile
                   </Link>
+                  <Link
+                    href="/admin/register"
+                    aria-current={linkActive('/admin/register') ? 'page' : undefined}
+                    className={`inline-flex items-center rounded-full px-5 py-3 ${linkActive('/admin/register') ? 'text-[#E5C500]' : 'text-white'}`}
+                  >
+                    Admin Users
+                  </Link>
                 </div>
 
                 <button className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black text-white">

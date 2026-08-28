@@ -62,6 +62,20 @@ CREATE TABLE IF NOT EXISTS members (
   updated_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS member_profiles (
+  member_id        VARCHAR(50) PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,
+  date_of_birth    DATE,
+  gender           VARCHAR(20),
+  address          TEXT,
+  district         VARCHAR(100),
+  pincode          VARCHAR(20),
+  state            VARCHAR(100),
+  nominee_name     VARCHAR(255),
+  nominee_relation VARCHAR(100),
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Referrals (one row per referred member)
 CREATE TABLE IF NOT EXISTS referrals (
   id            VARCHAR(50)   PRIMARY KEY,           -- e.g. REF-20260712-001
@@ -223,6 +237,9 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
   bank_name       VARCHAR(255)  NOT NULL,
   account_number  VARCHAR(50)   NOT NULL,
   ifsc_code       VARCHAR(20),
+  branch          VARCHAR(255),
+  pan             VARCHAR(50),
+  upi_id          VARCHAR(255),
   account_type    VARCHAR(20),                       -- Savings | Current | Business
   is_primary      BOOLEAN       NOT NULL DEFAULT FALSE,
   is_verified     BOOLEAN       NOT NULL DEFAULT FALSE,

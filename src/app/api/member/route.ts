@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readUsers } from '@/lib/excel';
+import { readUsers } from '@/lib/postgres';
 
 export async function GET() {
   try {

@@ -10,7 +10,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = request.cookies.get('bzb_token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');
+  const token = pathname.startsWith('/admin')
+    ? request.cookies.get('bzb_admin_token')?.value
+    : request.cookies.get('bzb_token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');
 
   if (!token && pathname.startsWith('/bzb')) {
     return NextResponse.redirect(new URL('/login', request.url));

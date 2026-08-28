@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { comparePassword, readUsers } from '@/lib/excel';
+import { comparePassword, findUserByEmailOrMobile } from '@/lib/postgres';
 import { signToken } from '@/lib/jwt';
 
 export async function POST(request: Request) {
@@ -11,29 +11,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Email and password are required' }, { status: 400 });
     }
 
-    const users = await readUsers();
-    const user = users.find((item) => item.Email.toLowerCase() === email.toLowerCase() || item.Mobile === email);
+    const user = await findUserByEmailOrMobile(email);
 
     if (!user) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
-    const isValidPassword = comparePassword(password, user.Password);
+    const isValidPassword = comparePassword(password, user.password);
 
     if (!isValidPassword) {
       return NextResponse.json({ success: false, message: 'Invalid password' }, { status: 401 });
     }
 
-    const token = signToken({ id: user.ID, email: user.Email, name: user.FullName, mobile: user.Mobile });
+    const token = signToken({ id: user.id, email: user.email, name: user.fullName, mobile: user.mobile });
     const response = NextResponse.json({
       success: true,
       message: 'Login Successful',
       token,
       user: {
-        id: user.ID,
-        fullName: user.FullName,
-        email: user.Email,
-        mobile: user.Mobile,
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        mobile: user.mobile,
       },
     });
 

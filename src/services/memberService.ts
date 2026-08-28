@@ -45,7 +45,21 @@ function adaptMockMember(m: AdminMember): Member {
 export async function getAllMembers(): Promise<Member[]> {
   if (!isDbConfigured()) return adminMembers.map(adaptMockMember);
   const rows = await query<Member>('SELECT * FROM members ORDER BY created_at DESC');
-  return rows.length ? rows : adminMembers.map(adaptMockMember);
+  return rows;
+}
+
+export async function getMembersReferredBy(adminName: string, adminEmail: string): Promise<Member[]> {
+  if (!isDbConfigured()) return [];
+  return query<Member>(
+    `SELECT m.*
+     FROM members m
+     WHERE LOWER(COALESCE(m.sponsor_name, '')) = LOWER($1)
+        OR m.sponsor_id IN (
+          SELECT id::varchar FROM members WHERE LOWER(email) = LOWER($2)
+        )
+     ORDER BY m.created_at DESC`,
+    [adminName, adminEmail],
+  );
 }
 
 export async function getMemberById(id: string): Promise<Member | null> {

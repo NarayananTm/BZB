@@ -54,12 +54,3 @@ export default async function AdminReferralsPage() {
     </AdminLayout>
   );
 }
-
-              memberId={me?.id}
-            />
-          </div>
-        </section>
-      </div>
-    </AdminLayout>
-  );
-}

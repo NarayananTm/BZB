@@ -1,4 +1,15 @@
+import console from 'console';
+import bcrypt from 'bcryptjs';
 import type { Pool as PgPool, PoolClient } from 'pg';
+
+export interface UserRecord {
+  id: number;
+  fullName: string;
+  email: string;
+  mobile: string;
+  password: string;
+  createdDate: string;
+}
 
 let pool: PgPool | undefined;
 
@@ -7,6 +18,7 @@ export function isDbConfigured(): boolean {
 }
 
 export function getPool(): PgPool {
+  console.log(pool,'Initializing PostgreSQL pool...');
   if (!pool) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require('pg') as typeof import('pg');
@@ -43,6 +55,121 @@ export async function query<T = unknown>(sql: string, params?: unknown[]): Promi
 export async function queryOne<T = unknown>(sql: string, params?: unknown[]): Promise<T | null> {
   const rows = await query<T>(sql, params);
   return rows[0] ?? null;
+}
+
+export async function readUsers(): Promise<UserRecord[]> {
+  return query<UserRecord>(
+    'SELECT id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate" FROM users ORDER BY id'
+  );
+}
+
+export async function findUserByEmailOrMobile(emailOrMobile: string): Promise<UserRecord | null> {
+  return queryOne<UserRecord>(
+    'SELECT id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate" FROM users WHERE LOWER(email) = LOWER($1) OR mobile = $1 LIMIT 1',
+    [emailOrMobile]
+  );
+}
+
+export async function registerUser(user: Omit<UserRecord, 'id' | 'createdDate'>): Promise<UserRecord> {
+  if (!isDbConfigured()) {
+    throw new Error('Database is not configured');
+  }
+
+  const result = await getPool().query<UserRecord>(
+    'INSERT INTO users (full_name, email, mobile, password) VALUES ($1, $2, $3, $4) RETURNING id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate"',
+    [user.fullName, user.email, user.mobile, user.password]
+  );
+
+  return result.rows[0];
+}
+
+export function hashPassword(password: string): string {
+  return bcrypt.hashSync(password, 10);
+}
+
+export function comparePassword(password: string, hash: string): boolean {
+  return bcrypt.compareSync(password, hash);
+}
+
+export interface MemberProfile {
+  id: string;
+  name: string;
+  email: string;
+  mobile: string;
+  avatar: string | null;
+  dateOfBirth: string | null;
+  gender: string | null;
+  address: string | null;
+  district: string | null;
+  pincode: string | null;
+  state: string | null;
+  nomineeName: string | null;
+  nomineeRelation: string | null;
+  bankName: string | null;
+  accountNumber: string | null;
+  accountHolder: string | null;
+  branch: string | null;
+  ifscCode: string | null;
+  pan: string | null;
+  upiId: string | null;
+}
+
+async function ensureMemberProfilesTable() {
+  await getPool().query(`
+    CREATE TABLE IF NOT EXISTS member_profiles (
+      member_id VARCHAR(50) PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,
+      date_of_birth DATE, gender VARCHAR(20), address TEXT, district VARCHAR(100),
+      pincode VARCHAR(20), state VARCHAR(100), nominee_name VARCHAR(255),
+      nominee_relation VARCHAR(100), created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  await getPool().query('ALTER TABLE bank_accounts ADD COLUMN IF NOT EXISTS branch VARCHAR(255), ADD COLUMN IF NOT EXISTS pan VARCHAR(50), ADD COLUMN IF NOT EXISTS upi_id VARCHAR(255)');
+}
+
+const memberProfileSelect = `
+  SELECT m.id, m.name, m.email, m.mobile, m.avatar,
+    TO_CHAR(p.date_of_birth, 'YYYY-MM-DD') AS "dateOfBirth", p.gender, p.address,
+    p.district, p.pincode, p.state, p.nominee_name AS "nomineeName",
+    p.nominee_relation AS "nomineeRelation", b.bank_name AS "bankName",
+    b.account_number AS "accountNumber", b.account_holder AS "accountHolder",
+    b.branch, b.ifsc_code AS "ifscCode", b.pan, b.upi_id AS "upiId"
+  FROM members m
+  LEFT JOIN member_profiles p ON p.member_id = m.id
+  LEFT JOIN LATERAL (SELECT * FROM bank_accounts WHERE member_id = m.id ORDER BY is_primary DESC, id LIMIT 1) b ON TRUE
+  ORDER BY m.id LIMIT 1`;
+
+export async function getMemberProfile(): Promise<MemberProfile | null> {
+  if (!isDbConfigured()) return null;
+  await ensureMemberProfilesTable();
+  return queryOne<MemberProfile>(memberProfileSelect);
+}
+
+export async function updateMemberProfile(profile: Partial<MemberProfile> & { id: string }) {
+  await ensureMemberProfilesTable();
+  await getPool().query('UPDATE members SET email = $1, updated_at = NOW() WHERE id = $2', [profile.email, profile.id]);
+  await getPool().query(
+    `INSERT INTO member_profiles (member_id, date_of_birth, gender, address, district, pincode, state, nominee_name, nominee_relation)
+     VALUES ($1, NULLIF($2, '')::date, $3, $4, $5, $6, $7, $8, $9)
+     ON CONFLICT (member_id) DO UPDATE SET date_of_birth = EXCLUDED.date_of_birth, gender = EXCLUDED.gender,
+     address = EXCLUDED.address, district = EXCLUDED.district, pincode = EXCLUDED.pincode, state = EXCLUDED.state,
+     nominee_name = EXCLUDED.nominee_name, nominee_relation = EXCLUDED.nominee_relation, updated_at = NOW()` ,
+    [profile.id, profile.dateOfBirth ?? '', profile.gender, profile.address, profile.district, profile.pincode, profile.state, profile.nomineeName, profile.nomineeRelation],
+  );
+  await getPool().query(
+    `INSERT INTO bank_accounts (id, member_id, account_holder, bank_name, account_number, ifsc_code, branch, pan, upi_id, is_primary)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, TRUE)
+     ON CONFLICT (id) DO UPDATE SET account_holder = EXCLUDED.account_holder, bank_name = EXCLUDED.bank_name,
+     account_number = EXCLUDED.account_number, ifsc_code = EXCLUDED.ifsc_code, branch = EXCLUDED.branch,
+     pan = EXCLUDED.pan, upi_id = EXCLUDED.upi_id, updated_at = NOW()`,
+    [`BANK-${profile.id}`, profile.id, profile.accountHolder ?? '', profile.bankName ?? '', profile.accountNumber ?? '', profile.ifscCode, profile.branch, profile.pan, profile.upiId],
+  );
+  return getMemberProfile();
+}
+
+export async function updateMemberAvatar(id: string, avatar: string) {
+  await getPool().query('UPDATE members SET avatar = $1, updated_at = NOW() WHERE id = $2', [avatar, id]);
+  return getMemberProfile();
 }
 
 export async function withTransaction<T>(fn: (client: PoolClient) => Promise<T>): Promise<T> {

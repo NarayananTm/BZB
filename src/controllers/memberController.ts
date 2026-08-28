@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
 import {
-  getAllMembers, getMemberById, createMember,
+  getMembersReferredBy, getMemberById, createMember,
   updateMember, updateMemberStatus, deleteMember, getMemberStats,
 } from '@/services/memberService';
 import type { CreateMemberDto } from '@/models';
 
 export async function listMembers(request: NextRequest) {
-  const { error } = requireAdmin(request);
+  const check = requireAdmin(request);
+  const { error } = check;
   if (error) return error;
 
   try {
@@ -15,7 +16,7 @@ export async function listMembers(request: NextRequest) {
     if (searchParams.get('stats') === 'true') {
       return NextResponse.json({ success: true, data: await getMemberStats() });
     }
-    const members = await getAllMembers();
+    const members = await getMembersReferredBy(check.admin.name, check.admin.email);
     return NextResponse.json({ success: true, data: members, total: members.length });
   } catch (err) {
     console.error('[memberController.listMembers]', err);
