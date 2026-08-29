@@ -14,7 +14,18 @@ export interface UserRecord {
 let pool: PgPool | undefined;
 
 export function isDbConfigured(): boolean {
-  return Boolean(process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD);
+  const host = process.env.DB_HOST || "pg-18c96d3-narayanan2600-6de6.h.aivencloud.com";
+  const name = process.env.DB_NAME || "defaultdb";
+  const user = process.env.DB_USER || "avnadmin";
+  const port = process.env.DB_PORT || "14471";
+
+  return Boolean(
+    host &&
+    name &&
+    user &&
+    process.env.DB_PASSWORD &&
+    port
+  );
 }
 
 export function getPool(): PgPool {
