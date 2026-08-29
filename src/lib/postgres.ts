@@ -18,12 +18,13 @@ export function isDbConfigured(): boolean {
   const name = process.env.DB_NAME || "defaultdb";
   const user = process.env.DB_USER || "avnadmin";
   const port = process.env.DB_PORT || "14471";
+  const pass = process.env.DB_PASSWORD || "AVNS_zHo5ErjPikeL9_zPCmw";
 
   return Boolean(
     host &&
     name &&
     user &&
-    process.env.DB_PASSWORD &&
+    pass &&
     port
   );
 }
