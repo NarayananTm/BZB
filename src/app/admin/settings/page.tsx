@@ -1,6 +1,7 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllSettings } from '@/services/settingService';
 import SettingsForm from '@/components/admin/SettingsForm';
+export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
   const settings = await getAllSettings();

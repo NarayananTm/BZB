@@ -8,6 +8,7 @@ import { getMemberByEmail } from '@/services/memberService';
 import { getReferralsBySponsor } from '@/services/referralService';
 import { getMemberProfile } from '@/lib/postgres';
 import { getAdminSessionUser } from '@/lib/adminAuth';
+export const dynamic = "force-dynamic";
 
 export default async function AdminReferralsPage() {
   const session = await getAdminSessionUser();

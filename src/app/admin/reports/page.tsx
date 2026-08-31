@@ -1,5 +1,6 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllReports } from '@/services/reportService';
+export const dynamic = "force-dynamic";
 
 export default async function AdminReportsPage() {
   const reports = await getAllReports();

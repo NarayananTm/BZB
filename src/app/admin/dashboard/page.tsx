@@ -1,3 +1,5 @@
+'use client';
+
 import AdminLayout from '@/components/admin/AdminLayout';
 import DashboardHeader from '@/components/admin/DashboardHeader';
 import LevelProgress from '@/components/admin/LevelProgress';
@@ -11,7 +13,7 @@ import { getAllLevels } from '@/services/levelService';
 import { getTopupsByMember } from '@/services/topupService';
 import { getEarningsByMember } from '@/services/earningService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
-
+export const dynamic = "force-dynamic";
 export default async function AdminDashboardPage() {
   const session = await getAdminSessionUser();
   const me = session?.email ? await getMemberByEmail(session.email) : null;
