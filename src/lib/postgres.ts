@@ -30,34 +30,64 @@ export function isDbConfigured(): boolean {
 }
 
 export function getPool(): PgPool {
-  console.log(pool, 'Initializing PostgreSQL pool...') ;
-  const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n")||;
-  if (!pool) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { Pool } = require('pg') as typeof import('pg');
-   const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
-
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-
-  ssl: {
-    ca,
-    rejectUnauthorized: true,
-  },
-
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
-});
-
-    pool.on('error', (err) => {
-      console.error('PostgreSQL pool error:', err);
-    });
+  if (pool) {
+    return pool;
   }
+
+  console.log("Initializing PostgreSQL pool...");
+
+  const host = process.env.DB_HOST;
+  const port = process.env.DB_PORT;
+  const database = process.env.DB_NAME;
+  const user = process.env.DB_USER;
+  const password = process.env.DB_PASSWORD;
+  const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
+
+  // Validate configuration
+  if (!host) {
+    throw new Error("DB_HOST is not configured");
+  }
+
+  if (!port) {
+    throw new Error("DB_PORT is not configured");
+  }
+
+  if (!database) {
+    throw new Error("DB_NAME is not configured");
+  }
+
+  if (!user) {
+    throw new Error("DB_USER is not configured");
+  }
+
+  if (!password) {
+    throw new Error("DB_PASSWORD is not configured");
+  }
+
+  if (!ca) {
+    throw new Error("DB_CA_CERT is not configured");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { Pool } = require("pg") as typeof import("pg");
+
+  pool = new Pool({
+    host,
+    port: Number(port),
+    database,
+    user,
+    password,
+
+    ssl: {
+      ca,
+      rejectUnauthorized: true,
+    },
+
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+  });
+
   return pool;
 }
 
