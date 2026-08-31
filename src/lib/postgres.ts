@@ -30,17 +30,41 @@ export function isDbConfigured(): boolean {
 }
 
 export function getPool(): PgPool {
-  console.log(pool, 'Initializing PostgreSQL pool...');
-  const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
+  console.log(pool, 'Initializing PostgreSQL pool...') ;
+  const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n")||`-----BEGIN CERTIFICATE-----
+MIIERDCCAqygAwIBAgIUCfqXDHZ2uRVSUK2fWw6ki+2ANSkwDQYJKoZIhvcNAQEM
+BQAwOjE4MDYGA1UEAwwvYjA4MmMxN2MtM2MxMC00MTZiLWI5YzYtZDVkNDY4ZDNh
+ZGNkIFByb2plY3QgQ0EwHhcNMjYwODEyMTMyNTA4WhcNMzYwODA5MTMyNTA4WjA6
+MTgwNgYDVQQDDC9iMDgyYzE3Yy0zYzEwLTQxNmItYjljNi1kNWQ0NjhkM2FkY2Qg
+UHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMhunL/F
+tZhCBhLkImg/n9uranKxnOwj60lK677O6oCpcuoEK1xcIgXWVmx0l6ygLBrpsb3U
+S1Gka/rG+UyrElvBlv4EVxXQ3QUsuwDydPcB3/Cr/NqOCo3fX23X39eszHXIVZUA
+/DS05X0wx+2MQ5TD+K4ADuSVfCBb5TnbK2Svd7l5D1tl3/lz3cuCm5og8zZqccS5
+V6PmNKyECmboA7yQogJXLX2bQqy8SJcq/gjA/SwW4e6UHkuTQG5hGCA/yaIeEWEK
+JmDXzIkf42jOzer3L67qoU7JpisRiRbKwF+TrzuG2rf7yM3GfMXhXH9LDwTysfaJ
+ixBU+l8gr8hZLT+lvLc89tzrFq3ZrPSC7Z6OV8VUmGo1X37sqYAewDaUz4EtG6KG
+p7IM6Bxc/dCnuDstRaT8Uj108aBfs9fesXlmJJUCsY+w9mn6PDldBkIG7fI5gExe
+McUPMJEc7yF0ypJkZQmowp6bDrF5EFaYZakucWYMMQJKhkKk/XPt46XtcwIDAQAB
+o0IwQDAdBgNVHQ4EFgQUJAZT9MubkBad0shPp26YZGD3PX8wEgYDVR0TAQH/BAgw
+BgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGBABv1DYuCP6k7
+bZK0WYOkVGYbvFlAkEvDk1YTfGMuqBmDrPgdRrxdoMVzpvXynLCh3c5RPgqrRAaL
+Fego+4GQNz/8/rvCg1QU5/txI/tn1BgR77F8aiNTsdihBnJpbBi1vP50jIiB4mhI
+733rHYVJCMtN+X3PgZD1eX1NwLVEp3uAyGMQYNGoslF7VlfDM6GgkXiTXIcwgrfE
+M3UytwE8kkojo/rMOQ+qqc3ps17VwqgNlzLH+Yg3GagsZ30RKlDy70KQXsSF0i69
+1KYkIazG/h3JCRLCuj7YCRQ5oSUxf1D9S6i1afiQiEbsBtjcMYZo8XGTNTj98o8U
+zYBQLEJzvT9YOUBlmU6YGupz5iALPN8VWeCP9zbzXoR4wiqlI/dvyMFvu/6RNDZ8
+eaS0PLU3UVS4sKs/qg365S2E+aEL2BC4Z65OVv8CDUSRykDsxrWmPv+1o/KiH0ZW
+agkRQemrpvqn9dT219alhB/C+v2sXyXjcqkn/83CuPqBdHV9cbTFrA==
+-----END CERTIFICATE-----`;
   if (!pool) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require('pg') as typeof import('pg');
     pool = new Pool({
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT ?? 5432),
-      database: process.env.DB_NAME,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
+      host: process.env.DB_HOST|| "pg-18c96d3-narayanan2600-6de6.h.aivencloud.com",
+      port: Number(process.env.DB_PORT ?? 14471),
+      database: process.env.DB_NAME || "defaultdb",
+      user: process.env.DB_USER|| "avnadmin",
+      password: process.env.DB_PASSWORD|| "AVNS_zHo5ErjPikeL9_zPCmw",
 
       ssl: {
         ca,
