@@ -1,7 +1,8 @@
 import console from 'console';
 import bcrypt from 'bcryptjs';
-import type { Pool as PgPool, PoolClient } from 'pg';
 
+import { Pool } from "pg";
+import type { Pool as PgPool, PoolClient } from 'pg';
 export interface UserRecord {
   id: number;
   fullName: string;
@@ -11,7 +12,7 @@ export interface UserRecord {
   createdDate: string;
 }
 
-let pool: PgPool | undefined;
+let pool: PgPool | null = null;
 
 export function isDbConfigured(): boolean {
   const host = process.env.DB_HOST || "pg-18c96d3-narayanan2600-6de6.h.aivencloud.com";
@@ -34,8 +35,6 @@ export function getPool(): PgPool {
     return pool;
   }
 
-  console.log("Initializing PostgreSQL pool...");
-
   const host = process.env.DB_HOST;
   const port = process.env.DB_PORT;
   const database = process.env.DB_NAME;
@@ -43,33 +42,11 @@ export function getPool(): PgPool {
   const password = process.env.DB_PASSWORD;
   const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
 
-  // Validate configuration
-  if (!host) {
-    throw new Error("DB_HOST is not configured");
+  if (!host || !port || !database || !user || !password) {
+    throw new Error(
+      "PostgreSQL environment variables are not configured correctly"
+    );
   }
-
-  if (!port) {
-    throw new Error("DB_PORT is not configured");
-  }
-
-  if (!database) {
-    throw new Error("DB_NAME is not configured");
-  }
-
-  if (!user) {
-    throw new Error("DB_USER is not configured");
-  }
-
-  if (!password) {
-    throw new Error("DB_PASSWORD is not configured");
-  }
-
-  if (!ca) {
-    throw new Error("DB_CA_CERT is not configured");
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Pool } = require("pg") as typeof import("pg");
 
   pool = new Pool({
     host,
@@ -78,10 +55,14 @@ export function getPool(): PgPool {
     user,
     password,
 
-    ssl: {
-      ca,
-      rejectUnauthorized: true,
-    },
+    ssl: ca
+      ? {
+          ca,
+          rejectUnauthorized: true,
+        }
+      : {
+          rejectUnauthorized: false,
+        },
 
     max: 10,
     idleTimeoutMillis: 30000,
@@ -89,6 +70,7 @@ export function getPool(): PgPool {
   });
 
   return pool;
+  
 }
 
 export async function query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]> {
