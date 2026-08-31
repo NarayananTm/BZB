@@ -30,20 +30,26 @@ export function isDbConfigured(): boolean {
 }
 
 export function getPool(): PgPool {
-  console.log(pool,'Initializing PostgreSQL pool...');
+  console.log(pool, 'Initializing PostgreSQL pool...');
+  const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
   if (!pool) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require('pg') as typeof import('pg');
     pool = new Pool({
-      host:     process.env.DB_HOST,
-      port:     Number(process.env.DB_PORT ?? 5432),
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT ?? 5432),
       database: process.env.DB_NAME,
-      user:     process.env.DB_USER,
+      user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      ssl:      process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-      max:      10,
-      idleTimeoutMillis: 30_000,
-      connectionTimeoutMillis: 5_000,
+
+      ssl: {
+        ca,
+        rejectUnauthorized: true,
+      },
+      max: 10,
+      idleTimeoutMillis: 30000,
+
+      connectionTimeoutMillis: 10000,
     });
 
     pool.on('error', (err) => {
