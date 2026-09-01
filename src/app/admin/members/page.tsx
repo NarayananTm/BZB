@@ -2,6 +2,8 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllMembers } from '@/services/memberService';
 import StatusUpdateBadge from '@/components/admin/StatusUpdateBadge';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminMembersPage() {
   const adminMembers = await getAllMembers();
   const activeCount = adminMembers.filter((m) => m.status === 'Active').length;

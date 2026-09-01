@@ -2,6 +2,8 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllWithdrawals } from '@/services/withdrawalService';
 import WithdrawalActions from '@/components/admin/WithdrawalActions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminWithdrawalsPage() {
   const adminWithdrawals = await getAllWithdrawals();
   const approved = adminWithdrawals.filter((w) => w.status === 'Approved').length;
