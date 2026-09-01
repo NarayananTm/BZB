@@ -35,11 +35,11 @@ export function getPool(): PgPool {
     return pool;
   }
 
-  const host = process.env.DB_HOST;
-  const port = process.env.DB_PORT;
-  const database = process.env.DB_NAME;
-  const user = process.env.DB_USER;
-  const password = process.env.DB_PASSWORD;
+  const host = process.env.DB_HOST || "pg-18c96d3-narayanan2600-6de6.h.aivencloud.com";
+  const port = process.env.DB_PORT || "14471";
+  const database = process.env.DB_NAME || "defaultdb";
+  const user = process.env.DB_USER || "avnadmin";
+  const password = process.env.DB_PASSWORD || "AVNS_zHo5ErjPikeL9_zPCmw";
   const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
 
   if (!host || !port || !database || !user || !password) {
