@@ -1,5 +1,6 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import AdminProfileTabs from '@/components/admin/AdminProfileTabs';
+export const dynamic = "force-dynamic";
 
 export default async function AdminProfilePage() {
   return (

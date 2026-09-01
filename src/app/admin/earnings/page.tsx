@@ -1,6 +1,8 @@
+
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllEarnings } from '@/services/earningService';
 import StatusUpdateBadge from '@/components/admin/StatusUpdateBadge';
+export const dynamic = "force-dynamic";
 
 export const dynamic = 'force-dynamic';
 

@@ -1,7 +1,8 @@
 import console from 'console';
 import bcrypt from 'bcryptjs';
-import type { Pool as PgPool, PoolClient } from 'pg';
 
+import { Pool } from "pg";
+import type { Pool as PgPool, PoolClient } from 'pg';
 export interface UserRecord {
   id: number;
   fullName: string;
@@ -11,34 +12,65 @@ export interface UserRecord {
   createdDate: string;
 }
 
-let pool: PgPool | undefined;
+let pool: PgPool | null = null;
 
 export function isDbConfigured(): boolean {
-  return Boolean(process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD);
+  const host = process.env.DB_HOST || "pg-18c96d3-narayanan2600-6de6.h.aivencloud.com";
+  const name = process.env.DB_NAME || "defaultdb";
+  const user = process.env.DB_USER || "avnadmin";
+  const port = process.env.DB_PORT || "14471";
+  const pass = process.env.DB_PASSWORD || "AVNS_zHo5ErjPikeL9_zPCmw";
+
+  return Boolean(
+    host &&
+    name &&
+    user &&
+    pass &&
+    port
+  );
 }
 
 export function getPool(): PgPool {
-  console.log(pool,'Initializing PostgreSQL pool...');
-  if (!pool) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { Pool } = require('pg') as typeof import('pg');
-    pool = new Pool({
-      host:     process.env.DB_HOST,
-      port:     Number(process.env.DB_PORT ?? 5432),
-      database: process.env.DB_NAME,
-      user:     process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      ssl:      process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-      max:      10,
-      idleTimeoutMillis: 30_000,
-      connectionTimeoutMillis: 5_000,
-    });
-
-    pool.on('error', (err) => {
-      console.error('PostgreSQL pool error:', err);
-    });
+  if (pool) {
+    return pool;
   }
+
+  const host = process.env.DB_HOST;
+  const port = process.env.DB_PORT;
+  const database = process.env.DB_NAME;
+  const user = process.env.DB_USER;
+  const password = process.env.DB_PASSWORD;
+  const ca = process.env.DB_CA_CERT?.replace(/\\n/g, "\n");
+
+  if (!host || !port || !database || !user || !password) {
+    throw new Error(
+      "PostgreSQL environment variables are not configured correctly"
+    );
+  }
+
+  pool = new Pool({
+    host,
+    port: Number(port),
+    database,
+    user,
+    password,
+
+    ssl: ca
+      ? {
+          ca,
+          rejectUnauthorized: true,
+        }
+      : {
+          rejectUnauthorized: false,
+        },
+
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+  });
+
   return pool;
+  
 }
 
 export async function query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]> {

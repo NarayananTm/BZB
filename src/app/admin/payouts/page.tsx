@@ -1,6 +1,7 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllPayouts } from '@/services/payoutService';
 import StatusUpdateBadge from '@/components/admin/StatusUpdateBadge';
+export const dynamic = "force-dynamic";
 
 export const dynamic = 'force-dynamic';
 

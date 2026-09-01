@@ -8,6 +8,7 @@ import { getPayoutsByMember } from '@/services/payoutService';
 import ProfileInteractive from '@/components/admin/ProfileInteractive';
 import DashboardHeader from '@/components/admin/DashboardHeader';
 import { getAdminSessionUser } from '@/lib/adminAuth';
+export const dynamic = "force-dynamic";
 
 export default async function AdminProfilePage() {
   const session = await getAdminSessionUser();

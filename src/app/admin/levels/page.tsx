@@ -1,5 +1,6 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllLevels } from '@/services/levelService';
+export const dynamic = "force-dynamic";
 
 export default async function AdminLevelsPage() {
   const adminLevels = await getAllLevels();
