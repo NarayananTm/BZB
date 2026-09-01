@@ -1,6 +1,5 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllReports } from '@/services/reportService';
-export const dynamic = "force-dynamic";
 
 export const dynamic = 'force-dynamic';
 

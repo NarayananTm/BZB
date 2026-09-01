@@ -4,7 +4,6 @@ import { getAllEarnings } from '@/services/earningService';
 import StatusUpdateBadge from '@/components/admin/StatusUpdateBadge';
 export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
 
 export default async function AdminEarningsPage() {
   const adminEarnings = await getAllEarnings();

@@ -3,7 +3,6 @@ import { getAllNotifications } from '@/services/notificationService';
 import MarkReadButton from '@/components/admin/MarkReadButton';
 export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
 
 export default async function AdminNotificationsPage() {
   const notifications = await getAllNotifications();

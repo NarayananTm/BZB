@@ -3,7 +3,6 @@ import { getAllWithdrawals } from '@/services/withdrawalService';
 import WithdrawalActions from '@/components/admin/WithdrawalActions';
 export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
 
 export default async function AdminWithdrawalsPage() {
   const adminWithdrawals = await getAllWithdrawals();

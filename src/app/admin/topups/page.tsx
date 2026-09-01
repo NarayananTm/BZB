@@ -3,7 +3,6 @@ import { getAllTopups } from '@/services/topupService';
 import StatusUpdateBadge from '@/components/admin/StatusUpdateBadge';
 export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
 
 export default async function AdminTopupsPage() {
   const adminTopups = await getAllTopups();
