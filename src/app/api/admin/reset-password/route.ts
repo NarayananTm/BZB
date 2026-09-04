@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     // Verify the reset token
     let payload: TokenPayload;
     try {
-      payload = verifyToken(token) as TokenPayload;
+      payload = verifyToken(token) as unknown as TokenPayload;
     } catch (err) {
       return NextResponse.json(
         { success: false, message: 'Invalid or expired reset token' },

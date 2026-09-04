@@ -18,7 +18,7 @@ export default function UserReferralCard({
 }: UserReferralCardProps) {
   const [copied, setCopied] = useState(false);
   const [siteOrigin, setSiteOrigin] = useState('https://bzbgroup.com');
-  const [shareMessage, setShareMessage] = useState('');
+  // const [shareMessage, setShareMessage] = useState('');
 
   const referralLink = `${siteOrigin}/admin/register?ref=${encodeURIComponent(userId)}`;
 
@@ -43,7 +43,7 @@ export default function UserReferralCard({
   };
 
   const handleShare = async () => {
-    const shareText = `Join BZB Network! Use my referral link: ${referralLink}`;
+    // const shareText = `Join BZB Network! Use my referral link: ${referralLink}`;
     
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {

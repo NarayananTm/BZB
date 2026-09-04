@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createMember, getMemberById } from '@/services/memberService';
+import { generateUserId } from '@/lib/idGenerator';
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
+    const memberId = generateUserId();
+
     // Check if member already exists
-    const existing = await getMemberById('MBD9601381');
+    const existing = await getMemberById(memberId);
     if (existing) {
       return NextResponse.json({ 
         success: true, 
@@ -15,7 +18,7 @@ export async function POST(request: Request) {
 
     // Create new member with specific ID
     const member = await createMember({
-      id: 'MBD9601381',
+      id: memberId,
       name: 'Admin21',
       email: 'admin@bzb.com',
       mobile: '9601381',
