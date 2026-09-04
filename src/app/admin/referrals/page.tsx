@@ -4,7 +4,7 @@ import MemberAnalyticsCard from '@/components/admin/referral/MemberAnalyticsCard
 import ReferGrowCard from '@/components/admin/referral/ReferGrowCard';
 import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCard';
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
-import UserReferralCard from '@/components/admin/referral/UserReferralCard';
+// import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
 import { getMemberByEmail } from '@/services/memberService';
 import { getReferralsBySponsor } from '@/services/referralService';
