@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ShieldCheck } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
-  const router = useRouter();
+  // const router = useRouter();
   const [step, setStep] = useState<'verify' | 'reset'>('verify');
   const [form, setForm] = useState({ email: '', mobile: '' });
   const [message, setMessage] = useState('');
@@ -37,6 +37,7 @@ export default function ForgotPasswordPage() {
       setResetToken(data.token);
       setStep('reset');
       setMessage('');
+      
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Verification failed');
     } finally {
