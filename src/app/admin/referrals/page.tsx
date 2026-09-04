@@ -6,7 +6,7 @@ import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCa
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
 // import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
-import { getMemberByEmail } from '@/services/memberService';
+import { getMemberByEmail, getMemberById } from '@/services/memberService';
 import { getReferralsBySponsor } from '@/services/referralService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
@@ -23,6 +23,13 @@ export default async function AdminReferralsPage() {
   const mobile = member?.mobile || session?.mobile ;
   const rawDate = member?.joining_date || session?.joining_date;
   const joinDate = rawDate ? new Date(rawDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : undefined;
+  
+  // Fetch sponsor name if sponsor_id exists but sponsor_name is not set
+  let sponsorName = member?.sponsor_name;
+  if (!sponsorName && member?.sponsor_id) {
+    const sponsor = await getMemberById(member.sponsor_id);
+    sponsorName = sponsor?.name || undefined;
+  }
 
   return (
     <AdminLayout title="Referrals">
@@ -71,7 +78,7 @@ export default async function AdminReferralsPage() {
 
           <div>
             <SponsorReferralCard
-              sponsor={me?.sponsor_name ?? undefined}
+              sponsor={sponsorName}
               mobile={mobile}
               joinDate={joinDate}
               memberId={userId}

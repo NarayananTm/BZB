@@ -4,6 +4,7 @@ export interface AdminMember {
   email: string;
   mobile: string;
   sponsor: string;
+  sponsor_id: string;
   level: string;
   status: 'Active' | 'Inactive' | 'Pending' | 'Approved' | 'Rejected';
   joiningDate: string;

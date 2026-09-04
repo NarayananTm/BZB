@@ -1,5 +1,4 @@
 import { query, queryOne, isDbConfigured } from '@/lib/postgres';
-import { adminMembers, type AdminMember } from '@/data/admin/members';
 
 export interface Member {
   id: string;
@@ -20,36 +19,12 @@ export interface Member {
   updated_at: string;
 }
 
-function adaptMockMember(m: AdminMember): Member {
-  const parseRs = (s: string) => Number(s.replace(/[^0-9.]/g, '')) || 0;
-  return {
-    id: m.id,
-    name: m.name,
-    email: m.email,
-    mobile: m.mobile,
-    sponsor_id: null,
-    sponsor_name: m.sponsor ?? null,
-    level_name: m.level ?? 'Level 1',
-    status: m.status,
-    joining_date: m.joiningDate,
-    total_earnings: parseRs(m.totalEarnings ?? '0'),
-    wallet_balance: parseRs(m.walletBalance ?? '0'),
-    referral_count: m.referralCount ?? 0,
-    team_count: m.teamCount ?? 0,
-    avatar: m.avatar ?? null,
-    created_at: m.joiningDate,
-    updated_at: m.joiningDate,
-  };
-}
-
 export async function getAllMembers(): Promise<Member[]> {
-  if (!isDbConfigured()) return adminMembers.map(adaptMockMember);
   const rows = await query<Member>('SELECT * FROM members ORDER BY created_at DESC');
   return rows;
 }
 
 export async function getMembersReferredBy(adminName: string, adminEmail: string): Promise<Member[]> {
-  if (!isDbConfigured()) return [];
   return query<Member>(
     `SELECT m.*
      FROM members m
@@ -63,27 +38,14 @@ export async function getMembersReferredBy(adminName: string, adminEmail: string
 }
 
 export async function getMemberById(id: string): Promise<Member | null> {
-  if (!isDbConfigured()) {
-    const m = adminMembers.find((x) => x.id === id);
-    return m ? adaptMockMember(m) : null;
-  }
   return queryOne<Member>('SELECT * FROM members WHERE id = $1', [id]);
 }
 
 export async function getMemberByEmail(email: string): Promise<Member | null> {
-  if (!isDbConfigured()) {
-    const m = adminMembers.find((x) => x.email.toLowerCase() === email.toLowerCase());
-    return m ? adaptMockMember(m) : null;
-  }
   return queryOne<Member>('SELECT * FROM members WHERE LOWER(email) = LOWER($1)', [email]);
 }
 
 export async function getTeamMembers(sponsorId: string): Promise<Member[]> {
-  if (!isDbConfigured()) {
-    return adminMembers
-      .filter((m) => m.sponsor?.toLowerCase().includes(sponsorId.toLowerCase()) || m.id !== sponsorId)
-      .map(adaptMockMember);
-  }
   return query<Member>('SELECT * FROM members WHERE sponsor_id = $1 ORDER BY joining_date DESC', [sponsorId]);
 }
 
