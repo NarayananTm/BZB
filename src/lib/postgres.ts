@@ -12,7 +12,11 @@ export interface UserRecord {
   createdDate: string;
 }
 
-let pool: PgPool | null = null;
+const globalForPostgres = globalThis as typeof globalThis & {
+  bzbPostgresPool?: PgPool;
+};
+
+let pool: PgPool | null = globalForPostgres.bzbPostgresPool ?? null;
 
 export function isDbConfigured(): boolean {
   const host = process.env.DB_HOST || "pg-18c96d3-narayanan2600-6de6.h.aivencloud.com";
@@ -64,10 +68,14 @@ export function getPool(): PgPool {
           rejectUnauthorized: false,
         },
 
-    max: 10,
-    idleTimeoutMillis: 30000,
+    // Keep the per-instance footprint small in serverless deployments.
+    max: Math.max(1, Number(process.env.DB_POOL_MAX || 1)),
+    idleTimeoutMillis: 10000,
     connectionTimeoutMillis: 10000,
+    allowExitOnIdle: true,
   });
+
+  globalForPostgres.bzbPostgresPool = pool;
 
   return pool;
   
