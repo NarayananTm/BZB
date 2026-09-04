@@ -6,8 +6,6 @@ import { getTopupsByMember } from '@/services/topupService';
 import { getWithdrawalsByMember } from '@/services/withdrawalService';
 import { getPayoutsByMember } from '@/services/payoutService';
 import ProfileInteractive from '@/components/admin/ProfileInteractive';
-import AdminProfileTabs from '@/components/admin/AdminProfileTabs';
-import DashboardHeader from '@/components/admin/DashboardHeader';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
 
@@ -28,19 +26,6 @@ export default async function AdminProfilePage() {
   return (
     <AdminLayout title="Profile">
       <div className="space-y-4 mt-2">
-        <section className="">
-          <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <DashboardHeader userName={member?.name} />
-                <div>
-                  <div className="mt-2 text-sm text-slate-500">{member?.id} <a className="ml-2 text-slate-500" href="#">↗</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <AdminProfileTabs />
         <ProfileInteractive
           referrals={referrals}
           earnings={earnings}
