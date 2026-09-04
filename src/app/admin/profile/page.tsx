@@ -6,6 +6,7 @@ import { getTopupsByMember } from '@/services/topupService';
 import { getWithdrawalsByMember } from '@/services/withdrawalService';
 import { getPayoutsByMember } from '@/services/payoutService';
 import ProfileInteractive from '@/components/admin/ProfileInteractive';
+import AdminProfileTabs from '@/components/admin/AdminProfileTabs';
 import DashboardHeader from '@/components/admin/DashboardHeader';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
@@ -39,6 +40,7 @@ export default async function AdminProfilePage() {
             </div>
           </div>
         </section>
+        <AdminProfileTabs />
         <ProfileInteractive
           referrals={referrals}
           earnings={earnings}

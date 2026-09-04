@@ -5,7 +5,52 @@ import { getMemberProfile, updateMemberProfile, getPool } from '@/lib/postgres';
 export async function GET(request: NextRequest) {
   const admin = getAdminFromRequest(request);
   if (!admin) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
-  return NextResponse.json({ success: true, profile: await getMemberProfile(admin.id?.toString()) });
+  
+  try {
+    const profile = await getMemberProfile(admin.id?.toString());
+    
+    // If profile exists, return it with email and mobile auto-populated from admin session
+    if (profile) {
+      return NextResponse.json({ 
+        success: true, 
+        profile: {
+          ...profile,
+          email: profile.email || admin.email, // Auto-populate email from session if not in profile
+          mobile: profile.mobile || admin.mobile // Auto-populate mobile if available
+        }
+      });
+    }
+    
+    // If no profile exists, return an empty profile with email pre-filled
+    return NextResponse.json({ 
+      success: true, 
+      profile: {
+        id: admin.id?.toString() || '',
+        name: admin.name || '',
+        email: admin.email || '', // Pre-populate with admin email
+        mobile: admin.mobile || '', // Pre-populate if available
+        avatar: null,
+        dateOfBirth: null,
+        gender: null,
+        address: null,
+        district: null,
+        pincode: null,
+        state: null,
+        nomineeName: null,
+        nomineeRelation: null,
+        bankName: null,
+        accountNumber: null,
+        accountHolder: null,
+        branch: null,
+        ifscCode: null,
+        pan: null,
+        upiId: null,
+      }
+    });
+  } catch (error) {
+    console.error('[admin/profile GET]', error);
+    return NextResponse.json({ success: false, message: 'Unable to fetch profile' }, { status: 500 });
+  }
 }
 
 export async function POST(request: NextRequest) {
