@@ -20,7 +20,14 @@ export async function login(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
     }
 
-    const token = signToken({ id: admin.id, email: admin.email, name: admin.username, role: admin.role } as never);
+    const token = signToken({ 
+      id: admin.id, 
+      email: admin.email, 
+      name: admin.username, 
+      role: admin.role,
+      mobile: admin.mobile || '',
+      joining_date: admin.created_at || new Date().toISOString()
+    } as never);
 
     await createAuditLog({
       id: generateUserId(),
