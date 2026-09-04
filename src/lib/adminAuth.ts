@@ -7,6 +7,8 @@ export interface AdminTokenPayload {
   email: string;
   name: string;
   role: string;
+  mobile: string;
+  joining_date: string;
 }
 
 /** Extract and verify the admin JWT from the Authorization header or cookie. */

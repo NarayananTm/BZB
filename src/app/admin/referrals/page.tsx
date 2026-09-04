@@ -15,10 +15,14 @@ export default async function AdminReferralsPage() {
   const session = await getAdminSessionUser();
   const me = session?.email ? await getMemberByEmail(session.email) : null;
   const member = me;
-  const referrals = member ? await getReferralsBySponsor(member.id) : [];
-  const progress = member ? Math.min(100, Math.round((referrals.length / 9) * 100)) : 0;
   const userId = member?.id || session?.id?.toString() || '';
+  const referrals = userId ? await getReferralsBySponsor(userId) : [];
+  const progress = referrals ? Math.min(100, Math.round((referrals.length / 9) * 100)) : 0;
+  
   const displayName = member?.name || session?.name || 'User';
+  const mobile = member?.mobile || session?.mobile ;
+  const rawDate = member?.joining_date || session?.joining_date;
+  const joinDate = rawDate ? new Date(rawDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) : undefined;
 
   return (
     <AdminLayout title="Referrals">
@@ -30,16 +34,16 @@ export default async function AdminReferralsPage() {
         </section> */}
 
         {/* User Referral Share Card */}
-        <section className="mb-6">
+        {/* <section className="mb-6">
           {member && (
             <UserReferralCard
               userId={userId}
               userName={displayName}
-              joinDate={me?.joining_date}
-              mobile={me?.mobile}
+              joinDate={joinDate}
+              mobile={mobile}
             />
           )}
-        </section>
+        </section> */}
 
         <section className="rounded-[32px] p-6">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
@@ -68,8 +72,8 @@ export default async function AdminReferralsPage() {
           <div>
             <SponsorReferralCard
               sponsor={me?.sponsor_name ?? undefined}
-              mobile={me?.mobile ?? member?.mobile}
-              joinDate={me?.joining_date}
+              mobile={mobile}
+              joinDate={joinDate}
               memberId={userId}
               memberName={displayName}
             />
