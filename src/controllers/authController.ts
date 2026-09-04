@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
-import { validateAdminCredentials, createAdmin, getAllAdmins } from '@/services/adminUserService';
+import { validateAdminCredentials, createAdmin, getAllAdmins, findAdminByUsername, findAdminByEmail } from '@/services/adminUserService';
 import { signToken } from '@/lib/jwt';
-import { createAuditLog, generateAuditId } from '@/services/auditLogService';
+import { createAuditLog } from '@/services/auditLogService';
+import { generateMemberId } from '@/lib/idGenerator';
+
+
 
 export async function login(request: NextRequest) {
   try {
@@ -20,7 +23,7 @@ export async function login(request: NextRequest) {
     const token = signToken({ id: admin.id, email: admin.email, name: admin.username, role: admin.role } as never);
 
     await createAuditLog({
-      id: generateAuditId(),
+      id: generateMemberId(),
       user_name: admin.username,
       action: 'Admin login',
       target: 'Admin Panel',
@@ -77,6 +80,19 @@ export async function registerAdmin(request: NextRequest) {
     if (!body.username || !body.email || !body.password) {
       return NextResponse.json({ success: false, message: 'username, email and password are required' }, { status: 400 });
     }
+
+    // Check if username already exists
+    const existingByUsername = await findAdminByUsername(body.username);
+    if (existingByUsername) {
+      return NextResponse.json({ success: false, message: 'Username already exists' }, { status: 409 });
+    }
+
+    // Check if email already exists
+    const existingByEmail = await findAdminByEmail(body.email);
+    if (existingByEmail) {
+      return NextResponse.json({ success: false, message: 'Email already exists' }, { status: 409 });
+    }
+
     const admin = await createAdmin(body);
     return NextResponse.json({ success: true, data: admin }, { status: 201 });
   } catch (err) {

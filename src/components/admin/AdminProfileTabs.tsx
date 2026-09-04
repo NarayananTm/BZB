@@ -55,7 +55,16 @@ export default function AdminProfileTabs() {
 
   const saveProfile = async () => {
     setMessage('Saving...');
-    const response = await fetch('/api/admin/profile', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(profile) });
+    let response
+    if(profile.id !==''){
+
+     response = await fetch('/api/admin/profile', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(profile) });
+
+    }else{
+
+     response = await fetch('/api/admin/profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(profile) });
+
+    }
     const data = await response.json();
     setMessage(response.ok ? 'Profile updated successfully' : data.message || 'Unable to update profile');
     if (response.ok && data.profile) setProfile({ ...emptyProfile, ...data.profile });
@@ -149,18 +158,26 @@ export default function AdminProfileTabs() {
 
         <div>
           {/* {message && <p className="mb-3 text-sm text-slate-500">{message}</p>} */}
-          {message && <p className="mb-3 text-sm text-slate-500">{}</p>}
+          {message && <p className="mb-3 text-sm text-slate-500">{message}</p>}
           {tab === 'edit' && <div className="grid grid-cols-3 gap-6">
             <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] bg-white p-6">
-              <h3 className="text-lg font-semibold">Profile Details</h3><p className="text-sm text-slate-500">{profile.name} · {profile.mobile}</p>
+              <h3 className="text-lg font-semibold">Profile Details</h3><p className="text-sm text-slate-500">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p>
               <div className="mt-3 grid grid-cols-2 gap-3">
+                {textInput('Full Name', 'name')}
+                {textInput('Mobile No', 'mobile')}
+                {textInput('Email ID', 'email', 'email')}
                 {textInput('Date of Birth', 'dateOfBirth', 'date')}
                 <div><label className="text-xs text-slate-500">Gender</label><select value={profile.gender || ''} onChange={(event) => updateField('gender', event.target.value)} className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-                {textInput('Address', 'address')}{textInput('District', 'district')}{textInput('Pincode', 'pincode')}{textInput('State', 'state')}{textInput('Email ID', 'email', 'email')}{textInput('Nominee Name', 'nomineeName')}<div className="col-span-2">{textInput('Nominee Relation', 'nomineeRelation')}</div>
+                {textInput('Address', 'address')}
+                {textInput('District', 'district')}
+                {textInput('State', 'state')}
+                {textInput('Pincode', 'pincode')}
+                {textInput('Nominee Name', 'nomineeName')}
+                <div className="col-span-1">{textInput('Nominee Relation', 'nomineeRelation')}</div>
               </div>
-              <button onClick={saveProfile} disabled={!profile.id} className="mt-4 rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update</button>
+              <button onClick={saveProfile}  className="mt-4 rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update</button>
             </div>
-            <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6"><h3 className="text-lg font-semibold">Bank Details</h3><p className="text-sm text-slate-500">Fill your bank account details</p><div className="mt-2 space-y-3">{textInput('Name of Bank', 'bankName')}{textInput('Bank Account No', 'accountNumber')}{textInput('Account Holder Name', 'accountHolder')}{textInput('Branch', 'branch')}{textInput('IFSC Code', 'ifscCode')}{textInput('PAN', 'pan')}{textInput('GPAY Number | UPI ID', 'upiId')}<button onClick={saveProfile} disabled={!profile.id} className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update Bank</button></div></div>
+            <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6"><h3 className="text-lg font-semibold">Bank Details</h3><p className="text-sm text-slate-500">Fill your bank account details</p><div className="mt-2 space-y-3">{textInput('Name of Bank', 'bankName')}{textInput('Bank Account No', 'accountNumber')}{textInput('Account Holder Name', 'accountHolder')}{textInput('Branch', 'branch')}{textInput('IFSC Code', 'ifscCode')}{textInput('PAN', 'pan')}{textInput('GPAY Number | UPI ID', 'upiId')}<button onClick={saveProfile} className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update Bank</button></div></div>
           </div>}
           {tab === 'password' && <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
             <h3 className="text-lg font-semibold">Change Password</h3>

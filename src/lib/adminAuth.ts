@@ -10,7 +10,7 @@ export interface AdminTokenPayload {
 }
 
 /** Extract and verify the admin JWT from the Authorization header or cookie. */
-export function getAdminFromRequest(request: NextRequest): AdminTokenPayload | null {
+export function   getAdminFromRequest(request: NextRequest): AdminTokenPayload | null {
   const authHeader = request.headers.get('authorization');
   const token =
     (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null) ??

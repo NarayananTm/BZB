@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { hashPassword, readUsers, registerUser } from '@/lib/postgres';
+import { createMember } from '@/services/memberService';
+import { generateMemberId } from '@/lib/idGenerator';
 
 export async function POST(request: Request) {
   try {
@@ -32,12 +34,39 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Mobile already exists' }, { status: 409 });
     }
 
+    const memberId = generateMemberId();
     await registerUser({
+      id: memberId,
       fullName,
       email,
       mobile,
       password: hashPassword(password),
     });
+
+    // Create member entry with today's joining date
+    const joiningDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
+    
+    try {
+      await createMember({
+        id: memberId,
+        name: fullName,
+        email,
+        mobile,
+        sponsor_id: null,
+        sponsor_name: null,
+        level_name: 'Level 1',
+        status: 'Pending',
+        joining_date: joiningDate,
+        total_earnings: 0,
+        wallet_balance: 0,
+        referral_count: 0,
+        team_count: 0,
+        avatar: null,
+      });
+    } catch (memberError) {
+      console.error('Member creation error (non-critical):', memberError);
+      // Don't fail registration if member creation fails
+    }
 
     return NextResponse.json({ success: true, message: 'Registration Successful' });
   } catch (error) {

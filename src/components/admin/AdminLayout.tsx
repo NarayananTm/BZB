@@ -36,9 +36,9 @@ export default function AdminLayout({ children }: { children: ReactNode; title: 
               <div className="flex items-center gap-4">
                 <div className="inline-flex items-center rounded-full bg-black p-1 text-sm font-medium text-white shadow-sm">
                   <Link
-                    href="/admin"
-                    aria-current={linkActive(ROUTES.ADMIN) ? 'page' : undefined}
-                    className={`inline-flex items-center rounded-full px-5 py-3 ${linkActive(ROUTES.ADMIN) ? 'text-[#E5C500]' : 'text-white'}`}
+                    href="/admin/dashboard"
+                    aria-current={linkActive(ROUTES.ADMIN + '/dashboard') ? 'page' : undefined}
+                    className={`inline-flex items-center rounded-full px-5 py-3 ${linkActive(ROUTES.ADMIN + '/dashboard') ? 'text-[#E5C500]' : 'text-white'}`}
                   >
                     Dashboard
                   </Link>

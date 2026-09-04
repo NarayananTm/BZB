@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { Pool } from "pg";
 import type { Pool as PgPool, PoolClient } from 'pg';
 export interface UserRecord {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   mobile: string;
@@ -102,16 +102,16 @@ export async function findUserByEmailOrMobile(emailOrMobile: string): Promise<Us
   );
 }
 
-export async function registerUser(user: Omit<UserRecord, 'id' | 'createdDate'>): Promise<UserRecord> {
+export async function registerUser(user: Omit<UserRecord, 'createdDate'> & { id?: string | number }): Promise<UserRecord> {
   if (!isDbConfigured()) {
     throw new Error('Database is not configured');
   }
 
   const result = await getPool().query<UserRecord>(
-    'INSERT INTO users (full_name, email, mobile, password) VALUES ($1, $2, $3, $4) RETURNING id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate"',
-    [user.fullName, user.email, user.mobile, user.password]
+    'INSERT INTO users (id, full_name, email, mobile, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate"',
+    [user.id, user.fullName, user.email, user.mobile, user.password]
   );
-
+    
   return result.rows[0];
 }
 
@@ -184,13 +184,13 @@ const memberProfileSelect = `
   FROM members m
   LEFT JOIN member_profiles p ON p.member_id = m.id
   LEFT JOIN LATERAL (SELECT * FROM bank_accounts WHERE member_id = m.id ORDER BY is_primary DESC, id LIMIT 1) b ON TRUE
-  WHERE LOWER(m.email) = LOWER($1)
+  WHERE m.id = $1
   LIMIT 1`;
 
-export async function getMemberProfile(email: string): Promise<MemberProfile | null> {
+export async function getMemberProfile(id: string): Promise<MemberProfile | null> {
   if (!isDbConfigured()) return null;
   await ensureMemberProfilesTable();
-  return queryOne<MemberProfile>(memberProfileSelect, [email]);
+  return queryOne<MemberProfile>(memberProfileSelect, [id]);
 }
 
 export async function updateMemberProfile(profile: Partial<MemberProfile> & { id: string }) {
@@ -212,12 +212,12 @@ export async function updateMemberProfile(profile: Partial<MemberProfile> & { id
      pan = EXCLUDED.pan, upi_id = EXCLUDED.upi_id, updated_at = NOW()`,
     [`BANK-${profile.id}`, profile.id, profile.accountHolder ?? '', profile.bankName ?? '', profile.accountNumber ?? '', profile.ifscCode, profile.branch, profile.pan, profile.upiId],
   );
-  return queryOne<MemberProfile>(memberProfileSelect.replace('WHERE LOWER(m.email) = LOWER($1)', 'WHERE m.id = $1'), [profile.id]);
+  return queryOne<MemberProfile>(memberProfileSelect, [profile.id]);
 }
 
 export async function updateMemberAvatar(id: string, avatar: string) {
   await getPool().query('UPDATE members SET avatar = $1, updated_at = NOW() WHERE id = $2', [avatar, id]);
-  return queryOne<MemberProfile>(memberProfileSelect.replace('WHERE LOWER(m.email) = LOWER($1)', 'WHERE m.id = $1'), [id]);
+  return queryOne<MemberProfile>(memberProfileSelect, [id]);
 }
 
 export async function getMemberDocuments(memberId: string): Promise<MemberDocument[]> {

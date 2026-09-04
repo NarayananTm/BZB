@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
 
       if (!res.ok || !data.success) throw new Error(data.message ?? 'Login failed');
 
-      router.push('/admin');
+      router.push('/admin/dashboard');
       router.refresh();
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Login failed');
