@@ -36,6 +36,7 @@ export default async function AdminReferralsPage() {
               userId={userId}
               userName={displayName}
               joinDate={me?.joining_date}
+              mobile={me?.mobile}
             />
           )}
         </section>

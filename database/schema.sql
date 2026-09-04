@@ -6,7 +6,7 @@
 
 -- Users (registered members via website)
 CREATE TABLE IF NOT EXISTS users (
-  id          SERIAL PRIMARY KEY,
+  id          VARCHAR(50)  PRIMARY KEY,
   full_name   VARCHAR(255)  NOT NULL,
   email       VARCHAR(255)  NOT NULL UNIQUE,
   mobile      VARCHAR(20)   NOT NULL UNIQUE,
@@ -16,9 +16,10 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Admin users (back-office staff)
 CREATE TABLE IF NOT EXISTS admin_users (
-  id          SERIAL PRIMARY KEY,
+  id          VARCHAR(50)  PRIMARY KEY,
   username    VARCHAR(100)  NOT NULL UNIQUE,
   email       VARCHAR(255)  NOT NULL UNIQUE,
+  mobile      VARCHAR(20),
   password    VARCHAR(255)  NOT NULL,
   role        VARCHAR(50)   NOT NULL DEFAULT 'admin',  -- admin | superadmin
   is_active   BOOLEAN       NOT NULL DEFAULT TRUE,
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS levels (
 -- Members (MLM participants)
 CREATE TABLE IF NOT EXISTS members (
   id              VARCHAR(50)     PRIMARY KEY,              -- e.g. BZB9601381
-  user_id         INTEGER         REFERENCES users(id),
+  user_id         VARCHAR(50)     REFERENCES users(id),
   name            VARCHAR(255)    NOT NULL,
   email           VARCHAR(255)    NOT NULL,
   mobile          VARCHAR(20)     NOT NULL,

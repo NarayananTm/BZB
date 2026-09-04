@@ -9,6 +9,7 @@ export default function AdminRegisterPage() {
   const [form, setForm] = useState({
     username: '',
     email: '',
+    mobile: '',
     password: '',
     confirmPassword: '',
     role: 'admin',
@@ -45,6 +46,7 @@ export default function AdminRegisterPage() {
         body: JSON.stringify({
           username: form.username,
           email: form.email,
+          mobile: form.mobile,
           password: form.password,
           role: form.role,
         }),
@@ -55,7 +57,7 @@ export default function AdminRegisterPage() {
         throw new Error(data.message || 'Admin registration failed');
       }
 
-      setForm({ username: '', email: '', password: '', confirmPassword: '', role: 'admin' });
+      setForm({ username: '', email: '', mobile: '', password: '', confirmPassword: '', role: 'admin' });
       setSuccess(true);
       setMessage('Admin account created successfully');
       router.replace('/admin/login')
@@ -90,6 +92,10 @@ export default function AdminRegisterPage() {
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Email</label>
               <input name="email" type="email" value={form.email} onChange={handleChange} required autoComplete="email" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="admin@example.com" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Mobile Number</label>
+              <input name="mobile" type="tel" value={form.mobile} onChange={handleChange} required autoComplete="tel" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Enter mobile number" />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Role</label>

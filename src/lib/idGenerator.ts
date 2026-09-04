@@ -9,8 +9,8 @@ export function generateAuditId(): string {
   return `AL-${date}-${rand}`;
 }
 
-/** Generate Member/User ID: MBD-YYMMDD-XXX (e.g., MBD9601381) */
-export function generateMemberId(): string {
+/** Generate User ID: MBD-YYMMDD-XXX (e.g., MBD9601381) */
+export function generateUserId(): string {
   const now = new Date();
   const year = now.getFullYear().toString().slice(-2); // Last 2 digits (e.g., 26 for 2026)
   const month = String(now.getMonth() + 1).padStart(2, '0'); // 01-12
@@ -20,11 +20,11 @@ export function generateMemberId(): string {
 }
 
 /**
- * Parse a Member ID to extract components
+ * Parse a User ID to extract components
  * @param memberId e.g., "MBD9601381"
  * @returns Object with prefix, year, month, day, random
  */
-export function parseMemberId(memberId: string): {
+export function parseUserId(memberId: string): {
   prefix: string;
   year: string;
   month: string;
@@ -42,7 +42,7 @@ export function parseMemberId(memberId: string): {
   };
 }
 
-/** Validate Member ID format */
-export function isValidMemberId(memberId: string): boolean {
+/** Validate User ID format */
+export function isValidUserId(memberId: string): boolean {
   return /^MBD\d{7}$/.test(memberId);
 }

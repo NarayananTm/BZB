@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { hashPassword, readUsers, registerUser } from '@/lib/postgres';
-import { createMember } from '@/services/memberService';
-import { generateMemberId } from '@/lib/idGenerator';
+import { createMember, getMemberById, updateMember } from '@/services/memberService';
+import { generateUserId } from '@/lib/idGenerator';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { fullName, email, mobile, password, confirmPassword } = body;
+    const { fullName, email, mobile, password, confirmPassword, sponsor_id, sponsor_name } = body;
 
     if (!fullName || !email || !mobile || !password || !confirmPassword) {
       return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Mobile already exists' }, { status: 409 });
     }
 
-    const memberId = generateMemberId();
+    const memberId = generateUserId();
     await registerUser({
       id: memberId,
       fullName,
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       password: hashPassword(password),
     });
 
-    // Create member entry with today's joining date
+    // Create member entry with today's joining date and sponsor info
     const joiningDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
     
     try {
@@ -52,8 +52,8 @@ export async function POST(request: Request) {
         name: fullName,
         email,
         mobile,
-        sponsor_id: null,
-        sponsor_name: null,
+        sponsor_id: sponsor_id || null,
+        sponsor_name: sponsor_name || null,
         level_name: 'Level 1',
         status: 'Pending',
         joining_date: joiningDate,
@@ -63,6 +63,22 @@ export async function POST(request: Request) {
         team_count: 0,
         avatar: null,
       });
+
+      // Update sponsor's referral count and team count if sponsor exists
+      if (sponsor_id) {
+        try {
+          const sponsor = await getMemberById(sponsor_id);
+          if (sponsor) {
+            await updateMember(sponsor_id, {
+              referral_count: (sponsor.referral_count || 0) + 1,
+              team_count: (sponsor.team_count || 0) + 1,
+            });
+          }
+        } catch (sponsorError) {
+          console.error('Sponsor update error (non-critical):', sponsorError);
+          // Don't fail registration if sponsor update fails
+        }
+      }
     } catch (memberError) {
       console.error('Member creation error (non-critical):', memberError);
       // Don't fail registration if member creation fails

@@ -127,10 +127,17 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="mt-6 border-t border-white/10 pt-5 text-center text-sm text-slate-400">
-            Need a member account?{' '}
-            <Link href="/admin/register" className="font-semibold text-[#E5C500] hover:underline">
-              Register here
-            </Link>
+            <p>
+              Need a member account?{' '}
+              <Link href="/admin/register" className="font-semibold text-[#E5C500] hover:underline">
+                Register here
+              </Link>
+            </p>
+            <p className="mt-3">
+              <Link href="/admin/forgot-password" className="font-semibold text-[#E5C500] hover:underline">
+                Forgot Password?
+              </Link>
+            </p>
           </div>
         </div>
 

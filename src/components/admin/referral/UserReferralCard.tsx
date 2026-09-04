@@ -7,12 +7,14 @@ interface UserReferralCardProps {
   userId: string;
   userName: string;
   joinDate?: string;
+  mobile?: string;
 }
 
 export default function UserReferralCard({
   userId,
   userName,
   joinDate,
+  mobile,
 }: UserReferralCardProps) {
   const [copied, setCopied] = useState(false);
   const [siteOrigin, setSiteOrigin] = useState('https://bzbgroup.com');
@@ -102,10 +104,14 @@ export default function UserReferralCard({
       </div>
 
       {/* User Info */}
-      <div className="mb-6 grid grid-cols-2 gap-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
         <div className="rounded-[12px] bg-white/5 p-3">
           <p className="text-xs text-white/60 mb-1">Name</p>
           <p className="font-semibold text-white text-sm">{userName}</p>
+        </div>
+        <div className="rounded-[12px] bg-white/5 p-3">
+          <p className="text-xs text-white/60 mb-1">Mobile</p>
+          <p className="font-semibold text-white text-sm">{mobile || 'N/A'}</p>
         </div>
         <div className="rounded-[12px] bg-white/5 p-3">
           <p className="text-xs text-white/60 mb-1">Join Date</p>

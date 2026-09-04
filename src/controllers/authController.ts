@@ -3,7 +3,7 @@ import { requireAdmin } from '@/lib/adminAuth';
 import { validateAdminCredentials, createAdmin, getAllAdmins, findAdminByUsername, findAdminByEmail } from '@/services/adminUserService';
 import { signToken } from '@/lib/jwt';
 import { createAuditLog } from '@/services/auditLogService';
-import { generateMemberId } from '@/lib/idGenerator';
+import { generateUserId } from '@/lib/idGenerator';
 
 
 
@@ -23,7 +23,7 @@ export async function login(request: NextRequest) {
     const token = signToken({ id: admin.id, email: admin.email, name: admin.username, role: admin.role } as never);
 
     await createAuditLog({
-      id: generateMemberId(),
+      id: generateUserId(),
       user_name: admin.username,
       action: 'Admin login',
       target: 'Admin Panel',
@@ -93,7 +93,13 @@ export async function registerAdmin(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Email already exists' }, { status: 409 });
     }
 
-    const admin = await createAdmin(body);
+    const admin = await createAdmin({
+      username: body.username,
+      email: body.email,
+      mobile: body.mobile,
+      password: body.password,
+      role: body.role,
+    });
     return NextResponse.json({ success: true, data: admin }, { status: 201 });
   } catch (err) {
     console.error('[authController.registerAdmin]', err);

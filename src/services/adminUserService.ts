@@ -1,10 +1,11 @@
 import { query, queryOne } from '@/lib/postgres';
 import bcrypt from 'bcryptjs';
-
+import { generateUserId } from '@/lib/idGenerator';
 export interface AdminUser {
   id: number;
   username: string;
   email: string;
+  mobile?: string;
   password: string;
   role: string;
   is_active: boolean;
@@ -46,7 +47,7 @@ export async function validateAdminCredentials(
 
 export async function getAllAdmins(): Promise<Omit<AdminUser, 'password'>[]> {
   const rows = await query<AdminUser>(
-    'SELECT id, username, email, role, is_active, created_at, updated_at FROM admin_users ORDER BY id',
+    'SELECT id, username, email, mobile, role, is_active, created_at, updated_at FROM admin_users ORDER BY id',
   );
   return rows;
 }
@@ -54,15 +55,16 @@ export async function getAllAdmins(): Promise<Omit<AdminUser, 'password'>[]> {
 export async function createAdmin(data: {
   username: string;
   email: string;
+  mobile?: string;
   password: string;
   role?: string;
 }): Promise<Omit<AdminUser, 'password'>> {
   const hashed = await bcrypt.hash(data.password, 10);
   const rows = await query<AdminUser>(
-    `INSERT INTO admin_users (username, email, password, role)
-     VALUES ($1,$2,$3,$4)
-     RETURNING id, username, email, role, is_active, created_at, updated_at`,
-    [data.username, data.email, hashed, data.role ?? 'admin'],
+    `INSERT INTO admin_users (id, username, email, mobile, password, role)
+     VALUES ($1,$2,$3,$4,$5,$6)
+     RETURNING id, username, email, mobile, role, is_active, created_at, updated_at`,
+    [generateUserId(), data.username, data.email, data.mobile || null, hashed, data.role ?? 'admin'],
   );
   return rows[0];
 }
