@@ -30,7 +30,6 @@ export default function AdminLayout({ children }: { children: ReactNode; title: 
             <div className="flex items-end justify-between gap-6">
               <div>
                 <h1 className="text-[30px] font-semibold text-[#111111]"></h1>
-
               </div>
 
               <div className="flex items-center gap-4">
