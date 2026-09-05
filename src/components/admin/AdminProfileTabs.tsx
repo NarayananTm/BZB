@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Check } from 'lucide-react';
+import { Check, Home, User, Lock, FileText, ChevronDown, Building2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 type Profile = {
@@ -33,6 +33,7 @@ const emptyProfile: Profile = {
 export default function AdminProfileTabs() {
   const [tab, setTab] = useState<'edit' | 'password' | 'kyc'>('edit');
   const [profile, setProfile] = useState<Profile>(emptyProfile);
+  const [expandedSections, setExpandedSections] = useState({ profile: true, bank: false });
   const [message, setMessage] = useState('Loading profile...');
   const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
   const [passwordMessage, setPasswordMessage] = useState('');
@@ -138,90 +139,360 @@ export default function AdminProfileTabs() {
   }, [tab]);
 
   return (
-    <div className="mx-0 px-1 py-1">
-      <div className="grid grid-cols-[260px_1fr] gap-6">
-        <div className="space-y-3">
-          <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-4">
-            <ul className="text-sm text-slate-600">
-              <li className="py-3 font-semibold text-[#E5C500]">My Home</li>
-              {(['edit', 'password', 'kyc'] as const).map((item) => <li key={item} className={`py-3 ${tab === item ? 'font-semibold text-slate-900' : ''}`}><button className="w-full text-left" onClick={() => setTab(item)}>{item === 'edit' ? 'Edit Profile' : item === 'password' ? 'Change Password' : 'KYC Upload'}</button></li>)}
-            </ul>
-          </div>
-          <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-4">
-            <div className="overflow-hidden rounded-md">
-              <Image src={profile.avatar || '/images/admin/Mask_group.svg'} alt="Profile avatar" width={400} height={300} className="w-full object-cover" unoptimized />
+    <div className="w-full bg-white">
+      {/* Mobile & Tablet Layout */}
+      <div className="lg:hidden">
+        {/* Mobile Tabs */}
+        <div className="border-b border-[#EFEFEF] px-3 sm:px-4">
+          <ul className="flex gap-4 sm:gap-6 overflow-x-auto text-xs sm:text-sm">
+            <li className="py-3 sm:py-4 border-b-2 border-b-[#E5C500] font-semibold text-slate-900 whitespace-nowrap">
+              <button className="flex flex-col items-center gap-1 pb-3 sm:pb-4">
+                <Home size={20} className="text-[#E5C500]" />
+                <span>My Home</span>
+              </button>
+            </li>
+            {(['edit', 'password', 'kyc'] as const).map((item) => {
+              const icons = {
+                edit: <User size={20} />,
+                password: <Lock size={20} />,
+                kyc: <FileText size={20} />,
+              };
+              return (
+                <li key={item} className={`py-3 sm:py-4 border-b-2 whitespace-nowrap ${tab === item ? 'border-b-[#E5C500] font-semibold text-slate-900' : 'border-b-transparent text-slate-500'}`}>
+                  <button className="flex flex-col items-center gap-1 pb-3 sm:pb-4 text-left" onClick={() => setTab(item)}>
+                    {icons[item]}
+                    <span className="text-[10px] sm:text-xs">{item === 'edit' ? 'Edit Profile' : item === 'password' ? 'Change Password' : 'KYC Upload'}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* Profile Photo Section */}
+        <div className="px-3 sm:px-4 py-4 sm:py-6">
+          <div className="rounded-lg sm:rounded-[12px] border border-[#EFEFEF] bg-white p-3 sm:p-4">
+            <h3 className="font-semibold text-slate-900">Profile Photo</h3>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">Upload your profile picture</p>
+            <div className="mt-3 overflow-hidden rounded-lg">
+              <Image src={profile.avatar || '/images/admin/Mask_group.svg'} alt="Profile avatar" width={400} height={300} className="w-full h-40 sm:h-48 object-cover" unoptimized />
             </div>
             <input ref={fileRef} type="file" accept="image/*" onChange={uploadAvatar} className="hidden" />
-            <button onClick={() => fileRef.current?.click()} className="mt-4 w-full rounded-lg bg-[#E5C500] px-6 py-3 font-semibold text-slate-900">Upload</button>
+            <button onClick={() => fileRef.current?.click()} className="mt-3 w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 font-semibold text-slate-900 text-sm sm:text-base hover:bg-[#D4B300] transition-colors">
+              Upload
+            </button>
+            {message && <p className="mt-2 text-xs sm:text-sm text-slate-500">{message}</p>}
           </div>
         </div>
 
-        <div>
-          {/* {message && <p className="mb-3 text-sm text-slate-500">{message}</p>} */}
-          {message && <p className="mb-3 text-sm text-slate-500">{message}</p>}
-          {tab === 'edit' && <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] bg-white p-6">
-              <h3 className="text-lg font-semibold">Profile Details</h3><p className="text-sm text-slate-500">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {textInput('Full Name', 'name')}
-                {textInput('Mobile No', 'mobile')}
-                {textInput('Email ID', 'email', 'email')}
-                {textInput('Date of Birth', 'dateOfBirth', 'date')}
-                <div><label className="text-xs text-slate-500">Gender</label><select value={profile.gender || ''} onChange={(event) => updateField('gender', event.target.value)} className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-                {textInput('Address', 'address')}
-                {textInput('District', 'district')}
-                {textInput('State', 'state')}
-                {textInput('Pincode', 'pincode')}
-                {textInput('Nominee Name', 'nomineeName')}
-                <div className="col-span-1">{textInput('Nominee Relation', 'nomineeRelation')}</div>
-              </div>
-              <button onClick={saveProfile}  className="mt-4 rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update</button>
-            </div>
-            <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6"><h3 className="text-lg font-semibold">Bank Details</h3><p className="text-sm text-slate-500">Fill your bank account details</p><div className="mt-2 space-y-3">{textInput('Name of Bank', 'bankName')}{textInput('Bank Account No', 'accountNumber')}{textInput('Account Holder Name', 'accountHolder')}{textInput('Branch', 'branch')}{textInput('IFSC Code', 'ifscCode')}{textInput('PAN', 'pan')}{textInput('GPAY Number | UPI ID', 'upiId')}<button onClick={saveProfile} className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update Bank</button></div></div>
-          </div>}
-          {tab === 'password' && <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
-            <h3 className="text-lg font-semibold">Change Password</h3>
-            <p className="mt-1 text-sm text-slate-500">Change Account Login Password</p>
-            <div className="mt-5 max-w-3xl space-y-4">
-              {([
-                ['Old Password', 'current'],
-                ['New Password', 'next'],
-                ['Confirm Password', 'confirm'],
-              ] as const).map(([label, field]) => (
-                <div key={field}>
-                  <label className="text-sm text-slate-500">{label}</label>
-                  <input
-                    type="password"
-                    value={passwords[field]}
-                    onChange={(event) => setPasswords((current) => ({ ...current, [field]: event.target.value }))}
-                    className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] px-4 py-2 text-sm"
-                    placeholder={label}
-                  />
+        {/* Edit Profile Tab */}
+        {tab === 'edit' && (
+          <div className="px-3 sm:px-4 pb-4 sm:pb-6 space-y-4 sm:space-y-6">
+            {/* Profile Details */}
+            <div className="rounded-lg sm:rounded-[12px] border border-[#EFEFEF] bg-white p-3 sm:p-4">
+              <button
+                onClick={() => setExpandedSections(prev => ({ ...prev, profile: !prev.profile }))}
+                className="w-full flex items-center justify-between gap-2 mb-3"
+              >
+                <div className="flex items-center gap-2">
+                  <User size={18} className="text-[#E5C500]" />
+                  <h3 className="font-semibold text-slate-900 text-base sm:text-lg">Profile Details</h3>
                 </div>
-              ))}
-              {passwordMessage && <p className="text-sm text-slate-500">{passwordMessage}</p>}
-              <button onClick={updatePassword} className="rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
+                <ChevronDown size={18} className={`text-slate-400 transition-transform ${expandedSections.profile ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedSections.profile && (
+              <>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p>
+              <div className="mt-4 space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('Full Name', 'name')}
+                  {textInput('Mobile No', 'mobile')}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('Email ID', 'email', 'email')}
+                  {textInput('Date of Birth', 'dateOfBirth', 'date')}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="text-xs sm:text-sm text-slate-500">Gender</label>
+                    <select value={profile.gender || ''} onChange={(event) => updateField('gender', event.target.value)} className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-2 sm:p-3 text-xs sm:text-sm">
+                      <option value="">Select gender</option>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  {textInput('Address', 'address')}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('District', 'district')}
+                  {textInput('State', 'state')}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('Pincode', 'pincode')}
+                  {textInput('Nominee Name', 'nomineeName')}
+                </div>
+                <div className="grid grid-cols-1">
+                  {textInput('Nominee Relation', 'nomineeRelation')}
+                </div>
+              </div>
+              <button onClick={saveProfile} className="mt-4 w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 text-sm sm:text-base font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors">
+                Update
+              </button>
+              </>
+              )}
+
+            {/* Bank Details */}
+            <div className="rounded-lg sm:rounded-[12px] border border-[#EFEFEF] bg-white p-3 sm:p-4">
+              <button
+                onClick={() => setExpandedSections(prev => ({ ...prev, bank: !prev.bank }))}
+                className="w-full flex items-center justify-between gap-2 mb-3"
+              >
+                <div className="flex items-center gap-2">
+                  <Building2 size={18} className="text-[#E5C500]" />
+                  <h3 className="font-semibold text-slate-900 text-base sm:text-lg">Bank Details</h3>
+                </div>
+                <ChevronDown size={18} className={`text-slate-400 transition-transform ${expandedSections.bank ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedSections.bank && (
+              <>
+              <p className="text-xs sm:text-sm text-slate-500 mt-3">Fill your bank account details</p>
+              <div className="mt-4 space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('Name of Bank', 'bankName')}
+                  {textInput('Bank Account No', 'accountNumber')}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('Account Holder Name', 'accountHolder')}
+                  {textInput('Branch', 'branch')}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {textInput('IFSC Code', 'ifscCode')}
+                  {textInput('PAN', 'pan')}
+                </div>
+                <div className="grid grid-cols-1">
+                  {textInput('GPAY Number | UPI ID', 'upiId')}
+                </div>
+              </div>
+              <button onClick={saveProfile} className="mt-4 w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 text-sm sm:text-base font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors">
+                Update Bank
+              </button>
+              </>
+              )}
             </div>
-          </div>}
-          {tab === 'kyc' && <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
-            <div className="mx-auto max-w-4xl text-center"><h3 className="text-lg font-semibold">Submit Documents</h3><p className="mt-1 text-xs text-slate-500">We need to verify your information. Please submit the documents below to process your application.</p></div>
-            <div className="mx-auto mt-4 grid max-w-4xl grid-cols-1 gap-3 md:grid-cols-2">
-              {kycDocuments.map((documentType) => {
-                const document = documents.find((item) => item.documentType === documentType);
-                return <button key={documentType} onClick={() => openDocumentUpload(documentType)} className="flex min-h-[66px] items-center justify-between rounded-[10px] border border-[#F3F3F3] bg-[#FAFAFA] px-5 text-left">
-                  <span><span className="block text-xs font-medium text-slate-800">{documentType}</span><span className="mt-1 block text-[11px] text-slate-500">{document?.isVerified ? 'Verified' : document ? 'Uploaded - pending verification' : 'Verify'}</span></span>
-                  <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${document ? 'border-[#E5C500] bg-[#E5C500] text-white' : 'border-[#E5C500]'}`} aria-label={document ? 'Uploaded' : 'Not uploaded'}>
-                    {document && <Check size={13} strokeWidth={3} />}
-                  </span>
-                </button>;
-              })}
+          </div>
+          </div>
+        )}
+
+        {/* Password Tab */}
+        {tab === 'password' && (
+          <div className="px-3 sm:px-4 pb-4 sm:pb-6">
+            <div className="rounded-lg sm:rounded-[12px] border border-[#EFEFEF] bg-white p-3 sm:p-4">
+              <h3 className="font-semibold text-slate-900 text-base sm:text-lg">Change Password</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">Change Account Login Password</p>
+              <div className="mt-4 space-y-3 sm:space-y-4">
+                {([
+                  ['Old Password', 'current'],
+                  ['New Password', 'next'],
+                  ['Confirm Password', 'confirm'],
+                ] as const).map(([label, field]) => (
+                  <div key={field}>
+                    <label className="text-xs sm:text-sm text-slate-500">{label}</label>
+                    <input
+                      type="password"
+                      value={passwords[field]}
+                      onChange={(event) => setPasswords((current) => ({ ...current, [field]: event.target.value }))}
+                      className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-2 sm:p-3 text-xs sm:text-sm"
+                      placeholder={label}
+                    />
+                  </div>
+                ))}
+                {passwordMessage && <p className="text-xs sm:text-sm text-slate-500">{passwordMessage}</p>}
+                <button onClick={updatePassword} className="w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 text-sm sm:text-base font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors">
+                  Update Password
+                </button>
+              </div>
             </div>
-            {kycMessage && <p className="mx-auto mt-4 max-w-4xl text-sm text-slate-500">{kycMessage}</p>}
-            <button onClick={() => setKycMessage('Documents are saved automatically after upload.')} className="mx-auto mt-4 block rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
-            {selectedDocument && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" role="dialog" aria-modal="true" aria-label={`Upload ${selectedDocument}`}>
-              <div className="w-full max-w-xl rounded-[10px] bg-white p-8 shadow-xl"><h3 className="text-center text-xl font-semibold">File Upload</h3><p className="mt-2 text-center text-sm text-slate-500">{selectedDocument}</p><input ref={documentFileRef} type="file" accept="image/*,.pdf" onChange={uploadDocument} className="hidden" /><button onClick={() => documentFileRef.current?.click()} className="mt-7 flex h-36 w-full flex-col items-center justify-center rounded-md border border-dashed border-slate-300 text-sm text-slate-600">Choose a file to upload</button><div className="mt-5 flex justify-center gap-3"><button onClick={() => setSelectedDocument(null)} className="rounded-md border border-slate-200 px-5 py-2 text-sm">Cancel</button><button onClick={() => documentFileRef.current?.click()} className="rounded-md bg-[#E5C500] px-8 py-2 text-sm font-semibold text-white">Browse</button></div></div>
+          </div>
+        )}
+
+        {/* KYC Tab */}
+        {tab === 'kyc' && (
+          <div className="px-3 sm:px-4 pb-4 sm:pb-6">
+            <div className="rounded-lg sm:rounded-[12px] border border-[#EFEFEF] bg-white p-3 sm:p-4">
+              <h3 className="font-semibold text-slate-900 text-base sm:text-lg text-center">Submit Documents</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 text-center">We need to verify your information. Please submit the documents below.</p>
+              <div className="mt-4 space-y-2 sm:space-y-3">
+                {kycDocuments.map((documentType) => {
+                  const document = documents.find((item) => item.documentType === documentType);
+                  return (
+                    <button
+                      key={documentType}
+                      onClick={() => openDocumentUpload(documentType)}
+                      className="w-full flex items-center justify-between rounded-lg border border-[#F3F3F3] bg-[#FAFAFA] px-3 sm:px-4 py-2 sm:py-3 text-left hover:bg-slate-50 transition-colors"
+                    >
+                      <span>
+                        <span className="block text-xs sm:text-sm font-medium text-slate-800">{documentType}</span>
+                        <span className="mt-0.5 block text-[10px] sm:text-xs text-slate-500">
+                          {document?.isVerified ? 'Verified' : document ? 'Uploaded - pending verification' : 'Verify'}
+                        </span>
+                      </span>
+                      <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 flex-shrink-0 ${document ? 'border-[#E5C500] bg-[#E5C500] text-white' : 'border-[#E5C500]'}`}>
+                        {document && <Check size={13} strokeWidth={3} />}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {kycMessage && <p className="mt-4 text-xs sm:text-sm text-slate-500 text-center">{kycMessage}</p>}
+              <button
+                onClick={() => setKycMessage('Documents are saved automatically after upload.')}
+                className="mt-4 w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 text-sm sm:text-base font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* File Upload Modal */}
+        {selectedDocument && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" role="dialog" aria-modal="true" aria-label={`Upload ${selectedDocument}`}>
+            <div className="w-full max-w-xl rounded-[10px] bg-white p-4 sm:p-8 shadow-xl">
+              <h3 className="text-center text-lg sm:text-xl font-semibold">File Upload</h3>
+              <p className="mt-2 text-center text-xs sm:text-sm text-slate-500">{selectedDocument}</p>
+              <input ref={documentFileRef} type="file" accept="image/*,.pdf" onChange={uploadDocument} className="hidden" />
+              <button
+                onClick={() => documentFileRef.current?.click()}
+                className="mt-4 sm:mt-7 flex h-28 sm:h-36 w-full flex-col items-center justify-center rounded-md border border-dashed border-slate-300 text-xs sm:text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                Choose a file to upload
+              </button>
+              <div className="mt-4 sm:mt-5 flex justify-center gap-2 sm:gap-3">
+                <button onClick={() => setSelectedDocument(null)} className="rounded-md border border-slate-200 px-4 sm:px-5 py-2 text-xs sm:text-sm font-medium hover:bg-slate-50 transition-colors">
+                  Cancel
+                </button>
+                <button onClick={() => documentFileRef.current?.click()} className="rounded-md bg-[#E5C500] px-4 sm:px-8 py-2 text-xs sm:text-sm font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors">
+                  Browse
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:block mx-0 px-1 py-1">
+        <div className="grid grid-cols-[260px_1fr] gap-6">
+          <div className="space-y-3">
+            <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-4">
+              <ul className="text-sm text-slate-600">
+                <li className="py-3 font-semibold text-[#E5C500] flex items-center gap-2"><Home size={18} /> My Home</li>
+                {(['edit', 'password', 'kyc'] as const).map((item) => {
+                  const icons = {
+                    edit: <User size={18} />,
+                    password: <Lock size={18} />,
+                    kyc: <FileText size={18} />,
+                  };
+                  return <li key={item} className={`py-3 flex items-center gap-2 cursor-pointer ${tab === item ? 'font-semibold text-slate-900' : ''}`}><button className="w-full text-left flex items-center gap-2" onClick={() => setTab(item)}>{icons[item]}{item === 'edit' ? 'Edit Profile' : item === 'password' ? 'Change Password' : 'KYC Upload'}</button></li>;
+                })}
+              </ul>
+            </div>
+            <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-4">
+              <div className="overflow-hidden rounded-md">
+                <Image src={profile.avatar || '/images/admin/Mask_group.svg'} alt="Profile avatar" width={400} height={300} className="w-full object-cover" unoptimized />
+              </div>
+              <input ref={fileRef} type="file" accept="image/*" onChange={uploadAvatar} className="hidden" />
+              <button onClick={() => fileRef.current?.click()} className="mt-4 w-full rounded-lg bg-[#E5C500] px-6 py-3 font-semibold text-slate-900">Upload</button>
+            </div>
+          </div>
+
+          <div>
+            {message && <p className="mb-3 text-sm text-slate-500">{message}</p>}
+            {tab === 'edit' && <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] bg-white p-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <User size={20} className="text-[#E5C500]" />
+                  <h3 className="text-lg font-semibold">Profile Details</h3>
+                </div>
+                <p className="text-sm text-slate-500">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {textInput('Full Name', 'name')}
+                  {textInput('Mobile No', 'mobile')}
+                  {textInput('Email ID', 'email', 'email')}
+                  {textInput('Date of Birth', 'dateOfBirth', 'date')}
+                  <div><label className="text-xs text-slate-500">Gender</label><select value={profile.gender || ''} onChange={(event) => updateField('gender', event.target.value)} className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] p-3 text-sm"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+                  {textInput('Address', 'address')}
+                  {textInput('District', 'district')}
+                  {textInput('State', 'state')}
+                  {textInput('Pincode', 'pincode')}
+                  {textInput('Nominee Name', 'nomineeName')}
+                  <div className="col-span-1">{textInput('Nominee Relation', 'nomineeRelation')}</div>
+                </div>
+                <button onClick={saveProfile}  className="mt-4 rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update</button>
+              </div>
+              <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <Building2 size={20} className="text-[#E5C500]" />
+                  <h3 className="text-lg font-semibold">Bank Details</h3>
+                </div>
+                <p className="text-sm text-slate-500">Fill your bank account details</p>
+                <div className="mt-2 space-y-3">
+                  {textInput('Name of Bank', 'bankName')}
+                  {textInput('Bank Account No', 'accountNumber')}
+                  {textInput('Account Holder Name', 'accountHolder')}
+                  {textInput('Branch', 'branch')}
+                  {textInput('IFSC Code', 'ifscCode')}
+                  {textInput('PAN', 'pan')}
+                  {textInput('GPAY Number | UPI ID', 'upiId')}
+                  <button onClick={saveProfile} className="rounded-md bg-[#E5C500] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50">Update Bank</button>
+                </div>
+              </div>
             </div>}
-          </div>}
+            {tab === 'password' && <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
+              <h3 className="text-lg font-semibold">Change Password</h3>
+              <p className="mt-1 text-sm text-slate-500">Change Account Login Password</p>
+              <div className="mt-5 max-w-3xl space-y-4">
+                {([
+                  ['Old Password', 'current'],
+                  ['New Password', 'next'],
+                  ['Confirm Password', 'confirm'],
+                ] as const).map(([label, field]) => (
+                  <div key={field}>
+                    <label className="text-sm text-slate-500">{label}</label>
+                    <input
+                      type="password"
+                      value={passwords[field]}
+                      onChange={(event) => setPasswords((current) => ({ ...current, [field]: event.target.value }))}
+                      className="mt-2 w-full rounded-md border border-[#F0F0F0] bg-[#FAFAFA] px-4 py-2 text-sm"
+                      placeholder={label}
+                    />
+                  </div>
+                ))}
+                {passwordMessage && <p className="text-sm text-slate-500">{passwordMessage}</p>}
+                <button onClick={updatePassword} className="rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
+              </div>
+            </div>}
+            {tab === 'kyc' && <div className="rounded-[10px] border border-[#EFEFEF] bg-white p-6">
+              <div className="mx-auto max-w-4xl text-center"><h3 className="text-lg font-semibold">Submit Documents</h3><p className="mt-1 text-xs text-slate-500">We need to verify your information. Please submit the documents below to process your application.</p></div>
+              <div className="mx-auto mt-4 grid max-w-4xl grid-cols-1 gap-3 md:grid-cols-2">
+                {kycDocuments.map((documentType) => {
+                  const document = documents.find((item) => item.documentType === documentType);
+                  return <button key={documentType} onClick={() => openDocumentUpload(documentType)} className="flex min-h-[66px] items-center justify-between rounded-[10px] border border-[#F3F3F3] bg-[#FAFAFA] px-5 text-left">
+                    <span><span className="block text-xs font-medium text-slate-800">{documentType}</span><span className="mt-1 block text-[11px] text-slate-500">{document?.isVerified ? 'Verified' : document ? 'Uploaded - pending verification' : 'Verify'}</span></span>
+                    <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${document ? 'border-[#E5C500] bg-[#E5C500] text-white' : 'border-[#E5C500]'}`} aria-label={document ? 'Uploaded' : 'Not uploaded'}>
+                      {document && <Check size={13} strokeWidth={3} />}
+                    </span>
+                  </button>;
+                })}
+              </div>
+              {kycMessage && <p className="mx-auto mt-4 max-w-4xl text-sm text-slate-500">{kycMessage}</p>}
+              <button onClick={() => setKycMessage('Documents are saved automatically after upload.')} className="mx-auto mt-4 block rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
+              {selectedDocument && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" role="dialog" aria-modal="true" aria-label={`Upload ${selectedDocument}`}>
+                <div className="w-full max-w-xl rounded-[10px] bg-white p-8 shadow-xl"><h3 className="text-center text-xl font-semibold">File Upload</h3><p className="mt-2 text-center text-sm text-slate-500">{selectedDocument}</p><input ref={documentFileRef} type="file" accept="image/*,.pdf" onChange={uploadDocument} className="hidden" /><button onClick={() => documentFileRef.current?.click()} className="mt-7 flex h-36 w-full flex-col items-center justify-center rounded-md border border-dashed border-slate-300 text-sm text-slate-600">Choose a file to upload</button><div className="mt-5 flex justify-center gap-3"><button onClick={() => setSelectedDocument(null)} className="rounded-md border border-slate-200 px-5 py-2 text-sm">Cancel</button><button onClick={() => documentFileRef.current?.click()} className="rounded-md bg-[#E5C500] px-8 py-2 text-sm font-semibold text-white">Browse</button></div></div>
+              </div>}
+            </div>}
+          </div>
         </div>
       </div>
     </div>

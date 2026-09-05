@@ -84,9 +84,9 @@ export default function AdminLayout({ children }: { children: ReactNode; title: 
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black"
                   >
                     <User
-                      className={`h-5 w-5 transition-colors duration-200 
-                       ${linkActive(ROUTES.ADMIN + '/user-profile') ? "text-[#E5C500]" : "text-white"
-                        }`}
+                      className={`h-5 w-5 transition-colors duration-200 ${
+                        linkActive(ROUTES.ADMIN + '/user-profile') ? "text-[#E5C500]" : "text-white"
+                      }`}
                     />
                   </Link>
                 </div>

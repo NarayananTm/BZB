@@ -33,46 +33,28 @@ export default async function AdminReferralsPage() {
 
   return (
     <AdminLayout title="Referrals">
-      <div className="space-y-1 mt-0">
-        {/* User Name and ID Header */}
-        {/* <section className="mb-6">
-          <h1 className="text-3xl font-bold text-white">Welcome in, {displayName}</h1>
-          <p className="text-slate-400 mt-2">{userId}</p>
-        </section> */}
-
-        {/* User Referral Share Card */}
-        {/* <section className="mb-6">
-          {member && (
-            <UserReferralCard
-              userId={userId}
-              userName={displayName}
-              joinDate={joinDate}
-              mobile={mobile}
-            />
-          )}
-        </section> */}
-
-        <section className="rounded-[32px] p-6">
-          <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex items-center justify-between">
+      <div className="space-y-2 sm:space-y-3 md:space-y-4 lg:space-y-1 mt-0">
+        <section className="rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[32px] p-3 sm:p-4 md:p-5 lg:p-6">
+          <div className="flex flex-col gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
               <div className="flex-1">
                 <DashboardHeader userName={displayName} />
                 <div>
-                  <div className="mt-2 text-sm text-slate-500">{userId} <a className="ml-2 text-slate-500" href="#">↗</a></div>
-                  <div className="mt-2 text-sm text-slate-500">{referrals.length} referrals</div>
+                  <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">{userId} <a className="ml-2 text-slate-500" href="#">↗</a></div>
+                  <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">{referrals.length} referrals</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="grid gap-5 lg:grid-cols-[42%_15%_40%]">
-          <div className="space-y-6">
+        <section className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-[42%_15%_40%]">
+          <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
             <MemberAnalyticsCard data={[5, 12, 8, 20, 35, 22, 28]} />
             <ReferGrowCard direct={referrals.length} referrals={me?.team_count ?? 0} total={referrals.length + (me?.team_count ?? 0)} />
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
             <ReferralProgressCard percent={progress} />
           </div>
 

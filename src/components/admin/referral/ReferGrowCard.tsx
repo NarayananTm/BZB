@@ -136,69 +136,65 @@ export default function ReferGrowCard({
   total = 30,
 }: ReferGrowCardProps) {
   return (
-    <div className="h-[238px] w-[600px] rounded-[8px] border border-[#E5E5E5] bg-white">
-      <div className="flex h-full">
+    <div className="w-full min-h-[200px] sm:min-h-[220px] md:min-h-[238px] lg:min-h-[238px] rounded-lg md:rounded-[8px] lg:rounded-[8px] border border-[#E5E5E5] bg-white overflow-hidden">
+      <div className="flex flex-col md:flex-col lg:flex-row h-full">
 
-        {/* LEFT */}
-        <div className="relative w-[228px]">
+        {/* LEFT - Donut Section */}
+        <div className="w-full md:w-full lg:w-[240px] flex flex-col items-center justify-center px-3 sm:px-4 md:px-4 lg:px-[20px] py-4 sm:py-5 md:py-4 lg:py-[20px] flex-shrink-0 border-b lg:border-b-0 lg:border-r border-[#EEEEEE]">
 
-          <div className="absolute left-[15px] top-[13px]">
-            <h3 className="text-[13px] font-semibold text-[#A38F00]">
-              Refer &amp; Grow
-            </h3>
-          </div>
+          <h3 className="text-xs sm:text-sm md:text-[13px] lg:text-[13px] font-semibold text-[#A38F00] mb-3">
+            Refer &amp; Grow
+          </h3>
 
-          <div className="absolute left-[18px] top-[29px]">
-            <Donut direct={direct} total={total} />
-          </div>
+          <Donut direct={direct} total={total} />
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="my-[10px] ml-[35px] h-[218px] w-[288px] overflow-hidden rounded-[8px] bg-[#EEEEEE]">
+        {/* RIGHT PANEL - Stats */}
+        <div className="w-full md:w-full lg:flex-1 grid grid-cols-3 md:grid-cols-3 lg:grid-cols-1 gap-0 bg-[#EEEEEE]">
 
-          <div className="h-[76px] border-b border-[#D9D9D9] px-[13px] pt-[8px]">
-            <div className="flex items-center gap-[9px]">
+          <div className="border-b border-r md:border-r lg:border-b border-[#D9D9D9] px-2 sm:px-3 md:px-4 lg:px-[20px] py-2 sm:py-3 md:py-3 lg:py-[12px] flex flex-col items-center justify-center lg:justify-start">
+            <div className="flex flex-col items-center gap-1 sm:gap-1 lg:gap-2">
               <UserRoundPlus
-                size={24}
+                size={16}
                 strokeWidth={1.8}
-                className="text-[#C8A900]"
+                className="text-[#C8A900] sm:w-5 md:w-5 lg:w-5"
               />
 
-              <span className="text-[14px] font-medium text-[#222222]">
+              <span className="text-[11px] sm:text-[12px] md:text-[12px] lg:text-[13px] font-medium text-[#222222]">
                 Direct
               </span>
             </div>
 
-            <div className="-mt-[1px] text-center text-[29px] font-medium leading-none text-[#111111]">
+            <div className="text-center text-lg sm:text-xl md:text-xl lg:text-[26px] font-medium leading-none text-[#111111] mt-1 lg:mt-2">
               {String(direct).padStart(2, '0')}
             </div>
           </div>
 
-          <div className="h-[76px] border-b border-[#D9D9D9] px-[13px] pt-[8px]">
-            <div className="flex items-center gap-[9px]">
+          <div className="border-b border-r md:border-r lg:border-b border-[#D9D9D9] px-2 sm:px-3 md:px-4 lg:px-[20px] py-2 sm:py-3 md:py-3 lg:py-[12px] flex flex-col items-center justify-center lg:justify-start">
+            <div className="flex flex-col items-center gap-1 sm:gap-1 lg:gap-2">
               <Users
-                size={24}
+                size={16}
                 strokeWidth={1.8}
-                className="text-[#C8A900]"
+                className="text-[#C8A900] sm:w-5 md:w-5 lg:w-5"
               />
 
-              <span className="text-[14px] font-medium text-[#222222]">
+              <span className="text-[11px] sm:text-[12px] md:text-[12px] lg:text-[13px] font-medium text-[#222222]">
                 Referrals
               </span>
             </div>
 
-            <div className="-mt-[1px] text-center text-[29px] font-medium leading-none text-[#111111]">
+            <div className="text-center text-lg sm:text-xl md:text-xl lg:text-[26px] font-medium leading-none text-[#111111] mt-1 lg:mt-2">
               {referrals}
             </div>
           </div>
 
-          <div className="flex h-[66px] items-center justify-center">
-            <p className="whitespace-nowrap text-[13px] font-normal text-[#222222]">
-              Total Members :{' '}
-              <span className="text-[22px] font-medium text-[#111111]">
-                {total}
-              </span>
+          <div className="border-b-0 md:border-r-0 lg:border-b-0 px-2 sm:px-3 md:px-4 lg:px-[20px] py-2 sm:py-3 md:py-3 lg:py-[12px] flex flex-col items-center justify-center lg:justify-start">
+            <p className="text-center text-[9px] sm:text-[10px] md:text-[11px] lg:text-[12px] font-normal text-[#222222]">
+              Total
             </p>
+            <span className="text-base sm:text-lg md:text-lg lg:text-[24px] font-medium text-[#111111] mt-0.5 lg:mt-1">
+              {total}
+            </span>
           </div>
 
         </div>
