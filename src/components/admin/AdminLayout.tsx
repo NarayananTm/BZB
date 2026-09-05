@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 import { ROUTES } from '@/utils/constants';
-
+import Image from "next/image";
 
 
 export default function AdminLayout({ children }: { children: ReactNode; title: string, userName?: string }) {
@@ -29,7 +29,15 @@ export default function AdminLayout({ children }: { children: ReactNode; title: 
           <div className="rounded-[20px] sm:rounded-[28px] md:rounded-[32px] border border-slate-200/70 bg-white p-3 sm:p-4 md:p-6 shadow-sm">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
               <div>
-                <h1 className="text-[30px] font-semibold text-[#111111]"></h1>
+          <Image
+                src="/images/admin/logo/MBD_logo.svg"
+                alt="MBD Logo"
+                width={150}
+                height={150}
+                priority
+                className="object-contain"
+              />
+                {/* <h1 className="text-[30px] font-semibold text-[#111111]"> MbnC</h1> */}
               </div>
 
               <div className="flex items-center gap-4">
