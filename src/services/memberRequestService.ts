@@ -110,7 +110,7 @@ export async function getMemberRequestsByEmail(email: string): Promise<MemberReq
 export async function updateMemberRequestStatus(
   id: string,
   status: MemberRequest['status'],
-  adminId?: string,
+  adminId?: any,
   rejectionReason?: string,
 ): Promise<MemberRequest | null> {
   let query_str = `UPDATE member_requests SET status = $1, updated_at = NOW()`;

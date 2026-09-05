@@ -10,7 +10,7 @@ export default function SponsorReferralCard({
   memberId,
   memberName,
 }: {
-  sponsor?: string;
+  sponsor?: string | null | undefined;
   mobile?: string;
   joinDate?: string;
   memberId?: string;

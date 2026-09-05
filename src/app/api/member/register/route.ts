@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import { query } from '@/lib/postgres';
 
 export async function POST(request: NextRequest) {
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const memberId = `REQ-${Date.now()}`;
     const createdAt = new Date().toISOString();
 
-    const result = await query(
+    await query(
       `INSERT INTO member_requests (
         id, sponsor_name, name, mobile, pan, status, created_at, updated_at
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'Registration submitted successfully',
         data: {
-          id: result[0]?.id || memberId,
+          id: memberId,
           name,
           sponsor_name,
           status: 'Submitted',

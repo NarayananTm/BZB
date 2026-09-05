@@ -1,4 +1,4 @@
-import { query, queryOne, isDbConfigured } from '@/lib/postgres';
+import { query, queryOne } from '@/lib/postgres';
 
 export interface Member {
   id: string;

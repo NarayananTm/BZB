@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import AddMemberModal from '@/components/admin/AddMemberModal';
@@ -18,7 +18,7 @@ export default function AddMemberPage() {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout title="Add Member">
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-40">

@@ -22,7 +22,7 @@ export const NAVIGATION_LINKS = [
 
 export const FOOTER_LINKS = {
   quickLinks: [
-    { label: 'BZB', href: ROUTES.BZB },
+    { label: 'BZB', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About', href: ROUTES.ABOUT },
     { label: 'Contact Us', href: ROUTES.CONTACT },

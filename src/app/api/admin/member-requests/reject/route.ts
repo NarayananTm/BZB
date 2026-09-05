@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMemberRequestById, updateMemberRequestStatus } from '@/services/memberRequestService';
 import { sendRejectionSMS } from '@/lib/smsService';
-import { verifyAdminAuth } from '@/lib/adminAuth';
+import { requireAdmin } from '@/lib/adminAuth';
 
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authentication
-    const admin = await verifyAdminAuth(request);
-    if (!admin) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 },
-      );
-    }
+    const { admin, error } = requireAdmin(request);
+    if (error) return error;
 
     // Only superadmin can reject
     if (admin.role !== 'superadmin') {

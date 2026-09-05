@@ -4,18 +4,13 @@ import {
   getMemberRequestById,
   updateMemberRequestStatus,
 } from '@/services/memberRequestService';
-import { verifyAdminAuth } from '@/lib/adminAuth';
+import { requireAdmin } from '@/lib/adminAuth';
 
 export async function GET(request: NextRequest) {
   try {
     // Verify admin authentication
-    const admin = await verifyAdminAuth(request);
-    if (!admin) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 },
-      );
-    }
+    const { error } = requireAdmin(request);
+    if (error) return error;
 
     const status = request.nextUrl.searchParams.get('status') || 'Pending';
     const page = parseInt(request.nextUrl.searchParams.get('page') || '1');
@@ -49,13 +44,8 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Verify admin authentication
-    const admin = await verifyAdminAuth(request);
-    if (!admin) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 },
-      );
-    }
+    const { admin, error } = requireAdmin(request);
+    if (error) return error;
 
     // Only superadmin can approve/reject
     if (admin.role !== 'superadmin') {

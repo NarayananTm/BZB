@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminFromRequest } from '@/lib/adminAuth';
 import { getMemberProfile, updateMemberProfile, getPool } from '@/lib/postgres';
-import { findAdminByUsername } from '@/services/adminUserService';
 
 export async function GET(request: NextRequest) {
   const admin = getAdminFromRequest(request);

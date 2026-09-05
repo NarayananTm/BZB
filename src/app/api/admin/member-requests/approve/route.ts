@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMemberRequestById, updateMemberRequestStatus } from '@/services/memberRequestService';
-import { createMember, getMemberById } from '@/services/memberService';
+import { createMember,  } from '@/services/memberService';
 import { createReferral } from '@/services/referralService';
 import { sendCredentialsSMS } from '@/lib/smsService';
-import { verifyAdminAuth } from '@/lib/adminAuth';
-import { idGenerator } from '@/lib/idGenerator';
-import bcrypt from 'bcryptjs';
+import { requireAdmin } from '@/lib/adminAuth';
+import { generateUserId, generateReferralId, generatePassword } from '@/lib/idGenerator';
+// import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authentication
-    const admin = await verifyAdminAuth(request);
-    if (!admin) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 },
-      );
-    }
+    const { admin, error } = requireAdmin(request);
+    if (error) return error;
 
     // Only superadmin can approve
     if (admin.role !== 'superadmin') {
@@ -53,11 +48,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate member ID
-    const memberId = idGenerator.generate('BZB');
+    const memberId = generateUserId();
 
     // Generate temporary password
-    const tempPassword = idGenerator.generate('PWD').substring(0, 10);
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    const tempPassword = generatePassword();
+    // const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
     // Create member record
     const newMember = await createMember({
@@ -81,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     // Create referral record if sponsor exists
     if (memberRequest.sponsor_id) {
-      const referralId = idGenerator.generate('REF');
+      const referralId = generateReferralId();
       try {
         await createReferral({
           id: referralId,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMemberRequest, getMemberRequestsByEmail } from '@/services/memberRequestService';
-import { idGenerator } from '@/lib/idGenerator';
+import { generateRequestId } from '@/lib/idGenerator';
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate request ID
-    const requestId = idGenerator.generate('REQ');
+    const requestId = generateRequestId();
 
     // Create member request
     const memberRequest = await createMemberRequest({

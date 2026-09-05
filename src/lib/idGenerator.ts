@@ -46,3 +46,27 @@ export function parseUserId(memberId: string): {
 export function isValidUserId(memberId: string): boolean {
   return /^MBD\d{7}$/.test(memberId);
 }
+
+/** Generate Referral ID: REF-YYYYMMDD-XXX */
+export function generateReferralId(): string {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const rand = Math.floor(Math.random() * 900) + 100;
+  return `REF-${date}-${rand}`;
+}
+
+/** Generate Member Request ID: REQ-YYYYMMDD-XXX */
+export function generateRequestId(): string {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const rand = Math.floor(Math.random() * 900) + 100;
+  return `REQ-${date}-${rand}`;
+}
+
+/** Generate temporary password: PWD-XXXXXXXXXX */
+export function generatePassword(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let password = 'PWD-';
+  for (let i = 0; i < 10; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+}

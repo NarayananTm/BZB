@@ -312,6 +312,41 @@ CREATE TABLE IF NOT EXISTS member_settings (
   updated_at      TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE member_notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    member_id UUID NOT NULL,
+
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+
+    icon VARCHAR(50),
+
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    read_at TIMESTAMP WITH TIME ZONE,
+
+    notification_type VARCHAR(50),
+    
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_member_notifications_member
+        FOREIGN KEY (member_id)
+        REFERENCES members(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX idx_member_notifications_member_id
+ON member_notifications(member_id);
+
+CREATE INDEX idx_member_notifications_member_read
+ON member_notifications(member_id, is_read);
+
+CREATE INDEX idx_member_notifications_created_at
+ON member_notifications(created_at DESC);
+
+CREATE INDEX idx_member_notifications_member_created
+ON member_notifications(member_id, created_at DESC);
 -- ============================================================
 -- Indexes for common lookups
 -- ============================================================
