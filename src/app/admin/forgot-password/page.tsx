@@ -143,7 +143,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-600">
-          BZB Group — Restricted access. Authorised personnel only.
+          MBD Group — Restricted access. Authorised personnel only.
         </p>
       </div>
     </main>

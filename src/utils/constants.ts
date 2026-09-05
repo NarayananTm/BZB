@@ -1,20 +1,20 @@
 export const ROUTES = {
   HOME: '/',
-  BZB: '/bzb',
+  MBD: '/mbd',
   REFERRAL: '/referral',
   ABOUT: '/about',
   CONTACT: '/contact',
   MEMBER: '/member',
   ADMIN: '/admin',
-  MEMBER_DASHBOARD: '/bzb',
+  MEMBER_DASHBOARD: '/mbd',
   // MEMBER_DASHBOARD: '/member/dashboard',
   // MEMBER_PROFILE: '/member/profile',
-  MEMBER_PROFILE: '/bzb',
+  MEMBER_PROFILE: '/mbd',
 } as const;
 
 export const NAVIGATION_LINKS = [
   { label: 'Home', href: ROUTES.HOME },
-  { label: 'BZB', href: ROUTES.BZB },
+  { label: 'BZB', href: ROUTES.MBD },
   { label: 'Referral', href: ROUTES.REFERRAL },
   { label: 'About', href: ROUTES.ABOUT },
   { label: 'Contact', href: ROUTES.CONTACT },

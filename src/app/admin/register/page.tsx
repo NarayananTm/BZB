@@ -69,58 +69,58 @@ export default function AdminRegisterPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#0A0A0A] px-4 py-12 text-white">
+    <main className="flex min-h-screen items-center justify-center bg-[#0A0A0A] px-3 sm:px-4 py-8 sm:py-12 text-white">
       <div className="w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#E5C500]">
-            <ShieldCheck className="h-8 w-8 text-black" />
+        <div className="mb-6 sm:mb-8 flex flex-col items-center gap-2 sm:gap-3">
+          <div className="flex h-12 sm:h-16 w-12 sm:w-16 items-center justify-center rounded-xl sm:rounded-2xl bg-[#E5C500]">
+            <ShieldCheck className="h-6 sm:h-8 w-6 sm:w-8 text-black" />
           </div>
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#E5C500]">BZB Group</p>
-            <h1 className="mt-1 text-2xl font-bold">Register Admin User</h1>
+            <h1 className="mt-1 text-xl sm:text-2xl font-bold">Register Admin User</h1>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
-          <p className="mb-6 text-sm text-slate-400">Create an account for an administrator who needs portal access.</p>
+        <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 md:p-8 shadow-2xl backdrop-blur-sm">
+          <p className="mb-4 sm:mb-6 text-xs sm:text-sm text-slate-400">Create an account for an administrator who needs portal access.</p>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Username</label>
-              <input name="username" value={form.username} onChange={handleChange} required autoComplete="username" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Enter username" />
+              <label className="mb-1 sm:mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Username</label>
+              <input name="username" value={form.username} onChange={handleChange} required autoComplete="username" className="w-full rounded-lg sm:rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Enter username" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Email</label>
-              <input name="email" type="email" value={form.email} onChange={handleChange} required autoComplete="email" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="admin@example.com" />
+              <label className="mb-1 sm:mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Email</label>
+              <input name="email" type="email" value={form.email} onChange={handleChange} required autoComplete="email" className="w-full rounded-lg sm:rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="admin@example.com" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Mobile Number</label>
-              <input name="mobile" type="tel" value={form.mobile} onChange={handleChange} required autoComplete="tel" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Enter mobile number" />
+              <label className="mb-1 sm:mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Mobile Number</label>
+              <input name="mobile" type="tel" value={form.mobile} onChange={handleChange} required autoComplete="tel" className="w-full rounded-lg sm:rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Enter mobile number" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Role</label>
-              <select name="role" value={form.role} onChange={handleChange} className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50">
+              <label className="mb-1 sm:mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Role</label>
+              <select name="role" value={form.role} onChange={handleChange} className="w-full rounded-lg sm:rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-[#E5C500]/50">
                 <option value="admin" className="bg-[#171717]">Admin</option>
                 <option value="superadmin" className="bg-[#171717]">Superadmin</option>
               </select>
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Password</label>
-              <input name="password" type="password" value={form.password} onChange={handleChange} required minLength={8} autoComplete="new-password" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Minimum 8 characters" />
+              <label className="mb-1 sm:mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Password</label>
+              <input name="password" type="password" value={form.password} onChange={handleChange} required minLength={8} autoComplete="new-password" className="w-full rounded-lg sm:rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Minimum 8 characters" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Confirm Password</label>
-              <input name="confirmPassword" type="password" value={form.confirmPassword} onChange={handleChange} required autoComplete="new-password" className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Repeat password" />
+              <label className="mb-1 sm:mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">Confirm Password</label>
+              <input name="confirmPassword" type="password" value={form.confirmPassword} onChange={handleChange} required autoComplete="new-password" className="w-full rounded-lg sm:rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-white outline-none focus:border-[#E5C500]/50" placeholder="Repeat password" />
             </div>
 
-            {message && <p className={success ? 'rounded-lg bg-emerald-500/10 px-4 py-2.5 text-sm text-emerald-400' : 'rounded-lg bg-rose-500/10 px-4 py-2.5 text-sm text-rose-400'}>{message}</p>}
+            {message && <p className={`text-xs sm:text-sm rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 ${success ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>{message}</p>}
 
-            <button type="submit" disabled={loading} className="w-full rounded-xl bg-[#E5C500] px-4 py-3 text-sm font-bold text-black transition hover:bg-[#f0d000] disabled:opacity-60">
+            <button type="submit" disabled={loading} className="w-full rounded-lg sm:rounded-xl bg-[#E5C500] px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold text-black transition hover:bg-[#f0d000] disabled:opacity-60">
               {loading ? 'Creating account...' : 'Create admin account'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-400">
+          <p className="mt-4 sm:mt-6 text-center text-xs sm:text-sm text-slate-400">
             <Link href="/admin/login" className="font-semibold text-[#E5C500] hover:underline">Back to admin login</Link>
           </p>
         </div>

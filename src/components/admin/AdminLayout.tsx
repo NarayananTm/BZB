@@ -24,16 +24,16 @@ export default function AdminLayout({ children }: { children: ReactNode; title: 
 
   return (
     <div className="min-h-screen bg-[#F8F8F8] text-slate-900">
-      <div className="mx-auto flex min-h-screen max-w-[1600px] gap-6 px-4 py-5 lg:px-6 xl:px-8">
-        <div className="flex min-h-[calc(100vh-40px)] flex-1 flex-col gap-6">
-          <div className="rounded-[32px] border border-slate-200/70 bg-white p-6 shadow-sm">
-            <div className="flex items-end justify-between gap-6">
+      <div className="mx-auto flex min-h-screen max-w-[1600px] gap-2 px-2 py-3 sm:gap-4 sm:px-3 sm:py-4 md:gap-6 md:px-6 lg:px-6 xl:px-8">
+        <div className="flex min-h-[calc(100vh-40px)] flex-1 flex-col gap-3 sm:gap-4 md:gap-6">
+          <div className="rounded-[20px] sm:rounded-[28px] md:rounded-[32px] border border-slate-200/70 bg-white p-3 sm:p-4 md:p-6 shadow-sm">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
               <div>
                 <h1 className="text-[30px] font-semibold text-[#111111]"></h1>
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="inline-flex items-center rounded-full bg-black p-1 text-sm font-medium text-white shadow-sm">
+                <div className="inline-flex flex-wrap items-center rounded-full bg-black p-1 text-xs sm:text-sm font-medium text-white shadow-sm">
                   <Link
                     href="/admin/dashboard"
                     aria-current={linkActive(ROUTES.ADMIN + '/dashboard') ? 'page' : undefined}

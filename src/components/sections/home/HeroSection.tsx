@@ -157,7 +157,7 @@ lg:gap-10
               Future with
 
               <span className="text-[#F3C300]">
-                {" "}BZB
+                {" "}MBD
               </span>
 
             </h1>
@@ -203,7 +203,7 @@ sm:mt-5
                 animate-[fadeInLeft_1.4s_ease]
               "
             >
-              Join BZB and become part of a community where real estate
+              Join MBD and become part of a community where real estate
               opportunities meet rewarding referrals.
 
               Explore trusted projects, grow your network,

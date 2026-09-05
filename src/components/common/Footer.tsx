@@ -9,7 +9,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
-    { label: 'BZB', href: ROUTES.BZB },
+    { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About', href: ROUTES.ABOUT },
     // { label: 'Contact Us', href: ROUTES.CONTACT },
@@ -35,8 +35,8 @@ export default function Footer() {
             <div className="flex items-center gap-3">
 
               <Image
-                src="/images/logo/BZB Logo.png"
-                alt="BZB Logo"
+                src="/images/logo/MBD Log.svg"
+                alt="MBD Logo"
                 width={46}
                 height={46}
                 priority

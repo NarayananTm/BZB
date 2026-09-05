@@ -20,9 +20,9 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'About BZB | Born to Win',
+  title: 'About MBD | Born to Win',
   description:
-    'Learn about BZB - a leading real estate platform combining Builders & Developers with a dynamic referral-based membership ecosystem.',
+    'Learn about MBD - a leading real estate platform combining Builders & Developers with a dynamic referral-based membership ecosystem.',
   keywords: ['real estate', 'builders', 'developers', 'property investment', 'about us'],
 };
 

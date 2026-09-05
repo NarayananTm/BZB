@@ -57,13 +57,13 @@ export default function AdminLoginPage() {
 
         {/* Card */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
-          <p className="mb-6 text-sm text-slate-400">Sign in with your admin credentials to continue.</p>
+          <p className="mb-6 text-sm text-slate-400">Sign in with your credentials to continue.</p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* User ID */}
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">
-                Admin User ID
+                User ID
               </label>
               <input
                 type="text"
@@ -127,12 +127,12 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="mt-6 border-t border-white/10 pt-5 text-center text-sm text-slate-400">
-            <p>
+            {/* <p>
               Need a member account?{' '}
               <Link href="/admin/register" className="font-semibold text-[#E5C500] hover:underline">
                 Register here
               </Link>
-            </p>
+            </p> */}
             <p className="mt-3">
               <Link href="/admin/forgot-password" className="font-semibold text-[#E5C500] hover:underline">
                 Forgot Password?

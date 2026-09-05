@@ -60,7 +60,7 @@ console.log("Navigation component mounted and event listeners added.");
 
   const links = [
     { label: 'Home', href: ROUTES.HOME },
-    { label: 'BZB', href: ROUTES.BZB },
+    { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About Us', href: ROUTES.ABOUT },
     // { label: 'Contact', href: ROUTES.CONTACT },
@@ -87,23 +87,23 @@ console.log("Navigation component mounted and event listeners added.");
         <div className="flex justify-start">
           <Link href={ROUTES.HOME} className="flex items-center gap-3">
             <Image
-              src="/images/logo/BZB Logo.png"
-              alt="BZB Logo"
-              width={48}
-              height={48}
+              src="/images/logo/MBD Log.svg"
+              alt="MBD Logo"
+              width={120}
+              height={120}
               priority
               className="object-contain"
             />
 
-            <div className="flex flex-col leading-none">
+            {/* <div className="flex flex-col leading-none">
               <span className="text-white text-[47px] font-bold tracking-tight">
-                BZB
+                MBD
               </span>
 
               <span className="text-gray-300 uppercase tracking-[0.45em] text-[7px] mt-1">
                 Born To Win
               </span>
-            </div>
+            </div> */}
           </Link>
         </div>
 

@@ -6,6 +6,7 @@ import FinancialCardsGrid from '@/components/admin/FinancialCardsGrid';
 import TeamMembersCard from '@/components/admin/TeamMembersCard';
 import RewardsBanner from '@/components/admin/RewardsBanner';
 import InviteMembersCard from '@/components/admin/InviteMembersCard';
+import AddMemberButton from '@/components/admin/AddMemberButton';
 import { getMemberByEmail, getTeamMembers } from '@/services/memberService';
 import { getAllLevels } from '@/services/levelService';
 import { getTopupsByMember } from '@/services/topupService';
@@ -61,19 +62,19 @@ export default async function AdminDashboardPage() {
 
   return (
     <AdminLayout title="Dashboard">
-      <div className="mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
+      <div className="w-full px-2 sm:px-2 md:px-3 lg:px-6 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="flex flex-col gap-3 sm:gap-4 md:gap-4 lg:gap-5 max-w-full lg:max-w-[1350px]">
+          <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex-1 min-w-0">
               <DashboardHeader userName={displayName} />
               <LevelProgress levels={levelProgressItems.map(l => ({ name: l.name, pct: l.pct }))} />
             </div>
-            <div className="ml-6">
-              <button className="inline-flex h-14 min-w-[220px] items-center justify-center rounded-[16px] bg-[#E5C500] px-6 text-base font-semibold text-white">Add Member</button>
+            <div className="w-full sm:w-auto">
+              <AddMemberButton />
             </div>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[360px_1fr_320px]">
+          <div className="grid gap-3 sm:gap-4 md:gap-4 lg:gap-5 grid-cols-1 lg:grid-cols-[320px_1fr_280px]">
             <div className="col-span-1">
               <IncomeWalletCard
                 memberName={displayName}
@@ -96,7 +97,7 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.7fr_0.9fr]">
+          <div className="grid gap-3 sm:gap-3 md:gap-4 lg:gap-4 grid-cols-1 lg:grid-cols-[1.7fr_0.9fr]">
             <RewardsBanner />
             <InviteMembersCard />
           </div>

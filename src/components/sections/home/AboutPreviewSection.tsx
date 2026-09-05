@@ -107,8 +107,8 @@ export default function AboutPreviewSection() {
           <div className="flex justify-center">
 
             <Image
-              src="/images/logo/BZB Logo.png"
-              alt="BZB Logo"
+              src="/images/logo/MBD Log.svg"
+              alt="MBD Logo"
 
               width={420}
               height={420}

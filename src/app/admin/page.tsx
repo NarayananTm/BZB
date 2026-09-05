@@ -10,6 +10,7 @@ import FinancialCardsGrid from '@/components/admin/FinancialCardsGrid';
 import TeamMembersCard from '@/components/admin/TeamMembersCard';
 import RewardsBanner from '@/components/admin/RewardsBanner';
 import InviteMembersCard from '@/components/admin/InviteMembersCard';
+import AddMemberModal from '@/components/admin/AddMemberModal';
 import type { Member } from '@/services/memberService';
 
 type Dashboard = {
@@ -33,6 +34,7 @@ export default function AdminPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [error, setError] = useState('Loading dashboard...');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     Promise.all([fetch('/api/admin/dashboard'), fetch('/api/admin/members'), fetch('/api/admin/profile')]).then(async ([statsResponse, membersResponse, profileResponse]) => {
@@ -60,19 +62,26 @@ export default function AdminPage() {
 
   return (
     <AdminLayout title="Dashboard">
-      <div className="mx-2 px-1 py-1 sm:px-2 lg:px-1">
-        {error && <p className="mb-3 text-sm text-slate-500">{}</p>}
+      <div className="mx-2 px-1 py-1 sm:mx-3 sm:px-2 sm:py-2 md:px-4 lg:px-1">
+        {error && <p className="mb-3 text-xs sm:text-sm text-slate-500">{}</p>}
         {/* {error && <p className="mb-3 text-sm text-slate-500">{error}</p>} */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 sm:gap-3 md:gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex-1">
               <DashboardHeader userName={admin?.name || ''} />
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500">
-                <span>ID: {admin?.id || '-'}</span><span>{admin?.email || '-'}</span><span>{admin?.role || '-'}</span>
+              <div className="mt-2 sm:mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-slate-500">
+                <span>ID: {admin?.id || '-'}</span><span className="hidden sm:inline">{admin?.email || '-'}</span><span className="hidden md:inline">{admin?.role || '-'}</span>
               </div>
               <LevelProgress levels={dashboard?.levels} />
             </div>
-            <div className="ml-6"><button className="inline-flex h-14 min-w-[220px] items-center justify-center rounded-[16px] bg-[#E5C500] px-6 text-base font-semibold text-white">Add Member</button></div>
+            <div className="w-full sm:w-auto">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="w-full sm:w-auto inline-flex h-10 sm:h-12 md:h-14 min-w-[160px] sm:min-w-[200px] md:min-w-[220px] items-center justify-center rounded-[12px] sm:rounded-[14px] md:rounded-[16px] bg-[#E5C500] px-4 sm:px-5 md:px-6 text-sm sm:text-base font-semibold text-white hover:bg-yellow-500 transition-colors"
+              >
+                Add Member
+              </button>
+            </div>
           </div>
 
           <div className="grid gap-4 xl:grid-cols-[360px_1fr_320px]">
@@ -84,6 +93,16 @@ export default function AdminPage() {
           <div className="grid min-h-[150px] gap-6 lg:grid-cols-[1.7fr_0.9fr]"><RewardsBanner /><InviteMembersCard /></div>
         </div>
       </div>
+
+      <AddMemberModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {
+          setIsModalOpen(false);
+          // Optionally refresh members list
+          window.location.reload();
+        }}
+      />
     </AdminLayout>
   );
 }
