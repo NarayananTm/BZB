@@ -5,13 +5,13 @@ import {
 
 import bcrypt from 'bcryptjs';
 
-import { pool } from '@/lib/db';
+import { getPool } from '@/lib/postgres';
 
 export async function POST(
   request: NextRequest
 ) {
   const client =
-    await pool.connect();
+    await getPool().connect();
 
   try {
     /*
