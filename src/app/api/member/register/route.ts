@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
 import { query } from '@/lib/postgres';
 
 export async function POST(request: NextRequest) {
@@ -41,19 +39,8 @@ export async function POST(request: NextRequest) {
     // Save file
     let filePath = '';
     if (file) {
-      const fileName = `${Date.now()}-${file.name}`;
-      const uploadDir = join(process.cwd(), 'public', 'uploads', 'kyc');
-      
-      try {
-        await mkdir(uploadDir, { recursive: true });
-      } catch (e) {
-        // Directory might already exist
-      }
-      
-      const fullPath = join(uploadDir, fileName);
-      const buffer = await file.arrayBuffer();
-      await writeFile(fullPath, Buffer.from(buffer));
-      filePath = `/uploads/kyc/${fileName}`;
+      const fileData = Buffer.from(await file.arrayBuffer()).toString('base64');
+      filePath = `data:${file.type || 'application/octet-stream'};base64,${fileData}`;
     }
 
     // Insert into member_requests table

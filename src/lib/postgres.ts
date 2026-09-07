@@ -162,6 +162,8 @@ export interface MemberDocument {
 }
 
 async function ensureMemberProfilesTable() {
+  await getPool().query('ALTER TABLE members ADD COLUMN IF NOT EXISTS avatar TEXT');
+  await getPool().query('ALTER TABLE members ALTER COLUMN avatar TYPE TEXT');
   await getPool().query(`
     CREATE TABLE IF NOT EXISTS member_profiles (
       member_id VARCHAR(50) PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,
@@ -175,11 +177,12 @@ async function ensureMemberProfilesTable() {
   await getPool().query(`
     CREATE TABLE IF NOT EXISTS member_documents (
       id VARCHAR(50) PRIMARY KEY, member_id VARCHAR(50) NOT NULL REFERENCES members(id) ON DELETE CASCADE,
-      document_type VARCHAR(50) NOT NULL, document_number VARCHAR(50) NOT NULL DEFAULT '', document_url VARCHAR(500),
+      document_type VARCHAR(50) NOT NULL, document_number VARCHAR(50) NOT NULL DEFAULT '', document_url TEXT,
       is_verified BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       UNIQUE (member_id, document_type)
     )
   `);
+  await getPool().query('ALTER TABLE member_documents ALTER COLUMN document_url TYPE TEXT');
 }
 
 const memberProfileSelect = `

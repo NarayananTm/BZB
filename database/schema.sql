@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS members (
   wallet_balance  NUMERIC(14,2)   NOT NULL DEFAULT 0,
   referral_count  INTEGER         NOT NULL DEFAULT 0,
   team_count      INTEGER         NOT NULL DEFAULT 0,
-  avatar          VARCHAR(500),
+  avatar          TEXT,
   created_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
   updated_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS member_documents (
   member_id       VARCHAR(50)   NOT NULL REFERENCES members(id) ON DELETE CASCADE,
   document_type   VARCHAR(50)   NOT NULL,            -- Aadhar | PAN | Passport | License
   document_number VARCHAR(50)   NOT NULL,
-  document_url    VARCHAR(500),
+  document_url    TEXT,
   is_verified     BOOLEAN       NOT NULL DEFAULT FALSE,
   verified_by     VARCHAR(255),
   verified_date   TIMESTAMPTZ,
