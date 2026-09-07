@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight, X } from 'lucide-react';
+import { toast } from 'sonner';
 import { useState } from 'react';
 
 function Card({ title, desc, value, action, onAction }: { title: string; desc?: string; value?: string; action?: string; onAction?: () => void }) {
@@ -47,16 +48,12 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
   const [topupAmount, setTopupAmount] = useState('');
   const [boosterTopupAmount, setBoosterTopupAmount] = useState('');
   const [member, setMember] = useState<{ id: string; name: string } | null>(null);
-  const [message, setMessage] = useState('');
-  const [topupMessage, setTopupMessage] = useState('');
-  const [boosterTopupMessage, setBoosterTopupMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [topupSubmitting, setTopupSubmitting] = useState(false);
   const [boosterTopupSubmitting, setBoosterTopupSubmitting] = useState(false);
 
   const openWithdrawal = async () => {
     setShowWithdrawal(true);
-    setMessage('');
     setAmount('');
     try {
       const response = await fetch('/api/admin/profile');
@@ -64,15 +61,15 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
       if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
       setMember({ id: data.profile.id, name: data.profile.name || '' });
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Unable to load your profile');
+      toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
     }
   };
 
   const submitWithdrawal = async () => {
     const requestedAmount = Number(amount);
-    if (!member) return setMessage('Your profile is still loading.');
-    if (!Number.isFinite(requestedAmount) || requestedAmount < 200) return setMessage('Minimum payout request is Rs. 200.');
-    if (requestedAmount > walletBalance) return setMessage('Requested amount exceeds your income wallet balance.');
+    if (!member) { toast.error('Your profile is still loading.'); return; }
+    if (!Number.isFinite(requestedAmount) || requestedAmount < 200) { toast.error('Minimum payout request is Rs. 200.'); return; }
+    if (requestedAmount > walletBalance) { toast.error('Requested amount exceeds your income wallet balance.'); return; }
     setSubmitting(true);
     try {
       const response = await fetch('/api/admin/withdrawals', {
@@ -82,10 +79,10 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Unable to create withdrawal request');
-      setMessage('Withdrawal request submitted successfully.');
+      toast.success('Withdrawal request submitted successfully.');
       setAmount('');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Unable to create withdrawal request');
+      toast.error(error instanceof Error ? error.message : 'Unable to create withdrawal request');
     } finally {
       setSubmitting(false);
     }
@@ -93,7 +90,6 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
 
   const openTopup = async () => {
     setShowTopup(true);
-    setTopupMessage('');
     setTopupAmount('');
     try {
       const response = await fetch('/api/admin/profile');
@@ -101,14 +97,14 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
       if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
       setMember({ id: data.profile.id, name: data.profile.name || '' });
     } catch (error) {
-      setTopupMessage(error instanceof Error ? error.message : 'Unable to load your profile');
+      toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
     }
   };
 
   const submitTopup = async () => {
     const requestedAmount = Number(topupAmount);
-    if (!member) return setTopupMessage('Your profile is still loading.');
-    if (!Number.isFinite(requestedAmount) || requestedAmount < 1) return setTopupMessage('Please enter a valid amount.');
+    if (!member) { toast.error('Your profile is still loading.'); return; }
+    if (!Number.isFinite(requestedAmount) || requestedAmount < 1) { toast.error('Please enter a valid amount.'); return; }
     setTopupSubmitting(true);
     try {
       const response = await fetch('/api/member/topups', {
@@ -118,14 +114,14 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Unable to create topup request');
-      setTopupMessage('✅ Top-up request submitted successfully!');
+      toast.success('Top-up request submitted successfully!');
       setTopupAmount('');
       setTimeout(() => {
         setShowTopup(false);
         window.location.reload();
       }, 2000);
     } catch (error) {
-      setTopupMessage(error instanceof Error ? error.message : 'Unable to create topup request');
+      toast.error(error instanceof Error ? error.message : 'Unable to create topup request');
     } finally {
       setTopupSubmitting(false);
     }
@@ -133,7 +129,6 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
 
   const openBoosterTopup = async () => {
     setShowBoosterTopup(true);
-    setBoosterTopupMessage('');
     setBoosterTopupAmount('');
     try {
       const response = await fetch('/api/admin/profile');
@@ -141,15 +136,15 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
       if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
       setMember({ id: data.profile.id, name: data.profile.name || '' });
     } catch (error) {
-      setBoosterTopupMessage(error instanceof Error ? error.message : 'Unable to load your profile');
+      toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
     }
   };
 
   const submitBoosterTopup = async () => {
     const requestedAmount = Number(boosterTopupAmount);
-    if (!member) return setBoosterTopupMessage('Your profile is still loading.');
-    if (!Number.isFinite(requestedAmount) || requestedAmount < 1) return setBoosterTopupMessage('Please enter a valid amount.');
-    if (requestedAmount > boosterTopup) return setBoosterTopupMessage('Requested amount exceeds your level topup balance.');
+    if (!member) { toast.error('Your profile is still loading.'); return; }
+    if (!Number.isFinite(requestedAmount) || requestedAmount < 1) { toast.error('Please enter a valid amount.'); return; }
+    if (requestedAmount > boosterTopup) { toast.error('Requested amount exceeds your level topup balance.'); return; }
     setBoosterTopupSubmitting(true);
     try {
       const response = await fetch('/api/member/topups', {
@@ -159,14 +154,14 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Unable to create topup request');
-      setBoosterTopupMessage('✅ Booster top-up request submitted successfully!');
+      toast.success('Booster top-up request submitted successfully!');
       setBoosterTopupAmount('');
       setTimeout(() => {
         setShowBoosterTopup(false);
         window.location.reload();
       }, 2000);
     } catch (error) {
-      setBoosterTopupMessage(error instanceof Error ? error.message : 'Unable to create topup request');
+      toast.error(error instanceof Error ? error.message : 'Unable to create topup request');
     } finally {
       setBoosterTopupSubmitting(false);
     }
@@ -190,7 +185,6 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
         <p className="mt-3 sm:mt-5 text-xs sm:text-sm text-slate-500">Request Amount Minimum payout request is<br />200 INR (TDS 5% + Service Charge 5%)</p>
         <label className="mt-4 sm:mt-7 block text-xs sm:text-sm text-slate-500" htmlFor="withdrawal-amount">Payout Request Amount Rs.</label>
         <input id="withdrawal-amount" type="number" min="200" value={amount} onChange={(event) => setAmount(event.target.value)} className="mx-auto mt-2 sm:mt-4 block w-full max-w-xs rounded-md border border-[#F0F0F0] bg-[#F5F5F5] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" placeholder="Enter Amount" />
-        {message && <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-600">{message}</p>}
         <button onClick={submitWithdrawal} disabled={submitting || !member} className="mt-4 sm:mt-8 w-full max-w-xs rounded-md bg-[#E5C500] px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium text-white disabled:opacity-50">{submitting ? 'Submitting...' : 'Withdraw'}</button>
       </div>
     </div>}
@@ -203,7 +197,6 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
         <p className="mt-3 sm:mt-5 text-xs sm:text-sm text-slate-500">You can Topup one time daily</p>
         <label className="mt-4 sm:mt-7 block text-xs sm:text-sm text-slate-500" htmlFor="topup-amount">Top-up Amount Rs.</label>
         <input id="topup-amount" type="number" min="1" value={topupAmount} onChange={(event) => setTopupAmount(event.target.value)} className="mx-auto mt-2 sm:mt-4 block w-full max-w-xs rounded-md border border-[#F0F0F0] bg-[#F5F5F5] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" placeholder="Enter Amount" />
-        {topupMessage && <p className={`mt-2 sm:mt-3 text-xs sm:text-sm ${topupMessage.includes('✅') ? 'text-green-600' : 'text-slate-600'}`}>{topupMessage}</p>}
         <button onClick={submitTopup} disabled={topupSubmitting || !member} className="mt-4 sm:mt-8 w-full max-w-xs rounded-md bg-[#E5C500] px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium text-white disabled:opacity-50">{topupSubmitting ? 'Submitting...' : 'Top-up'}</button>
       </div>
     </div>}
@@ -221,7 +214,6 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
             <input id="booster-topup-amount" type="number" min="1" max={boosterTopup} value={boosterTopupAmount} onChange={(event) => setBoosterTopupAmount(event.target.value)} className="mx-auto mt-2 sm:mt-4 block w-full max-w-xs rounded-md border border-[#F0F0F0] bg-[#F5F5F5] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" placeholder="Enter Amount" />
           </>
         )}
-        {boosterTopupMessage && <p className={`mt-2 sm:mt-3 text-xs sm:text-sm ${boosterTopupMessage.includes('✅') ? 'text-green-600' : 'text-slate-600'}`}>{boosterTopupMessage}</p>}
         {boosterTopup > 0 && <button onClick={submitBoosterTopup} disabled={boosterTopupSubmitting || !member} className="mt-4 sm:mt-8 w-full max-w-xs rounded-md bg-[#E5C500] px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium text-white disabled:opacity-50">{boosterTopupSubmitting ? 'Submitting...' : 'Top-up'}</button>}
       </div>
     </div>}

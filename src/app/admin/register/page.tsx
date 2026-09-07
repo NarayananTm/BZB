@@ -12,8 +12,8 @@ import {
   Loader2,
   Upload,
   UserPlus,
-  AlertCircle,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 /* ============================================================
    TYPES
@@ -36,8 +36,6 @@ interface RegisterForm {
   utrNumber: string;
   proof: File | null;
 }
-
-type MessageType = 'error' | 'success' | '';
 
 /* ============================================================
    CONSTANTS
@@ -90,12 +88,6 @@ export default function RegisterPage() {
   const [form, setForm] =
     useState<RegisterForm>(INITIAL_FORM);
 
-  const [message, setMessage] =
-    useState('');
-
-  const [messageType, setMessageType] =
-    useState<MessageType>('');
-
   const [showPassword, setShowPassword] =
     useState(false);
 
@@ -132,11 +124,7 @@ export default function RegisterPage() {
       setLoadingSponsor(false);
       setSponsor(null);
 
-      setMessage(
-        'Referral ID is missing. Please use a valid referral link.'
-      );
-
-      setMessageType('error');
+      toast.error('Referral ID is missing. Please use a valid referral link.');
 
       return;
     }
@@ -145,8 +133,6 @@ export default function RegisterPage() {
 
     const loadSponsor = async () => {
       setLoadingSponsor(true);
-      setMessage('');
-      setMessageType('');
 
       try {
         /*
@@ -207,13 +193,7 @@ export default function RegisterPage() {
 
         setSponsor(null);
 
-        setMessage(
-          error instanceof Error
-            ? error.message
-            : 'Unable to load sponsor.'
-        );
-
-        setMessageType('error');
+        toast.error(error instanceof Error ? error.message : 'Unable to load sponsor.');
       } finally {
         if (!cancelled) {
           setLoadingSponsor(false);
@@ -252,12 +232,6 @@ export default function RegisterPage() {
       [field]: value,
     }));
 
-    if (
-      messageType === 'error'
-    ) {
-      setMessage('');
-      setMessageType('');
-    }
   };
 
   /* ==========================================================
@@ -283,11 +257,7 @@ export default function RegisterPage() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      setMessage(
-        'Please upload JPG, PNG, WEBP or PDF only.'
-      );
-
-      setMessageType('error');
+      toast.error('Please upload JPG, PNG, WEBP or PDF only.');
 
       event.target.value = '';
 
@@ -298,11 +268,7 @@ export default function RegisterPage() {
       5 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      setMessage(
-        'Transaction proof must be less than 5 MB.'
-      );
-
-      setMessageType('error');
+      toast.error('Transaction proof must be less than 5 MB.');
 
       event.target.value = '';
 
@@ -331,11 +297,7 @@ export default function RegisterPage() {
         setCopied(false);
       }, 2000);
     } catch {
-      setMessage(
-        'Unable to copy UPI ID.'
-      );
-
-      setMessageType('error');
+      toast.error('Unable to copy UPI ID.');
     }
   };
 
@@ -453,18 +415,11 @@ export default function RegisterPage() {
       return;
     }
 
-    setMessage('');
-    setMessageType('');
-
     const validationError =
       validateForm();
 
     if (validationError) {
-      setMessage(
-        validationError
-      );
-
-      setMessageType('error');
+      toast.error(validationError);
 
       return;
     }
@@ -635,11 +590,7 @@ export default function RegisterPage() {
        * ================================================
        */
 
-      setMessage(
-        'Registration successful. Redirecting to login...'
-      );
-
-      setMessageType('success');
+      toast.success('Registration successful. Redirecting to login...');
 
       setForm({
         ...INITIAL_FORM,
@@ -665,13 +616,7 @@ export default function RegisterPage() {
         error
       );
 
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : 'Registration failed. Please try again.'
-      );
-
-      setMessageType('error');
+      toast.error(error instanceof Error ? error.message : 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -1356,58 +1301,6 @@ export default function RegisterPage() {
 
           </div>
 
-
-          {/* ==================================================
-              MESSAGE
-          =================================================== */}
-
-          {message && (
-            <div className={`
-              mx-auto
-              mt-4
-              flex
-              max-w-[650px]
-              items-start
-              gap-2
-              rounded-[8px]
-              border
-              px-3
-              py-2.5
-              text-[11px]
-              font-medium
-              ${
-                messageType === 'success'
-                  ? 'border-green-200 bg-green-50 text-green-700'
-                  : 'border-red-200 bg-red-50 text-red-600'
-              }
-            `}>
-
-              {messageType ===
-                'error' && (
-                <AlertCircle className="
-                  mt-0.5
-                  h-4
-                  w-4
-                  shrink-0
-                " />
-              )}
-
-              {messageType ===
-                'success' && (
-                <Check className="
-                  mt-0.5
-                  h-4
-                  w-4
-                  shrink-0
-                " />
-              )}
-
-              <span>
-                {message}
-              </span>
-
-            </div>
-          )}
 
         </form>
 

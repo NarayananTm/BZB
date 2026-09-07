@@ -11,6 +11,7 @@ import {
   EyeOff,
   Loader2,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -20,7 +21,6 @@ export default function AdminLoginPage() {
     password: '',
   });
 
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
@@ -38,9 +38,6 @@ export default function AdminLoginPage() {
       [field]: value,
     }));
 
-    if (message) {
-      setMessage('');
-    }
   };
 
   /**
@@ -56,7 +53,6 @@ export default function AdminLoginPage() {
     if (loading) return;
 
     setLoading(true);
-    setMessage('');
 
     try {
       const res = await fetch('/api/admin/login', {
@@ -82,7 +78,7 @@ export default function AdminLoginPage() {
       router.push('/admin/dashboard');
       router.refresh();
     } catch (error) {
-      setMessage(
+      toast.error(
         error instanceof Error
           ? error.message
           : 'Login failed. Please try again.'
@@ -375,29 +371,6 @@ export default function AdminLoginPage() {
                       )}
                     </button>
                   </div>
-
-                  {/* =================================================
-                      ERROR MESSAGE
-                  ================================================== */}
-                  {message && (
-                    <div
-                      role="alert"
-                      className="
-                        rounded-lg
-                        border
-                        border-red-200
-                        bg-red-50
-                        px-4
-                        py-3
-                        text-center
-                        text-sm
-                        font-medium
-                        text-red-600
-                      "
-                    >
-                      {message}
-                    </div>
-                  )}
 
                   {/* =================================================
                       LOGIN BUTTON

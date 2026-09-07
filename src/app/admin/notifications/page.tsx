@@ -10,9 +10,9 @@ import {
   CheckCheck,
   Loader2,
   RefreshCw,
-  AlertCircle,
   Inbox,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 type Notification = {
   id: string;
@@ -43,8 +43,6 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [markingAll, setMarkingAll] = useState(false);
-
-  const [error, setError] = useState<string | null>(null);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -102,8 +100,6 @@ export default function NotificationsPage() {
   const loadNotifications = useCallback(
     async (showRefreshLoader = false) => {
       try {
-        setError(null);
-
         if (showRefreshLoader) {
           setRefreshing(true);
         } else {
@@ -136,7 +132,7 @@ export default function NotificationsPage() {
             ? err.message
             : 'Unable to load notifications';
 
-        setError(message);
+        toast.error(message);
       } finally {
         setLoading(false);
         setRefreshing(false);
@@ -222,8 +218,6 @@ export default function NotificationsPage() {
 
     try {
       setMarkingAll(true);
-      setError(null);
-
       const response = await fetch(
         '/api/admin/notifications/read-all',
         {
@@ -257,7 +251,7 @@ export default function NotificationsPage() {
           ? err.message
           : 'Unable to mark notifications as read';
 
-      setError(message);
+      toast.error(message);
     } finally {
       setMarkingAll(false);
     }
@@ -480,33 +474,6 @@ export default function NotificationsPage() {
               </button>
             </div>
           </div>
-
-          {/* =====================================================
-              ERROR
-          ====================================================== */}
-          {error && (
-            <div className="mt-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
-              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-
-              <div className="flex-1">
-                <p className="font-medium">
-                  Unable to load notifications
-                </p>
-
-                <p className="mt-1 text-sm">
-                  {error}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => loadNotifications()}
-                className="text-sm font-semibold underline"
-              >
-                Retry
-              </button>
-            </div>
-          )}
 
           {/* =====================================================
               NOTIFICATION LIST

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Phone, Check, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface MobileUpdateCardProps {
   currentMobile?: string;
@@ -12,11 +13,10 @@ export default function MobileUpdateCard({ currentMobile = '', onUpdate }: Mobil
   const [mobile, setMobile] = useState(currentMobile);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const handleSaveMobile = async () => {
     if (!mobile || mobile.trim().length < 10) {
-      setMessage({ type: 'error', text: 'Please enter a valid mobile number (at least 10 digits)' });
+      toast.error('Please enter a valid mobile number (at least 10 digits)');
       return;
     }
 
@@ -31,15 +31,14 @@ export default function MobileUpdateCard({ currentMobile = '', onUpdate }: Mobil
       const data = await response.json();
 
       if (data.success) {
-        setMessage({ type: 'success', text: 'Mobile number updated successfully!' });
+        toast.success('Mobile number updated successfully!');
         setIsEditing(false);
         if (onUpdate) onUpdate(mobile);
-        setTimeout(() => setMessage(null), 3000);
       } else {
-        setMessage({ type: 'error', text: data.message || 'Failed to update mobile number' });
+        toast.error(data.message || 'Failed to update mobile number');
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error updating mobile number' });
+      toast.error('Error updating mobile number');
       console.error('Error:', error);
     } finally {
       setIsSaving(false);
@@ -49,7 +48,6 @@ export default function MobileUpdateCard({ currentMobile = '', onUpdate }: Mobil
   const handleCancel = () => {
     setMobile(currentMobile);
     setIsEditing(false);
-    setMessage(null);
   };
 
   return (
@@ -106,15 +104,6 @@ export default function MobileUpdateCard({ currentMobile = '', onUpdate }: Mobil
         </div>
       )}
 
-      {message && (
-        <div className={`mt-3 px-3 py-2 rounded-lg text-sm ${
-          message.type === 'success'
-            ? 'bg-green-500/10 text-green-200 border border-green-500/20'
-            : 'bg-red-500/10 text-red-200 border border-red-500/20'
-        }`}>
-          {message.text}
-        </div>
-      )}
     </div>
   );
 }

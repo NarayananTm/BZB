@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import AdminLayout from '@/components/admin/AdminLayout';
 import DashboardHeader from '@/components/admin/DashboardHeader';
 import LevelProgress from '@/components/admin/LevelProgress';
@@ -33,7 +34,6 @@ export default function AdminPage() {
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [error, setError] = useState('Loading dashboard...');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -52,8 +52,7 @@ export default function AdminPage() {
       setAdmin(stats.admin);
       setMembers(memberData.data || []);
       setProfile(profileData.profile);
-      setError('');
-    }).catch((reason) => setError(reason instanceof Error ? reason.message : 'Unable to load dashboard'));
+    }).catch((reason) => toast.error(reason instanceof Error ? reason.message : 'Unable to load dashboard'));
   }, [router]);
 
   const totalEarnings = Number(dashboard?.total_earnings || 0);
@@ -63,8 +62,6 @@ export default function AdminPage() {
   return (
     <AdminLayout title="Dashboard">
       <div className="mx-2 px-1 py-1 sm:mx-3 sm:px-2 sm:py-2 md:px-4 lg:px-1">
-        {error && <p className="mb-3 text-xs sm:text-sm text-slate-500">{}</p>}
-        {/* {error && <p className="mb-3 text-sm text-slate-500">{error}</p>} */}
         <div className="flex flex-col gap-2 sm:gap-3 md:gap-4">
           <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex-1">

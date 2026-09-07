@@ -13,6 +13,7 @@ import {
   Loader2,
   ArrowLeft,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<'verify' | 'reset'>('verify');
@@ -22,7 +23,6 @@ export default function ForgotPasswordPage() {
     mobile: '',
   });
 
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [resetToken, setResetToken] = useState('');
 
@@ -39,7 +39,6 @@ export default function ForgotPasswordPage() {
     if (loading) return;
 
     setLoading(true);
-    setMessage('');
 
     try {
       if (!form.email.trim() || !form.mobile.trim()) {
@@ -72,9 +71,9 @@ export default function ForgotPasswordPage() {
 
       setResetToken(data.token);
       setStep('reset');
-      setMessage('');
+      toast.success('Identity verified. Set your new password.');
     } catch (err) {
-      setMessage(
+      toast.error(
         err instanceof Error
           ? err.message
           : 'Verification failed'
@@ -99,9 +98,6 @@ export default function ForgotPasswordPage() {
       [field]: value,
     }));
 
-    if (message) {
-      setMessage('');
-    }
   };
 
   return (
@@ -381,27 +377,6 @@ export default function ForgotPasswordPage() {
                       />
                     </div>
 
-                    {/* ERROR */}
-                    {message && (
-                      <div
-                        role="alert"
-                        className="
-                          mt-3
-                          rounded-lg
-                          border
-                          border-red-200
-                          bg-red-50
-                          px-4
-                          py-3
-                          text-center
-                          text-sm
-                          font-medium
-                          text-red-600
-                        "
-                      >
-                        {message}
-                      </div>
-                    )}
 
                     {/* VERIFY BUTTON */}
                     <button
@@ -505,7 +480,6 @@ function ResetPasswordForm({
     confirmPassword: '',
   });
 
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [showNewPassword, setShowNewPassword] =
     useState(false);
@@ -525,7 +499,6 @@ function ResetPasswordForm({
     if (loading) return;
 
     setLoading(true);
-    setMessage('');
 
     try {
       if (
@@ -575,19 +548,13 @@ function ResetPasswordForm({
         );
       }
 
-      setMessage(
-        'Password reset successfully! Redirecting to login...'
-      );
+      toast.success('Password reset successfully! Redirecting to login...');
 
       setTimeout(() => {
         router.push('/admin/login');
       }, 2000);
     } catch (err) {
-      setMessage(
-        err instanceof Error
-          ? err.message
-          : 'Password reset failed'
-      );
+      toast.error(err instanceof Error ? err.message : 'Password reset failed');
     } finally {
       setLoading(false);
     }
@@ -780,30 +747,6 @@ function ResetPasswordForm({
         </button>
       </div>
 
-      {/* =====================================================
-          MESSAGE
-      ====================================================== */}
-      {message && (
-        <div
-          role="alert"
-          className={`
-            mt-3
-            rounded-lg
-            px-4
-            py-3
-            text-center
-            text-sm
-            font-medium
-            ${
-              message.includes('successfully')
-                ? 'border border-green-200 bg-green-50 text-green-600'
-                : 'border border-red-200 bg-red-50 text-red-600'
-            }
-          `}
-        >
-          {message}
-        </div>
-      )}
 
       {/* =====================================================
           RESET BUTTON

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { toast } from 'sonner';
 
 function RegisterForm() {
   const router = useRouter();
@@ -18,7 +19,6 @@ function RegisterForm() {
     confirmPassword: '',
   });
   const [sponsorInfo, setSponsorInfo] = useState<{ id: string; name: string } | null>(null);
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Fetch sponsor info when referral ID is present
@@ -49,7 +49,6 @@ function RegisterForm() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    setMessage('');
 
     try {
       const response = await fetch('/api/register', {
@@ -68,10 +67,10 @@ function RegisterForm() {
         throw new Error(data.message || 'Registration failed');
       }
 
-      setMessage('Registration Successful');
+      toast.success('Registration successful');
       router.push('/login');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Registration failed');
+      toast.error(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -171,7 +170,6 @@ function RegisterForm() {
               </Link>
             </div>
 
-            {message ? <p className="text-sm text-[#FFD31A]">{message}</p> : null}
           </form>
         </div>
       </div>

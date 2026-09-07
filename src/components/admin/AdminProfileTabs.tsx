@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Check, Home, User, Lock, FileText, ChevronDown, Building2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useEffect, useRef, useState } from 'react';
 
 type Profile = {
@@ -34,12 +35,9 @@ export default function AdminProfileTabs() {
   const [tab, setTab] = useState<'edit' | 'password' | 'kyc'>('edit');
   const [profile, setProfile] = useState<Profile>(emptyProfile);
   const [expandedSections, setExpandedSections] = useState({ profile: true, bank: false });
-  const [message, setMessage] = useState('Loading profile...');
   const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
-  const [passwordMessage, setPasswordMessage] = useState('');
   const [documents, setDocuments] = useState<MemberDocument[]>([]);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
-  const [kycMessage, setKycMessage] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
   const documentFileRef = useRef<HTMLInputElement>(null);
 
@@ -48,14 +46,12 @@ export default function AdminProfileTabs() {
       const data = await response.json();
       if (!response.ok || !data.profile) throw new Error(data.message || 'Unable to load profile');
       setProfile({ ...emptyProfile, ...data.profile });
-      setMessage('');
-    }).catch((error) => setMessage(error instanceof Error ? error.message : 'Unable to load profile'));
+    }).catch((error) => toast.error(error instanceof Error ? error.message : 'Unable to load profile'));
   }, []);
 
   const updateField = (field: keyof Profile, value: string) => setProfile((current) => ({ ...current, [field]: value }));
 
   const saveProfile = async () => {
-    setMessage('Saving...');
     let response
     if(profile.id !==''){
 
@@ -67,24 +63,25 @@ export default function AdminProfileTabs() {
 
     }
     const data = await response.json();
-    setMessage(response.ok ? 'Profile updated successfully' : data.message || 'Unable to update profile');
+    if (response.ok) toast.success('Profile updated successfully');
+    else toast.error(data.message || 'Unable to update profile');
     if (response.ok && data.profile) setProfile({ ...emptyProfile, ...data.profile });
   };
 
   const updatePassword = () => {
     if (!passwords.current || !passwords.next || !passwords.confirm) {
-      setPasswordMessage('Please complete all password fields.');
+      toast.error('Please complete all password fields.');
       return;
     }
     if (passwords.next.length < 8) {
-      setPasswordMessage('New password must be at least 8 characters.');
+      toast.error('New password must be at least 8 characters.');
       return;
     }
     if (passwords.next !== passwords.confirm) {
-      setPasswordMessage('New password and confirmation do not match.');
+      toast.error('New password and confirmation do not match.');
       return;
     }
-    setPasswordMessage('Password updates are not available yet.');
+    toast.info('Password updates are not available yet.');
   };
 
   const loadDocuments = async () => {
@@ -95,13 +92,11 @@ export default function AdminProfileTabs() {
 
   const openDocumentUpload = (documentType: string) => {
     setSelectedDocument(documentType);
-    setKycMessage('');
   };
 
   const uploadDocument = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !selectedDocument) return;
-    setKycMessage('Uploading...');
     const formData = new FormData();
     formData.append('file', file);
     formData.append('documentType', selectedDocument);
@@ -109,21 +104,21 @@ export default function AdminProfileTabs() {
     const data = await response.json();
     if (response.ok) {
       setDocuments((current) => [...current.filter((document) => document.documentType !== data.document.documentType), data.document]);
-      setKycMessage('Document uploaded.');
+      toast.success('Document uploaded.');
       setSelectedDocument(null);
-    } else setKycMessage(data.message || 'Unable to upload document.');
+    } else toast.error(data.message || 'Unable to upload document.');
     event.target.value = '';
   };
 
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    setMessage('Uploading image...');
     const formData = new FormData();
     formData.append('file', file);
     const response = await fetch('/api/admin/profile/avatar', { method: 'POST', body: formData });
     const data = await response.json();
-    setMessage(response.ok ? 'Image uploaded successfully' : data.message || 'Unable to upload image');
+    if (response.ok) toast.success('Image uploaded successfully');
+    else toast.error(data.message || 'Unable to upload image');
     if (response.ok && data.profile) setProfile({ ...emptyProfile, ...data.profile });
   };
 
@@ -181,7 +176,6 @@ export default function AdminProfileTabs() {
             <button onClick={() => fileRef.current?.click()} className="mt-3 w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 font-semibold text-slate-900 text-sm sm:text-base hover:bg-[#D4B300] transition-colors">
               Upload
             </button>
-            {message && <p className="mt-2 text-xs sm:text-sm text-slate-500">{message}</p>}
           </div>
         </div>
 
@@ -307,7 +301,6 @@ export default function AdminProfileTabs() {
                     />
                   </div>
                 ))}
-                {passwordMessage && <p className="text-xs sm:text-sm text-slate-500">{passwordMessage}</p>}
                 <button onClick={updatePassword} className="w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 text-sm sm:text-base font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors">
                   Update Password
                 </button>
@@ -344,9 +337,8 @@ export default function AdminProfileTabs() {
                   );
                 })}
               </div>
-              {kycMessage && <p className="mt-4 text-xs sm:text-sm text-slate-500 text-center">{kycMessage}</p>}
               <button
-                onClick={() => setKycMessage('Documents are saved automatically after upload.')}
+                onClick={() => toast.info('Documents are saved automatically after upload.')}
                 className="mt-4 w-full rounded-lg bg-[#E5C500] px-4 py-2 sm:py-3 text-sm sm:text-base font-semibold text-slate-900 hover:bg-[#D4B300] transition-colors"
               >
                 Update
@@ -408,7 +400,6 @@ export default function AdminProfileTabs() {
           </div>
 
           <div>
-            {message && <p className="mb-3 text-sm text-slate-500">{message}</p>}
             {tab === 'edit' && <div className="grid grid-cols-3 gap-6">
               <div className="col-span-2 rounded-[10px] border border-[#EFEFEF] bg-white p-6">
                 <div className="flex items-center gap-2 mb-2">
@@ -469,7 +460,6 @@ export default function AdminProfileTabs() {
                     />
                   </div>
                 ))}
-                {passwordMessage && <p className="text-sm text-slate-500">{passwordMessage}</p>}
                 <button onClick={updatePassword} className="rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
               </div>
             </div>}
@@ -486,8 +476,7 @@ export default function AdminProfileTabs() {
                   </button>;
                 })}
               </div>
-              {kycMessage && <p className="mx-auto mt-4 max-w-4xl text-sm text-slate-500">{kycMessage}</p>}
-              <button onClick={() => setKycMessage('Documents are saved automatically after upload.')} className="mx-auto mt-4 block rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
+              <button onClick={() => toast.info('Documents are saved automatically after upload.')} className="mx-auto mt-4 block rounded-md bg-[#E5C500] px-7 py-2 text-sm font-semibold text-white">Update</button>
               {selectedDocument && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" role="dialog" aria-modal="true" aria-label={`Upload ${selectedDocument}`}>
                 <div className="w-full max-w-xl rounded-[10px] bg-white p-8 shadow-xl"><h3 className="text-center text-xl font-semibold">File Upload</h3><p className="mt-2 text-center text-sm text-slate-500">{selectedDocument}</p><input ref={documentFileRef} type="file" accept="image/*,.pdf" onChange={uploadDocument} className="hidden" /><button onClick={() => documentFileRef.current?.click()} className="mt-7 flex h-36 w-full flex-col items-center justify-center rounded-md border border-dashed border-slate-300 text-sm text-slate-600">Choose a file to upload</button><div className="mt-5 flex justify-center gap-3"><button onClick={() => setSelectedDocument(null)} className="rounded-md border border-slate-200 px-5 py-2 text-sm">Cancel</button><button onClick={() => documentFileRef.current?.click()} className="rounded-md bg-[#E5C500] px-8 py-2 text-sm font-semibold text-white">Browse</button></div></div>
               </div>}

@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
     const router = useRouter();
     const [form, setForm] = useState({ email: '', password: '' });
-    const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +17,6 @@ export default function LoginPage() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setLoading(true);
-        setMessage('');
 
         try {
             const response = await fetch('/api/login', {
@@ -43,10 +42,10 @@ export default function LoginPage() {
                 })
             );
             window.dispatchEvent(new Event("userChanged"));
-            setMessage('Login Successful');
+            toast.success('Login successful');
             router.push('/bzb');
         } catch (error) {
-            setMessage(error instanceof Error ? error.message : 'Login failed');
+            toast.error(error instanceof Error ? error.message : 'Login failed');
         } finally {
             setLoading(false);
         }
@@ -107,7 +106,6 @@ export default function LoginPage() {
                             </button>
                         </div>
 
-                        {message ? <p className="text-sm text-[#FFD31A]">{message}</p> : null}
                     </form>
                 </div>
             </div>
