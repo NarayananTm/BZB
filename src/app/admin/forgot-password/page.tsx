@@ -79,6 +79,7 @@ export default function ForgotPasswordPage() {
           ? err.message
           : 'Verification failed'
       );
+      console.error('Verification error:', err);
     } finally {
       setLoading(false);
     }

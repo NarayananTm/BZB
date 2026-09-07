@@ -8,10 +8,10 @@ import ContactInfo from '@/components/sections/ContactInfo';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Contact Us | BZB - Born to Win',
+  title: 'Contact Us | MBD - Born to Win',
   description:
-    'Get in touch with BZB. Contact us for inquiries about properties, investment opportunities, or the referral program.',
-  keywords: ['contact', 'get in touch', 'support', 'inquiry', 'BZB'],
+    'Get in touch with MBD. Contact us for inquiries about properties, investment opportunities, or the referral program.',
+  keywords: ['contact', 'get in touch', 'support', 'inquiry', 'MBD'],
 };
 
 export default function ContactPage() {
@@ -21,7 +21,7 @@ export default function ContactPage() {
       <Hero
         title={
           <span>
-            Get in Touch with <span className="gradient-text">BZB</span>
+            Get in Touch with <span className="gradient-text">MBD</span>
           </span>
         }
         subtitle="We're here to help"
