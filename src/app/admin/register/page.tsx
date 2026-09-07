@@ -51,7 +51,7 @@ const UPI_ID = 'mprema7771980@okaxis';
  * Example:
  * /public/images/admin/upi-qr.png
  */
-const QR_IMAGE = '/images/admin/upi-qr.png';
+const QR_IMAGE = '/images/admin/upi/upi-qr-code.png';
 
 const INITIAL_FORM: RegisterForm = {
   name: '',
