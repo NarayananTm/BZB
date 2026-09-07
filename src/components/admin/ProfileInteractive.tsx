@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Users, TrendingUp, FileText, Database, BarChart3, Wallet, Gift, ChevronRight } from 'lucide-react';
 import type { Referral } from '@/services/referralService';
 import type { Earning } from '@/services/earningService';
@@ -17,7 +18,40 @@ interface Props {
 }
 
 export default function ProfileInteractive({ referrals, earnings = [], topups = [], withdrawals = [], payouts = [] }: Props) {
+  const router = useRouter();
   const [active, setActive] = useState<string>('direct');
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setLoggingOut(true);
+
+      // Call logout API endpoint
+      const response = await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+
+      // Clear any local session data
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Redirect to login
+      router.replace('/admin/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still redirect even if API call fails
+      localStorage.clear();
+      sessionStorage.clear();
+      router.replace('/admin/login');
+    }
+  };
 
   const menu = [
     { key: 'direct', label: 'My Direct Members', icon: Users },
@@ -222,8 +256,12 @@ export default function ProfileInteractive({ referrals, earnings = [], topups = 
 
         {/* Logout Button */}
         <div className="px-3 sm:px-4 py-4 sm:py-6 border-t border-[#F0F0F0]">
-          <button className="w-full rounded-lg bg-[#E5C500] px-4 py-3 sm:py-4 text-base sm:text-base font-semibold text-slate-900 shadow-sm hover:bg-[#D4B300] transition-colors">
-            Logout
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="w-full rounded-lg bg-[#E5C500] px-4 py-3 sm:py-4 text-base sm:text-base font-semibold text-slate-900 shadow-sm hover:bg-[#D4B300] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loggingOut ? 'Logging out...' : 'Logout'}
           </button>
         </div>
       </div>
@@ -260,8 +298,12 @@ export default function ProfileInteractive({ referrals, earnings = [], topups = 
             </div>
 
             <div className="mt-6">
-              <button className="w-full rounded-lg bg-[#E5C500] px-6 py-4 font-semibold text-slate-900 shadow-sm hover:bg-[#D4B300] transition-colors">
-                Logout
+              <button
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="w-full rounded-lg bg-[#E5C500] px-6 py-4 font-semibold text-slate-900 shadow-sm hover:bg-[#D4B300] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loggingOut ? 'Logging out...' : 'Logout'}
               </button>
             </div>
           </aside>

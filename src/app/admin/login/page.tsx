@@ -3,147 +3,468 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
+import {
+  Mail,
+  LockKeyhole,
+  Eye,
+  EyeOff,
+  Loader2,
+} from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [form, setForm]       = useState({ userId: '', password: '' });
+
+  const [form, setForm] = useState({
+    userId: '',
+    password: '',
+  });
+
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  /**
+   * =========================================================
+   * HANDLE INPUT CHANGE
+   * =========================================================
+   */
+  const handleChange = (
+    field: 'userId' | 'password',
+    value: string
+  ) => {
+    setForm((previous) => ({
+      ...previous,
+      [field]: value,
+    }));
+
+    if (message) {
+      setMessage('');
+    }
+  };
+
+  /**
+   * =========================================================
+   * LOGIN
+   * =========================================================
+   */
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
+
+    if (loading) return;
+
     setLoading(true);
     setMessage('');
 
     try {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emailOrUsername: form.userId, password: form.password }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          emailOrUsername: form.userId.trim(),
+          password: form.password,
+        }),
       });
+
       const data = await res.json();
 
-      if (!res.ok || !data.success) throw new Error(data.message ?? 'Login failed');
+      if (!res.ok || !data.success) {
+        throw new Error(
+          data.message || 'Invalid Member ID or Password'
+        );
+      }
 
       router.push('/admin/dashboard');
       router.refresh();
-    } catch (err) {
-      setMessage(err instanceof Error ? err.message : 'Login failed');
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Login failed. Please try again.'
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#0A0A0A] px-4">
-      {/* Background accent */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#E5C500]/10 blur-[120px]" />
-      </div>
-
-      <div className="relative w-full max-w-md">
-        {/* Logo / brand */}
-        <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#E5C500]">
-            <ShieldCheck className="h-8 w-8 text-black" />
+    <main className="min-h-screen bg-[#F7F7F7] px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+      <div className="flex min-h-[calc(100vh-32px)] items-center justify-center sm:min-h-[calc(100vh-48px)]">
+        {/* =====================================================
+            MAIN LOGIN CARD
+        ====================================================== */}
+        <section
+          className="
+            relative
+            w-full
+            max-w-[1100px]
+            overflow-hidden
+            rounded-[24px]
+            bg-white
+            shadow-[0_4px_30px_rgba(0,0,0,0.03)]
+            sm:rounded-[28px]
+            lg:min-h-[600px]
+            lg:rounded-[30px]
+          "
+        >
+          {/* ===================================================
+              SUBTLE BOTTOM PATTERN
+          ==================================================== */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              bottom-0
+              left-[24%]
+              right-0
+              h-[70px]
+              opacity-[0.035]
+            "
+          >
+            <div
+              className="
+                h-full
+                w-full
+                bg-[repeating-linear-gradient(
+                  90deg,
+                  #000_0px,
+                  #000_38px,
+                  transparent_38px,
+                  transparent_58px
+                )]
+              "
+            />
           </div>
-          <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#E5C500]">BZB Group</p>
-            <h1 className="mt-1 text-2xl font-bold text-white">Admin Portal</h1>
-          </div>
-        </div>
 
-        {/* Card */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
-          <p className="mb-6 text-sm text-slate-400">Sign in with your credentials to continue.</p>
+          {/* ===================================================
+              DESKTOP TWO COLUMN
+          ==================================================== */}
+          <div className="relative grid min-h-[600px] lg:grid-cols-2">
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* User ID */}
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">
-                User ID
-              </label>
-              <input
-                type="text"
-                value={form.userId}
-                onChange={(e) => setForm({ ...form, userId: e.target.value })}
-                required
-                autoComplete="username"
-                placeholder="Enter your user ID"
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-[#E5C500]/50 focus:ring-1 focus:ring-[#E5C500]/30"
-              />
-            </div>
+            {/* =================================================
+                LEFT — MBD BRAND
+            ================================================== */}
+            <div
+              className="
+                flex
+                items-center
+                justify-center
+                px-6
+                py-12
+                sm:px-10
+                lg:px-12
+              "
+            >
+              <div className="flex w-full max-w-[430px] flex-col items-center">
 
-            {/* Password */}
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-slate-400">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPwd ? 'text' : 'password'}
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  required
-                  autoComplete="current-password"
-                  placeholder="Enter your password"
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 pr-11 text-sm text-white placeholder-slate-500 outline-none transition focus:border-[#E5C500]/50 focus:ring-1 focus:ring-[#E5C500]/30"
+                {/* Logo */}
+                <Image
+                  src="/images/admin/logo/MBD_logo.svg"
+                  alt="MBD - Builders & Developers"
+                  width={430}
+                  height={150}
+                  priority
+                  className="
+                    h-auto
+                    w-[240px]
+                    object-contain
+                    sm:w-[300px]
+                    lg:w-[380px]
+                  "
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPwd((p) => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-                  aria-label="Toggle password visibility"
-                >
-                  {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
+
               </div>
             </div>
 
-            {/* Error */}
-            {message && (
-              <p className="rounded-lg bg-rose-500/10 px-4 py-2.5 text-sm font-medium text-rose-400">
-                {message}
-              </p>
-            )}
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#E5C500] px-4 py-3 text-sm font-bold text-black transition hover:bg-[#f0d000] disabled:opacity-60"
+            {/* =================================================
+                RIGHT — LOGIN
+            ================================================== */}
+            <div
+              className="
+                flex
+                items-center
+                justify-center
+                px-6
+                pb-12
+                sm:px-10
+                lg:px-14
+                lg:py-12
+              "
             >
-              {loading ? (
-                <>
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" />
-                  Signing in…
-                </>
-              ) : (
-                'Sign in'
-              )}
-            </button>
-          </form>
+              <div className="w-full max-w-[400px]">
 
-          <div className="mt-6 border-t border-white/10 pt-5 text-center text-sm text-slate-400">
-            {/* <p>
-              Need a member account?{' '}
-              <Link href="/admin/register" className="font-semibold text-[#E5C500] hover:underline">
-                Register here
-              </Link>
-            </p> */}
-            <p className="mt-3">
-              <Link href="/admin/forgot-password" className="font-semibold text-[#E5C500] hover:underline">
-                Forgot Password?
-              </Link>
-            </p>
+                {/* Heading */}
+                <h1
+                  className="
+                    mb-8
+                    text-center
+                    text-[22px]
+                    font-medium
+                    tracking-[-0.02em]
+                    text-[#111111]
+                    sm:text-[24px]
+                  "
+                >
+                  Member login
+                </h1>
+
+                {/* =================================================
+                    LOGIN FORM
+                ================================================== */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-2"
+                >
+
+                  {/* =================================================
+                      MEMBER ID
+                  ================================================== */}
+                  <div className="relative">
+                    <Mail
+                      className="
+                        pointer-events-none
+                        absolute
+                        left-6
+                        top-1/2
+                        z-10
+                        h-6
+                        w-6
+                        -translate-y-1/2
+                        text-[#AAAAAA]
+                      "
+                    />
+
+                    <input
+                      type="text"
+                      value={form.userId}
+                      onChange={(e) =>
+                        handleChange(
+                          'userId',
+                          e.target.value
+                        )
+                      }
+                      required
+                      autoComplete="username"
+                      placeholder="Member ID"
+                      disabled={loading}
+                      className="
+                        h-[78px]
+                        w-full
+                        rounded-[11px]
+                        border
+                        border-[#E5E5E5]
+                        bg-[#F1F1F1]
+                        pl-[76px]
+                        pr-5
+                        text-center
+                        text-[18px]
+                        font-normal
+                        text-[#222222]
+                        outline-none
+                        placeholder:text-[#A7A7A7]
+                        transition
+                        focus:border-[#E5C500]
+                        focus:bg-white
+                        focus:ring-2
+                        focus:ring-[#E5C500]/20
+                        disabled:cursor-not-allowed
+                        disabled:opacity-70
+                        sm:text-[19px]
+                      "
+                    />
+                  </div>
+
+                  {/* =================================================
+                      PASSWORD
+                  ================================================== */}
+                  <div className="relative">
+                    <LockKeyhole
+                      className="
+                        pointer-events-none
+                        absolute
+                        left-6
+                        top-1/2
+                        z-10
+                        h-6
+                        w-6
+                        -translate-y-1/2
+                        text-[#AAAAAA]
+                      "
+                    />
+
+                    <input
+                      type={
+                        showPwd
+                          ? 'text'
+                          : 'password'
+                      }
+                      value={form.password}
+                      onChange={(e) =>
+                        handleChange(
+                          'password',
+                          e.target.value
+                        )
+                      }
+                      required
+                      autoComplete="current-password"
+                      placeholder="Password"
+                      disabled={loading}
+                      className="
+                        h-[78px]
+                        w-full
+                        rounded-[11px]
+                        border
+                        border-[#E5E5E5]
+                        bg-[#F1F1F1]
+                        pl-[76px]
+                        pr-[58px]
+                        text-center
+                        text-[18px]
+                        font-normal
+                        text-[#222222]
+                        outline-none
+                        placeholder:text-[#A7A7A7]
+                        transition
+                        focus:border-[#E5C500]
+                        focus:bg-white
+                        focus:ring-2
+                        focus:ring-[#E5C500]/20
+                        disabled:cursor-not-allowed
+                        disabled:opacity-70
+                        sm:text-[19px]
+                      "
+                    />
+
+                    {/* Show / Hide Password */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowPwd(
+                          (previous) => !previous
+                        )
+                      }
+                      disabled={loading}
+                      aria-label={
+                        showPwd
+                          ? 'Hide password'
+                          : 'Show password'
+                      }
+                      className="
+                        absolute
+                        right-5
+                        top-1/2
+                        flex
+                        -translate-y-1/2
+                        items-center
+                        justify-center
+                        p-2
+                        text-[#AAAAAA]
+                        transition
+                        hover:text-[#555555]
+                      "
+                    >
+                      {showPwd ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* =================================================
+                      ERROR MESSAGE
+                  ================================================== */}
+                  {message && (
+                    <div
+                      role="alert"
+                      className="
+                        rounded-lg
+                        border
+                        border-red-200
+                        bg-red-50
+                        px-4
+                        py-3
+                        text-center
+                        text-sm
+                        font-medium
+                        text-red-600
+                      "
+                    >
+                      {message}
+                    </div>
+                  )}
+
+                  {/* =================================================
+                      LOGIN BUTTON
+                  ================================================== */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="
+                      mt-5
+                      flex
+                      h-[80px]
+                      w-full
+                      items-center
+                      justify-center
+                      gap-2
+                      rounded-[11px]
+                      bg-[#E5C500]
+                      px-5
+                      text-[22px]
+                      font-normal
+                      text-white
+                      transition-all
+                      duration-200
+                      hover:bg-[#D5B700]
+                      active:scale-[0.99]
+                      disabled:cursor-not-allowed
+                      disabled:opacity-70
+                      sm:text-[24px]
+                    "
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <span>Logging in...</span>
+                      </>
+                    ) : (
+                      'Login'
+                    )}
+                  </button>
+                </form>
+
+                {/* =================================================
+                    FORGOT PASSWORD
+                ================================================== */}
+                <div className="mt-8 text-center">
+                  <Link
+                    href="/admin/forgot-password"
+                    className="
+                      text-[18px]
+                      font-normal
+                      text-[#999999]
+                      transition
+                      hover:text-[#111111]
+                      sm:text-[20px]
+                    "
+                  >
+                    Forgot{' '}
+                    <span className="font-medium text-[#111111]">
+                      Password?
+                    </span>
+                  </Link>
+                </div>
+
+              </div>
+            </div>
           </div>
-        </div>
-
-        <p className="mt-6 text-center text-xs text-slate-600">
-          BZB Group — Restricted access. Authorised personnel only.
-        </p>
+        </section>
       </div>
     </main>
   );

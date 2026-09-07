@@ -347,6 +347,21 @@ ON member_notifications(created_at DESC);
 
 CREATE INDEX idx_member_notifications_member_created
 ON member_notifications(member_id, created_at DESC);
+
+
+ALTER TABLE members
+ADD COLUMN IF NOT EXISTS sponsor_id UUID;
+
+CREATE INDEX IF NOT EXISTS
+idx_members_sponsor_id
+ON members(sponsor_id);
+
+ALTER TABLE members
+ADD CONSTRAINT fk_members_sponsor
+FOREIGN KEY (sponsor_id)
+REFERENCES members(id)
+ON DELETE SET NULL;
+
 -- ============================================================
 -- Indexes for common lookups
 -- ============================================================

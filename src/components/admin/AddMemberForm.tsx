@@ -259,7 +259,7 @@ export default function AddMemberForm({
               <label className="mb-2 sm:mb-3 block text-xs sm:text-sm font-medium text-slate-700">Our Bank Details</label>
               <div className="rounded-lg border border-slate-200 bg-slate-900 p-3 sm:p-4 text-white w-full sm:w-60">
                 <div className="mb-2 sm:mb-3 flex items-center justify-between">
-                  <div className="h-48 sm:h-56 md:h-80 w-full sm:w-56 md:w-60 rounded-lg p-1">
+                  <div className="h-[28rem] sm:h-[28rem] md:h-[28rem] w-full sm:w-56 md:w-60 rounded-lg p-1">
                     <Image
                       src="/images/admin/upi/upi-qr-code.png"
                       alt="UPI QR Code"
