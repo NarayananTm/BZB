@@ -4,9 +4,9 @@ import RouteAwareLayout from '@/components/common/RouteAwareLayout';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'BZB - Born to Win | Real Estate & Referral Platform',
-  description: 'Build your future with BZB. Invest in real estate, grow your network through referrals, and unlock exclusive rewards.',
-  keywords: ['real estate', 'investment', 'referral program', 'BZB'],
+  title: 'MBD - Born to Win | Real Estate & Referral Platform',
+  description: 'Build your future with MBD. Invest in real estate, grow your network through referrals, and unlock exclusive rewards.',
+  keywords: ['real estate', 'investment', 'referral program', 'MBD'],
 };
 
 export default function RootLayout({

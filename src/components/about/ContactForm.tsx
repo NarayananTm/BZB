@@ -324,7 +324,7 @@ export default function ContactForm() {
             text-gray-500
           "
         >
-          By submitting this form, you agree that BZB may contact you
+          By submitting this form, you agree that MBD may contact you
           regarding your enquiry.
         </p>
 
