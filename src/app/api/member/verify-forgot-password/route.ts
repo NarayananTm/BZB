@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query, queryOne } from '@/lib/postgres';
+import {  queryOne } from '@/lib/postgres';
 import { signToken } from '@/lib/jwt';
 
 export async function POST(request: NextRequest) {
