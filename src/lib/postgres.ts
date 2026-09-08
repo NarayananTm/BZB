@@ -99,13 +99,13 @@ export async function queryOne<T = unknown>(sql: string, params?: unknown[]): Pr
 
 export async function readUsers(): Promise<UserRecord[]> {
   return query<UserRecord>(
-    'SELECT id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate" FROM users ORDER BY id'
+    'SELECT id, full_name AS "fullName", email, mobile, password, created_at AS "createdDate" FROM website_users ORDER BY id'
   );
 }
 
 export async function findUserByEmailOrMobile(emailOrMobile: string): Promise<UserRecord | null> {
   return queryOne<UserRecord>(
-    'SELECT id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate" FROM users WHERE LOWER(email) = LOWER($1) OR mobile = $1 LIMIT 1',
+    'SELECT id, full_name AS "fullName", email, mobile, password, created_at AS "createdDate" FROM website_users WHERE LOWER(email) = LOWER($1) OR mobile = $1 LIMIT 1',
     [emailOrMobile]
   );
 }
@@ -116,7 +116,7 @@ export async function registerUser(user: Omit<UserRecord, 'createdDate'> & { id?
   }
 
   const result = await getPool().query<UserRecord>(
-    'INSERT INTO users (id, full_name, email, mobile, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, full_name AS "fullName", email, mobile, password, created_date AS "createdDate"',
+    'INSERT INTO website_users (id, full_name, email, mobile, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, full_name AS "fullName", email, mobile, password, created_at AS "createdDate"',
     [user.id, user.fullName, user.email, user.mobile, user.password]
   );
     
