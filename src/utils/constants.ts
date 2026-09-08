@@ -6,6 +6,7 @@ export const ROUTES = {
   CONTACT: '/contact',
   MEMBER: '/member',
   ADMIN: '/admin',
+  Dashboard: '/admin/login',
   MEMBER_DASHBOARD: '/mbd',
   // MEMBER_DASHBOARD: '/member/dashboard',
   // MEMBER_PROFILE: '/member/profile',

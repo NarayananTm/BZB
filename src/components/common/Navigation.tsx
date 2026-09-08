@@ -63,7 +63,7 @@ console.log("Navigation component mounted and event listeners added.");
     { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About Us', href: ROUTES.ABOUT },
-    // { label: 'Contact', href: ROUTES.CONTACT },
+     { label: 'Dashboard', href: ROUTES.Dashboard },
   ];
 
   const handleLogout = async () => {
