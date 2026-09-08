@@ -43,7 +43,7 @@ export default function LoginPage() {
             );
             window.dispatchEvent(new Event("userChanged"));
             toast.success('Login successful');
-            router.push('/bzb');
+            router.push('/mbd');
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Login failed');
         } finally {

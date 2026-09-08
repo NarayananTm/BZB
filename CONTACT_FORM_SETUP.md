@@ -8,14 +8,11 @@ Successfully configured the Contact Us form to store data in PostgreSQL instead 
 ### 1. Database Table
 **Migration File**: `database/migration_contacts_update.sql`
 
-```sql
--- Add name field if it doesn't exist
-ALTER TABLE contacts ADD COLUMN IF NOT EXISTS name VARCHAR(255);
+Run this migration against the PostgreSQL database used by the app before
+submitting the form. It adds the missing `name` column and repairs automatic ID
+generation for existing `contacts` tables.
 
--- Create indexes for better query performance
-CREATE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
-CREATE INDEX IF NOT EXISTS idx_contacts_created_at ON contacts(created_at DESC);
-```
+The migration is safe to run more than once.
 
 **Table Structure**:
 ```

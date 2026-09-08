@@ -271,7 +271,7 @@ export default function AboutSection() {
             >
 
               <Button
-                href="/bzb"
+                href="/mbd"
                 className="
                   h-14
                   sm:h-[58px]

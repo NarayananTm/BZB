@@ -12,7 +12,7 @@ export default function ProfilePage() {
               <p className="mt-2 sm:mt-3 max-w-2xl text-xs sm:text-sm md:text-base text-[#777777]">View your member details, referral progress, and current rewards from the MBD dashboard.</p>
             </div>
             <Link
-              href="/bzb"
+              href="/mbd"
               className="inline-flex items-center justify-center rounded-full bg-[#E5C400] px-4 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm font-semibold text-black transition hover:bg-[#d5b600] whitespace-nowrap w-full sm:w-auto"
             >
               Back to Dashboard

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://bzb.com',
+    url: 'https://mbd.com',
     title: 'MBD - Born to Win',
     description: 'Real Estate & Investment Platform',
     images: [

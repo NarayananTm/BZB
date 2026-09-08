@@ -210,7 +210,7 @@ export default function ContactPage() {
             {
               title: 'About MBD',
               description: 'Learn more about our company and mission',
-              link: '/bzb',
+              link: '/mbd',
             },
             {
               title: 'Referral Program',
@@ -245,7 +245,7 @@ export default function ContactPage() {
             <Link href="#contact-form">
               <Button>Send Message</Button>
             </Link>
-            <Link href="/bzb">
+            <Link href="/mbd">
               <Button variant="secondary">Become a Member</Button>
             </Link>
           </div>

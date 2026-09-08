@@ -53,7 +53,13 @@ export default function ContactSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: "Contact request submitted from the MBD contact section.",
+        }),
       });
 
       const result = await response.json();
