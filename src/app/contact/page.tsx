@@ -25,7 +25,7 @@ export default function ContactPage() {
           </span>
         }
         subtitle="We're here to help"
-        description="Have questions about our properties, investment opportunities, or the referral program? Contact us today and let us help you get started on your journey with BZB."
+        description="Have questions about our properties, investment opportunities, or the referral program? Contact us today and let us help you get started on your journey with MBD."
       >
         <Link href="#contact-form">
           <Button>Send Message</Button>
@@ -208,7 +208,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: 'About BZB',
+              title: 'About MBD',
               description: 'Learn more about our company and mission',
               link: '/bzb',
             },

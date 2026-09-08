@@ -57,7 +57,7 @@ export async function sendCredentialsSMS(
   password: string,
   memberName: string,
 ): Promise<SMSResponse> {
-  const message = `Welcome to BZB, ${memberName}! 🎉\n\nYour login credentials:\nUser ID: ${userId}\nPassword: ${password}\n\nLogin at: [your-app-url]\n\nKeep your credentials secure!`;
+  const message = `Welcome to MBD, ${memberName}! 🎉\n\nYour login credentials:\nUser ID: ${userId}\nPassword: ${password}\n\nLogin at: [your-app-url]\n\nKeep your credentials secure!`;
 
   return sendSMS(phoneNumber, message);
 }
@@ -69,7 +69,7 @@ export async function sendApprovalSMS(
   phoneNumber: string,
   memberName: string,
 ): Promise<SMSResponse> {
-  const message = `Hi ${memberName}, your BZB membership application has been approved! 🎊 You can now log in to your account.`;
+  const message = `Hi ${memberName}, your MBD membership application has been approved! 🎊 You can now log in to your account.`;
 
   return sendSMS(phoneNumber, message);
 }
@@ -83,7 +83,7 @@ export async function sendRejectionSMS(
   reason?: string,
 ): Promise<SMSResponse> {
   const reasonText = reason ? `\nReason: ${reason}` : '';
-  const message = `Hi ${memberName}, unfortunately your BZB membership application was not approved.${reasonText}\n\nPlease contact support for more details.`;
+  const message = `Hi ${memberName}, unfortunately your MBD membership application was not approved.${reasonText}\n\nPlease contact support for more details.`;
 
   return sendSMS(phoneNumber, message);
 }

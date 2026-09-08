@@ -34,7 +34,7 @@ export default function WhyChoose() {
                   mb-24
                 "
               >
-                Why Choose BZB ?
+                Why Choose MBD ?
               </h2>
 
               <div className="space-y-5">
@@ -87,7 +87,7 @@ export default function WhyChoose() {
             {/* Helmet Image */}
 
             <Image
-              src="/images/bzb/helmet.png"
+              src="/images/bzb/helmet.svg"
               alt=""
               fill
               quality={100}

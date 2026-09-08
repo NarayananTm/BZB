@@ -1,7 +1,7 @@
 {
   "name": "bzb-platform",
   "version": "1.0.0",
-  "description": "BZB - Born to Win: Real Estate & Referral Platform",
+  "description": "MBD - Born to Win: Real Estate & Referral Platform",
   "type": "module",
   "scripts": {
     "dev": "next dev",

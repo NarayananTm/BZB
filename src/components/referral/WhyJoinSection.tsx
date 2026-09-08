@@ -26,7 +26,7 @@ const features = [
   {
     icon: "/images/referral/community.png",
     title: "Strong Community",
-    text: "Grow together with thousands of members across the BZB network.",
+    text: "Grow together with thousands of members across the MBD network.",
   },
 ];
 

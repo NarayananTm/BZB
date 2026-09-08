@@ -89,7 +89,7 @@ console.log("Navigation component mounted and event listeners added.");
             <Image
               src="/images/logo/MBD Log.svg"
               alt="MBD Logo"
-              width={120}
+              width={220}
               height={120}
               priority
               className="object-contain"

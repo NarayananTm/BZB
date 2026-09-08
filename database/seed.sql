@@ -1,5 +1,5 @@
 -- ============================================================
--- BZB Platform - Seed Data
+-- MBD Platform - Seed Data
 -- Run AFTER schema.sql
 -- ============================================================
 
@@ -87,7 +87,7 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Default admin settings
 INSERT INTO admin_settings (key, value, description) VALUES
-  ('site_name',            'BZB Group',                    'Platform display name'),
+  ('site_name',            'MBD Group',                    'Platform display name'),
   ('referral_bonus_l1',    '1200',                         'Referral reward amount for Level 1 (Rs)'),
   ('referral_bonus_l2',    '2500',                         'Referral reward amount for Level 2 (Rs)'),
   ('referral_bonus_l3',    '3500',                         'Referral reward amount for Level 3 (Rs)'),

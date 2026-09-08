@@ -7,14 +7,14 @@ import type { Metadata } from 'next';
 // import Link from 'next/link';
 // import Image from 'next/image';
 
-import HeroLayout from "@/components/bzb/HeroLayout";
-import ContactSection from "@/components/bzb/ContactSection";
-import FAQSection from "@/components/bzb/FAQSection";
-import OurServices from '@/components/bzb/OurServices';
-import WhyChoose from '@/components/bzb/WhyChoose';
-import VisionMission from '@/components/bzb/VisionMission';
-import AboutCompany from '@/components/bzb/AboutCompany';
-import FeatureCards from '@/components/bzb/FeatureCards';
+import HeroLayout from "@/components/mbd/HeroLayout";
+import ContactSection from "@/components/mbd/ContactSection";
+import FAQSection from "@/components/mbd/FAQSection";
+import OurServices from '@/components/mbd/OurServices';
+import WhyChoose from '@/components/mbd/WhyChoose';
+import VisionMission from '@/components/mbd/VisionMission';
+import AboutCompany from '@/components/mbd/AboutCompany';
+import FeatureCards from '@/components/mbd/FeatureCards';
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -55,29 +55,29 @@ export const metadata: Metadata = {
 
 // const faqItems = [
 //   {
-//     question: 'What is BZB?',
+//     question: 'What is MBD?',
 //     answer:
-//       'BZB is a modern Builders & Developers platform committed to delivering quality real estate projects while creating rewarding opportunities for our members through our innovative referral program.',
+//       'MBD is a modern Builders & Developers platform committed to delivering quality real estate projects while creating rewarding opportunities for our members through our innovative referral program.',
 //   },
 //   {
-//     question: 'How long has BZB been operating?',
+//     question: 'How long has MBD been operating?',
 //     answer:
-//       'BZB has grown from a vision of delivering high-quality developments and meaningful member experiences into a trusted platform where innovation, trust, and opportunity come together.',
+//       'MBD has grown from a vision of delivering high-quality developments and meaningful member experiences into a trusted platform where innovation, trust, and opportunity come together.',
 //   },
 //   {
-//     question: 'What makes BZB different?',
+//     question: 'What makes MBD different?',
 //     answer:
 //       'We combine premium real estate developments with a dynamic referral-based membership ecosystem, creating multiple value streams for our members while maintaining transparency and trust.',
 //   },
 //   {
-//     question: 'How can I invest with BZB?',
+//     question: 'How can I invest with MBD?',
 //     answer:
 //       'You can become a member and access our curated property investment opportunities. As your network grows through our referral program, you unlock additional benefits and rewards.',
 //   },
 //   {
-//     question: 'Is BZB available in my city?',
+//     question: 'Is MBD available in my city?',
 //     answer:
-//       'BZB operates across multiple locations. Contact our team to learn about availability in your area and current projects near you.',
+//       'MBD operates across multiple locations. Contact our team to learn about availability in your area and current projects near you.',
 //   },
 // ];
 

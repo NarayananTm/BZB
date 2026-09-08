@@ -7,7 +7,7 @@ const faqItems = [
   {
     question: "Are your projects legally approved?",
     answer:
-      "Yes. Every BZB project complies with applicable legal regulations and approval requirements.",
+      "Yes. Every MBD project complies with applicable legal regulations and approval requirements.",
   },
   {
     question: "Do you provide investment guidance?",

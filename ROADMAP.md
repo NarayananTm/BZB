@@ -1,7 +1,7 @@
-# BZB Platform - Page Implementation Roadmap
+# MBD Platform - Page Implementation Roadmap
 
 ## Overview
-This document outlines the structure and implementation plan for all main pages of the BZB platform based on the PDF design specifications.
+This document outlines the structure and implementation plan for all main pages of the MBD platform based on the PDF design specifications.
 
 ---
 
@@ -11,7 +11,7 @@ This document outlines the structure and implementation plan for all main pages 
 
 **Sections to Include:**
 - Hero section with CTA
-- About BZB section
+- About MBD section
 - Features overview (Property Investment, Referral, Member Services)
 - Referral program teaser
 - Call-to-action section
@@ -31,7 +31,7 @@ This document outlines the structure and implementation plan for all main pages 
   ↓
 [Hero with "Build Your Future" + CTA]
   ↓
-[About BZB Section]
+[About MBD Section]
   ↓
 [4 Feature Cards]
   ↓
@@ -44,7 +44,7 @@ This document outlines the structure and implementation plan for all main pages 
 
 ---
 
-### 2. BZB Page (`/src/app/bzb/page.tsx`)
+### 2. MBD Page (`/src/app/bzb/page.tsx`)
 
 **Sections to Include:**
 - Hero with "Building Trust. Creating Opportunities."
@@ -167,7 +167,7 @@ import Section from '@/layouts/Section';
 import Container from '@/layouts/Container';
 ```
 
-### Page 2: BZB
+### Page 2: MBD
 ```tsx
 import Hero from '@/components/sections/Hero';
 import { FeatureCard } from '@/components';
@@ -265,7 +265,7 @@ Each page should have:
 ### Metadata
 ```typescript
 export const metadata: Metadata = {
-  title: 'Page Title | BZB',
+  title: 'Page Title | MBD',
   description: 'Page description...',
   keywords: ['keyword1', 'keyword2'],
 };
@@ -373,7 +373,7 @@ const HeavyComponent = dynamic(
 | Phase | Task | Duration |
 |-------|------|----------|
 | 4 | Home Page | 2-3 hours |
-| 4 | BZB Page | 1-2 hours |
+| 4 | MBD Page | 1-2 hours |
 | 4 | Referral Page | 2-3 hours |
 | 4 | About Page | 1-2 hours |
 | 4 | Contact Page | 1-2 hours |

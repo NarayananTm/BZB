@@ -175,7 +175,7 @@ export default function AboutSection() {
                 lg:text-[30px]
               "
             >
-              About BZB
+              About MBD
             </p>
 
             <h2
@@ -213,7 +213,7 @@ export default function AboutSection() {
                 lg:text-[22px]
               "
             >
-              BZB is a modern Builders & Developers platform committed
+              MBD is a modern Builders & Developers platform committed
               to delivering quality real estate projects while creating
               rewarding opportunities for our members.
             </p>
@@ -233,7 +233,7 @@ export default function AboutSection() {
               "
             >
               Whether you're looking to own a property, invest in real
-              estate, or earn through referrals, BZB provides a
+              estate, or earn through referrals, MBD provides a
               transparent and trusted ecosystem designed for long-term
               growth.
             </p>

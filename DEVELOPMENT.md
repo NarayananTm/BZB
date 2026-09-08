@@ -1,4 +1,4 @@
-# BZB Platform - Development Guide
+# MBD Platform - Development Guide
 
 ## Project Phases Status
 
@@ -45,7 +45,7 @@
 **Routes Structure:**
 ```
 /                    - Home
-/bzb                 - About BZB
+/bzb                 - About MBD
 /referral            - Referral Program
 /about               - About Us
 /contact             - Contact Page
@@ -134,7 +134,7 @@ import { Input } from '@/components';
 import { Hero, Button } from '@/components';
 
 <Hero
-  title="Welcome to BZB"
+  title="Welcome to MBD"
   subtitle="Born to Win"
   description="Your real estate journey starts here"
 >
@@ -240,12 +240,12 @@ public/
 ### Pages to Create:
 1. **Home Page** (`/src/app/page.tsx`)
    - Hero with CTA
-   - About BZB section
+   - About MBD section
    - Features overview
    - Referral program teaser
    - Call-to-action
 
-2. **BZB Page** (`/src/app/bzb/page.tsx`)
+2. **MBD Page** (`/src/app/bzb/page.tsx`)
    - Company story
    - Mission & vision
    - Services/offerings

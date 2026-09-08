@@ -1,9 +1,9 @@
 @echo off
-REM BZB Platform - Quick Setup Script (Windows)
+REM MBD Platform - Quick Setup Script (Windows)
 REM This script automates the initial setup
 
 echo.
-echo 🚀 BZB Platform - Initialization Script
+echo 🚀 MBD Platform - Initialization Script
 echo ========================================
 echo.
 

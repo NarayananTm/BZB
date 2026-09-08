@@ -81,7 +81,7 @@ function RegisterForm() {
       <div className="mx-auto flex max-w-6xl flex-col overflow-hidden rounded-[32px] border border-white/10 bg-white/10 shadow-2xl backdrop-blur-xl lg:flex-row">
         <div className="flex-1 bg-black/20 p-8 sm:p-12 lg:p-16">
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#FFD31A]">Create Account</p>
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Join the BZB community</h1>
+          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Join the MBD community</h1>
           <p className="max-w-md text-base text-slate-300 sm:text-lg">
             Register to unlock access to referral benefits, member opportunities, and exclusive updates.
           </p>

@@ -35,7 +35,7 @@ export default function SponsorReferralCard({
 
   const handleShare = async () => {
     if (typeof navigator !== 'undefined' && navigator.share) {
-      await navigator.share({ title: 'Join BZB', text: `Join BZB using ${memberName ?? 'my'} referral link.`, url: referralLink });
+      await navigator.share({ title: 'Join MBD', text: `Join MBD using ${memberName ?? 'my'} referral link.`, url: referralLink });
       return;
     }
     await handleCopyLink();

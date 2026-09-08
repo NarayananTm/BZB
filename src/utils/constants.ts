@@ -14,7 +14,7 @@ export const ROUTES = {
 
 export const NAVIGATION_LINKS = [
   { label: 'Home', href: ROUTES.HOME },
-  { label: 'BZB', href: ROUTES.MBD },
+  { label: 'MBD', href: ROUTES.MBD },
   { label: 'Referral', href: ROUTES.REFERRAL },
   { label: 'About', href: ROUTES.ABOUT },
   { label: 'Contact', href: ROUTES.CONTACT },
@@ -22,7 +22,7 @@ export const NAVIGATION_LINKS = [
 
 export const FOOTER_LINKS = {
   quickLinks: [
-    { label: 'BZB', href: ROUTES.MBD },
+    { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About', href: ROUTES.ABOUT },
     { label: 'Contact Us', href: ROUTES.CONTACT },
@@ -35,7 +35,7 @@ export const FOOTER_LINKS = {
 } as const;
 
 export const COMPANY_INFO = {
-  name: 'BZB',
+  name: 'MBD',
   tagline: 'Born to Win',
   fullTagline: 'Invest. Refer. Grow. Reward.',
   description: 'Building Dreams. Creating Opportunities.',

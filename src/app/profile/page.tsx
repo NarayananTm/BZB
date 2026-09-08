@@ -9,7 +9,7 @@ export default function ProfilePage() {
             <div>
               <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-[#777777]">Profile</p>
               <h1 className="mt-2 sm:mt-3 text-2xl sm:text-3xl md:text-4xl font-semibold text-black">Member Profile</h1>
-              <p className="mt-2 sm:mt-3 max-w-2xl text-xs sm:text-sm md:text-base text-[#777777]">View your member details, referral progress, and current rewards from the BZB dashboard.</p>
+              <p className="mt-2 sm:mt-3 max-w-2xl text-xs sm:text-sm md:text-base text-[#777777]">View your member details, referral progress, and current rewards from the MBD dashboard.</p>
             </div>
             <Link
               href="/bzb"

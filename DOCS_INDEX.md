@@ -1,6 +1,6 @@
-# BZB Platform - Documentation Index
+# MBD Platform - Documentation Index
 
-Welcome to BZB Platform! Use this guide to navigate the project documentation and get started quickly.
+Welcome to MBD Platform! Use this guide to navigate the project documentation and get started quickly.
 
 ## 📖 Documentation Files
 
@@ -312,4 +312,4 @@ It's the best entry point and will give you the complete picture of what's been 
 ---
 
 *Last Updated: 2024*
-*BZB Platform - Born to Win*
+*MBD Platform - Born to Win*

@@ -24,37 +24,23 @@ export default function Footer() {
   return (
     <footer className="bg-[#181616] text-white overflow-hidden">
 
-      <div className="mx-auto max-w-[1450px] px-6 lg:px-10 py-16 lg:py-20">
+      <div className="mx-auto max-w-[1450px] px-6 lg:px-10 py-8 lg:py-10">
 
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_0.8fr_1fr] gap-12 lg:gap-24">
 
           {/* ================= Left ================= */}
 
-          <div>
-
-            <div className="flex items-center gap-3">
+          <div className="-mt-12">
+            <div className="flex items-center mt-0 gap-3">
 
               <Image
                 src="/images/logo/MBD Log.svg"
                 alt="MBD Logo"
-                width={46}
-                height={46}
+                width={220}
+                height={120}
                 priority
                 className="object-contain"
               />
-
-              <div className="leading-none">
-
-                <h2 className="text-[22px] font-bold tracking-tight">
-                  BZB
-                </h2>
-
-                <p className="mt-1 text-[6px] uppercase tracking-[0.45em] text-gray-400">
-                  Born To Win
-                </p>
-
-              </div>
-
             </div>
 
             <h3 className="mt-8 text-[24px] font-semibold leading-tight">
@@ -64,7 +50,7 @@ export default function Footer() {
             <p className="mt-5 max-w-[330px] text-sm leading-8 text-gray-400">
               Whether you're looking for your dream property,
               a trusted investment, or an opportunity to grow
-              with our referral program, BZB is here to
+              with our referral program, MBD is here to
               support your journey.
             </p>
 
@@ -240,7 +226,7 @@ export default function Footer() {
           >
 
             <p className="text-xs text-gray-500">
-              © {currentYear} BZB. All Rights Reserved.
+              © {currentYear} MBD. All Rights Reserved.
             </p>
 
             <div className="flex flex-wrap justify-center gap-6">

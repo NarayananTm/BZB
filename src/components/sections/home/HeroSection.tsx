@@ -31,7 +31,7 @@ pb-10
       {/* ================= Background ================= */}
 
       <Image
-        src="/images/hero/BZB hom baner.png"
+        src="/images/hero/MBD hom baner.png"
         alt="Hero Background"
         fill
         priority
@@ -328,8 +328,8 @@ xl:w-[460px]
 
 
               <Image
-                src="/images/hero/BZB Mobile App.png"
-                alt="BZB Mobile App"
+                src="/images/hero/MBD Mobile App.png"
+                alt="MBD Mobile App"
 
                 width={420}
                 height={760}

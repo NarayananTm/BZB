@@ -1,8 +1,8 @@
-# BZB Platform - Project Summary & Quick Start
+# MBD Platform - Project Summary & Quick Start
 
 ## 🎯 Project Overview
 
-**BZB - Born to Win** is a modern real estate and referral platform built with:
+**MBD - Born to Win** is a modern real estate and referral platform built with:
 - **Framework**: Next.js 14 with React 18
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS
@@ -28,7 +28,7 @@
 ## 🏗️ Architecture Overview
 
 ```
-BZB Platform
+MBD Platform
 ├── Core Infrastructure (Phase 1) ✅
 │   ├── Next.js 14 Setup
 │   ├── TypeScript Configuration
@@ -51,7 +51,7 @@ BZB Platform
 │
 └── Page Layer (Phase 4) 🔄
     ├── Home Page
-    ├── BZB (About)
+    ├── MBD (About)
     ├── Referral Program
     ├── About Us
     └── Contact Page
@@ -287,7 +287,7 @@ import { FAQ } from '@/components';
 
 ```
 /                   Home Page
-/bzb                About BZB
+/bzb                About MBD
 /referral          Referral Program
 /about             About Us
 /contact           Contact Page
@@ -369,7 +369,7 @@ import { FAQ } from '@/components';
 
 Ready to build:
 1. **Home Page** - Hero + Features + CTA
-2. **BZB Page** - About company
+2. **MBD Page** - About company
 3. **Referral Page** - Program details + Steps
 4. **About Page** - Mission + Vision
 5. **Contact Page** - Form + Info
@@ -410,7 +410,7 @@ npm start
 
 Create `.env.local`:
 ```env
-NEXT_PUBLIC_SITE_NAME=BZB Platform
+NEXT_PUBLIC_SITE_NAME=MBD Platform
 NEXT_PUBLIC_API_URL=https://api.bzb.com
 ```
 
@@ -518,7 +518,7 @@ NEXT_PUBLIC_API_URL=https://api.bzb.com
 
 ## 📄 License
 
-All rights reserved © 2024 BZB Platform
+All rights reserved © 2024 MBD Platform
 
 ---
 

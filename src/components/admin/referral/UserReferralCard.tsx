@@ -43,13 +43,13 @@ export default function UserReferralCard({
   };
 
   const handleShare = async () => {
-    // const shareText = `Join BZB Network! Use my referral link: ${referralLink}`;
+    // const shareText = `Join MBD Network! Use my referral link: ${referralLink}`;
     
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
-          title: 'Join BZB with My Referral',
-          text: `I'm inviting you to join BZB! Use my referral link to sign up.`,
+          title: 'Join MBD with My Referral',
+          text: `I'm inviting you to join MBD! Use my referral link to sign up.`,
           url: referralLink,
         });
       } catch (error) {
@@ -63,14 +63,14 @@ export default function UserReferralCard({
   };
 
   const handleShareViaWhatsApp = () => {
-    const message = `Hey! 👋 Join me on BZB Network! Here's my referral link: ${referralLink}`;
+    const message = `Hey! 👋 Join me on MBD Network! Here's my referral link: ${referralLink}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleShareViaEmail = () => {
-    const subject = 'Join BZB Network - My Referral Invitation';
-    const body = `Hi,\n\nI'd like to invite you to join BZB Network!\n\nClick this link to sign up using my referral:\n${referralLink}\n\nLooking forward to seeing you there!\n\nBest regards,\n${userName}`;
+    const subject = 'Join MBD Network - My Referral Invitation';
+    const body = `Hi,\n\nI'd like to invite you to join MBD Network!\n\nClick this link to sign up using my referral:\n${referralLink}\n\nLooking forward to seeing you there!\n\nBest regards,\n${userName}`;
     const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoUrl;
   };

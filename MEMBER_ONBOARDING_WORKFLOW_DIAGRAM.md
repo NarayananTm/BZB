@@ -137,7 +137,7 @@
          │              │             │     │ "Your request    │
          │    ┌─────────▼──────────┐  │     │ was rejected."   │
          │    │ Sending SMS:       │  │     │ [Reason]         │
-         │    │ "Welcome to BZB!   │  │     └────────┬─────────┘
+         │    │ "Welcome to MBD!   │  │     └────────┬─────────┘
          │    │ User ID: BZB12345  │  │              │
          │    │ Password: PWD12345 │  │              ▼
          │    │ Login at: [url]"   │  │     ┌──────────────────┐
@@ -169,7 +169,7 @@
     ┌─────────────────────────────────────────┐
     │ Member Receives SMS                     │
     ├─────────────────────────────────────────┤
-    │ 📱 "Welcome to BZB!                     │
+    │ 📱 "Welcome to MBD!                     │
     │                                         │
     │ Your login credentials:                 │
     │ User ID: BZB9601381                     │
@@ -236,7 +236,7 @@ Admin Action (Approve)
   │
   ├─→ Get member_requests record
   │
-  ├─→ Generate Member ID (BZB-XXXXX)
+  ├─→ Generate Member ID (MBD-XXXXX)
   │
   ├─→ Generate & Hash Password
   │

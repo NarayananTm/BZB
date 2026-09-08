@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document explains the complete member onboarding workflow implemented for the BZB platform. The system allows users to request membership through a multi-step form, which is then reviewed by admins and can be approved to automatically send SMS credentials.
+This document explains the complete member onboarding workflow implemented for the MBD platform. The system allows users to request membership through a multi-step form, which is then reviewed by admins and can be approved to automatically send SMS credentials.
 
 ## Workflow Steps
 
@@ -35,7 +35,7 @@ This document explains the complete member onboarding workflow implemented for t
 
 ### 5. Automatic SMS Credentials Sent
 - Upon approval, system:
-  - Generates unique Member ID (BZB-XXXXX format)
+  - Generates unique Member ID (MBD-XXXXX format)
   - Creates temporary password
   - Creates new member record in `members` table
   - Creates referral record linking to sponsor (if applicable)

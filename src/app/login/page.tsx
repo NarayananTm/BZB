@@ -56,7 +56,7 @@ export default function LoginPage() {
             <div className="mx-auto flex max-w-6xl flex-col overflow-hidden rounded-[32px] border border-white/10 bg-white/10 shadow-2xl backdrop-blur-xl lg:flex-row">
                 <div className="flex-1 bg-black/20 p-8 sm:p-12 lg:p-16">
                     <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#FFD31A]">Member Login</p>
-                    <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Welcome back to BZB</h1>
+                    <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Welcome back to MBD</h1>
                     <p className="max-w-md text-base text-slate-300 sm:text-lg">
                         Sign in to continue your journey, manage referrals, and unlock your member benefits.
                     </p>
@@ -101,9 +101,9 @@ export default function LoginPage() {
                             <Link href="/register" className="text-[#FFD31A] hover:underline">
                                 Register
                             </Link>
-                            <button type="button" className="hover:text-white">
+                            <Link href="/forgot-password" className="text-[#FFD31A] hover:underline">
                                 Forgot Password
-                            </button>
+                            </Link>
                         </div>
 
                     </form>

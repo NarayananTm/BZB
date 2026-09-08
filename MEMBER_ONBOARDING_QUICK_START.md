@@ -95,7 +95,7 @@ TWILIO_PHONE_NUMBER=xxx
 
 ### On Admin Approval:
 1. ✅ Creates new `members` record with:
-   - Unique Member ID (BZB-XXXXX)
+   - Unique Member ID (MBD-XXXXX)
    - Generated password
    - Status set to "Active"
    - Joining date = today
@@ -104,7 +104,7 @@ TWILIO_PHONE_NUMBER=xxx
 
 3. ✅ Sends SMS with:
    ```
-   Welcome to BZB!
+   Welcome to MBD!
    User ID: BZB12345
    Password: PWD123ABC
    Login at: [your-url]
@@ -142,7 +142,7 @@ If you don't have SMS configured yet:
 2. Check console/logs to see what SMS would be sent
 3. In `smsService.ts`, currently it logs to console:
    ```
-   📱 SMS to 9876543210: Welcome to BZB...
+   📱 SMS to 9876543210: Welcome to MBD...
    ```
 
 Once you configure a real SMS provider, it will send actual SMS automatically.

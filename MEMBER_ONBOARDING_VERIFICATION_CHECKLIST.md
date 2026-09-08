@@ -134,10 +134,10 @@
 **Purpose:** Verify SMS preparation
 - [ ] Approve a request
 - [ ] Check console/logs for SMS message
-- [ ] Should see: `📱 SMS to 9876543210: Welcome to BZB!...`
+- [ ] Should see: `📱 SMS to 9876543210: Welcome to MBD!...`
 - [ ] Verify it contains:
   - [ ] Welcome message
-  - [ ] User ID (BZB-XXXXX format)
+  - [ ] User ID (MBD-XXXXX format)
   - [ ] Password
   - [ ] Login URL
 

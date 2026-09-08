@@ -38,7 +38,7 @@ export default function UserIDCard({ userId, userName }: UserIDCardProps) {
   };
 
   const handleShareViaWhatsApp = () => {
-    const message = `My User ID on BZB: ${userId}`;
+    const message = `My User ID on MBD: ${userId}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

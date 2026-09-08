@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
 
   // Use admin session name if member not found
   const displayName = me?.name || session?.name || 'Member';
-  const userGroup = session?.role || 'Member of BZB';
+  const userGroup = session?.role || 'Member of MBD';
 
   const [levels, topups, earnings, teamMembers] = me
     ? await Promise.all([

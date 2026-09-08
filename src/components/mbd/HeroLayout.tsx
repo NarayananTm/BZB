@@ -224,7 +224,7 @@ export default function HeroLayout() {
               </p>
 
               <p className="mt-6 text-white leading-5 text-[15px] sm:text-[16px]">
-                Every BZB project is designed with modern architecture,
+                Every MBD project is designed with modern architecture,
                 quality construction, and long-term value to create
                 exceptional living and investment opportunities.
               </p>

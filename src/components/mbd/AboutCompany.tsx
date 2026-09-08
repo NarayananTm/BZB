@@ -144,7 +144,7 @@ export default function AboutCompany() {
                   lg:text-[25px]
                 "
               >
-                BZB Builders & Developers is committed to creating
+                MBD Builders & Developers is committed to creating
                 thoughtfully designed residential communities and
                 commercial developments that meet modern lifestyle
                 needs.

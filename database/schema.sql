@@ -1,5 +1,5 @@
 -- ============================================================
--- BZB Platform - PostgreSQL Database Schema
+-- MBD Platform - PostgreSQL Database Schema
 -- Host: 
 -- Database: 
 -- ============================================================
