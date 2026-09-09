@@ -294,8 +294,8 @@ export async function POST(
         `
         SELECT
           id,
-          username,
-          name
+          name,
+          sponsor_name
         FROM members
         WHERE id = $1
         LIMIT 1
@@ -532,13 +532,7 @@ export async function POST(
           memberResult.rows[0],
         sponsor: {
           id: sponsorResult.rows[0].id,
-          username:
-            sponsorResult.rows[0]
-              .username,
-          name:
-            sponsorResult.rows[0].name ||
-            sponsorResult.rows[0]
-              .username,
+          name: sponsorResult.rows[0].name,
         },
       },
       { status: 201 }

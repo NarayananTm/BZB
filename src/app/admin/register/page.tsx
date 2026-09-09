@@ -493,10 +493,10 @@ export default function RegisterPage() {
         form.password
       );
 
-      /*
-       * Do NOT send confirmPassword
-       * to the server.
-       */
+      formData.append(
+        'confirmPassword',
+        form.confirmPassword
+      );
 
       formData.append(
         'amount',

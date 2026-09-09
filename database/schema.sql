@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS members (
   name            VARCHAR(255)    NOT NULL,
   email           VARCHAR(255)    NOT NULL,
   mobile          VARCHAR(20)     NOT NULL,
+  password        VARCHAR(255),                             -- Hashed password for member authentication
   sponsor_id      VARCHAR(50)     REFERENCES members(id),
   sponsor_name    VARCHAR(255),
   level_id        VARCHAR(50)     REFERENCES levels(id),
@@ -59,6 +60,14 @@ CREATE TABLE IF NOT EXISTS members (
   referral_count  INTEGER         NOT NULL DEFAULT 0,
   team_count      INTEGER         NOT NULL DEFAULT 0,
   avatar          TEXT,
+  pan             VARCHAR(20),                              -- PAN for tax identification
+  aadhar          VARCHAR(20),                              -- Aadhar number for KYC
+  amount          NUMERIC(14,2),                            -- Initial investment amount
+  utr_number      VARCHAR(50),                              -- Unique Transaction Reference
+  transaction_proof BYTEA,                                  -- Binary payment proof
+  transaction_proof_name VARCHAR(255),                      -- Filename of proof
+  transaction_proof_type VARCHAR(100),                      -- MIME type of proof
+  role            VARCHAR(50)     DEFAULT 'member',         -- member | admin | superadmin
   created_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
   updated_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );
@@ -367,6 +376,8 @@ ON DELETE SET NULL;
 -- ============================================================
 CREATE INDEX IF NOT EXISTS idx_members_status        ON members(status);
 CREATE INDEX IF NOT EXISTS idx_members_sponsor_id    ON members(sponsor_id);
+CREATE INDEX IF NOT EXISTS idx_members_pan           ON members(pan);
+CREATE INDEX IF NOT EXISTS idx_members_aadhar        ON members(aadhar);
 CREATE INDEX IF NOT EXISTS idx_referrals_sponsor_id  ON referrals(sponsor_id);
 CREATE INDEX IF NOT EXISTS idx_referrals_status      ON referrals(status);
 CREATE INDEX IF NOT EXISTS idx_earnings_member_id    ON earnings(member_id);
