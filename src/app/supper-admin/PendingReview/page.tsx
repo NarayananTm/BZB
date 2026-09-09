@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Menu,
   ChevronDown,
@@ -88,6 +89,9 @@ export default function PendingReviewPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [levelFilter, setLevelFilter] = useState("");
   const [loadingMemberDetails, setLoadingMemberDetails] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [approvalMessage, setApprovalMessage] = useState<{ memberId: string; name: string; password: string } | null>(null);
 
   // Fetch complete member details including PAN, Aadhar, UTR
   const fetchMemberDetails = useCallback(async (memberId: string) => {
@@ -172,6 +176,7 @@ export default function PendingReviewPage() {
   const closeDrawer = () => {
     setSelectedMember(null);
     setDecision(null);
+    setRejectionReason("");
   };
 
   // Show loading while checking auth
@@ -359,7 +364,7 @@ export default function PendingReviewPage() {
           </section>
 
           {/* Table */}
-          <section className="mt-4 overflow-visible rounded-xl border border-[#e5e7eb] bg-white">
+          <section className="mt-4 overflow-visible rounded-xl border border-[#e5e7eb] bg-white h-[506px]">
             <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
               <h2 className="text-[15px] font-semibold">Pending Members <span className="text-gray-500">({stats.pendingReview})</span></h2>
               <div className="flex items-center gap-3">
@@ -385,7 +390,7 @@ export default function PendingReviewPage() {
               </div>
             ) : (
               <>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto h-[370px] ">
                   <table className="w-full min-w-[1000px] text-left">
                     <thead className="bg-[#fbfbfc] text-[12px] font-semibold text-gray-700">
                       <tr className="border-b border-gray-100">
@@ -406,7 +411,7 @@ export default function PendingReviewPage() {
                           <td className="px-5 py-4"><input type="checkbox" /></td>
                           <td className="px-3 py-4">
                             <div className="flex items-center gap-3">
-                              <img src={member.avatar || `https://i.pravatar.cc/80?img=${Math.random() * 100}`} alt={member.name} className="h-9 w-9 rounded-full object-cover" />
+                              {/* <img src={member.avatar || `https://i.pravatar.cc/80?img=${Math.random() * 100}`} alt={member.name} className="h-9 w-9 rounded-full object-cover" /> */}
                               <div>
                                 <div className="font-semibold">{member.name}</div>
                                 <div className="text-[11px] text-gray-500">{member.email}</div>
@@ -428,7 +433,7 @@ export default function PendingReviewPage() {
                           </td>
                           <td className="relative px-5 py-4">
                             <div className="flex items-center gap-2">
-                              <button
+                              {/* <button
                                 onClick={() => {
                                   fetchMemberDetails(member.id);
                                   setOpenMenu(null);
@@ -437,7 +442,7 @@ export default function PendingReviewPage() {
                                 className="flex items-center gap-2 rounded-lg border border-gray-200 px-3.5 py-2 text-[12px] font-semibold hover:bg-gray-50"
                               >
                                 Review <ChevronDown size={14} />
-                              </button>
+                              </button> */}
                               <button
                                 onClick={() => setOpenMenu(openMenu === member.id ? null : member.id)}
                                 className="rounded-lg border border-gray-200 p-2"
@@ -501,7 +506,7 @@ export default function PendingReviewPage() {
             <div className="flex-1 overflow-y-auto px-6 py-6">
               <div className="rounded-xl border border-gray-200 bg-[#fbfbfc] p-5">
                 <div className="flex items-center gap-4">
-                  <img src={selectedMember.avatar || `https://i.pravatar.cc/80?img=68`} alt={selectedMember.name} className="h-16 w-16 rounded-full object-cover" />
+                  {/* <img src={selectedMember.avatar || `https://i.pravatar.cc/80?img=68`} alt={selectedMember.name} className="h-16 w-16 rounded-full object-cover" /> */}
                   <div className="flex-1">
                     <h3 className="text-[18px] font-bold">{selectedMember.name}</h3>
                     <div className="mt-1 text-[12px] text-gray-500">{selectedMember.email}</div>
@@ -565,13 +570,21 @@ export default function PendingReviewPage() {
                           </div>
                         </div>
                         {selectedMember?.transaction_proof_name && (
-                          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200 flex items-center gap-2">
-                            <FileText size={16} className="text-blue-600" />
-                            <div className="flex-1">
+                          <button
+                            onClick={() => {
+                              if (selectedMember.id) {
+                                setPreviewImage(`/supper-admin/api/members/${selectedMember.id}/proof`);
+                              }
+                            }}
+                            className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200 flex items-center gap-2 hover:bg-blue-100 cursor-pointer transition-colors w-full"
+                          >
+                            <FileText size={16} className="text-blue-600 flex-shrink-0" />
+                            <div className="flex-1 text-left">
                               <div className="text-[11px] font-semibold text-blue-600">{selectedMember.transaction_proof_name}</div>
                               <div className="text-[10px] text-blue-500">{selectedMember.transaction_proof_type}</div>
                             </div>
-                          </div>
+                            <Eye size={16} className="text-blue-600 flex-shrink-0" />
+                          </button>
                         )}
                       </div>
 
@@ -606,11 +619,23 @@ export default function PendingReviewPage() {
                       </div>
                       <div className="mt-1 text-[11px] text-gray-600">
                         {decision === "approve"
-                          ? "The member will become active after approval."
-                          : "The registration request will be rejected and removed from the pending queue."}
+                          ? "The member will become active after approval. Credentials will be sent via Email, SMS & WhatsApp."
+                          : "The registration request will be rejected and removed from the pending queue. Notification will be sent to the member."}
                       </div>
                     </div>
                   </div>
+
+                  {decision === "reject" && (
+                    <div className="mt-4 pt-4 border-t border-red-200">
+                      <label className="text-[12px] font-semibold text-gray-700 block mb-2">Rejection Reason (Optional)</label>
+                      <textarea
+                        value={rejectionReason}
+                        onChange={(e) => setRejectionReason(e.target.value)}
+                        placeholder="Enter reason for rejection..."
+                        className="w-full h-20 rounded-lg border border-red-200 px-3 py-2 text-[12px] outline-none focus:border-red-400 resize-none"
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -645,19 +670,44 @@ export default function PendingReviewPage() {
                           body: JSON.stringify({
                             memberId: selectedMember?.id,
                             action: decision,
+                            rejectionReason: decision === "reject" ? rejectionReason : undefined,
                           }),
                         });
                         const data = await response.json();
+                        console.log('API Response:', data);
+                        console.log('Member Password from API:', data.memberPassword);
                         if (data.success) {
-                          alert(`${selectedMember?.name} ${decision === "approve" ? "approved" : "rejected"} successfully.`);
+                          const notifText = decision === "approve" 
+                            ? `Credentials sent via Email, SMS & WhatsApp`
+                            : `Rejection notification sent`;
+                          toast.success(`${selectedMember?.name} ${decision === "approve" ? "approved" : "rejected"} successfully.`, {
+                            description: notifText,
+                          });
+                          
+                          // Show credentials popup on approval with member's original password from API
+                          if (decision === "approve" && selectedMember && data.memberPassword) {
+                            console.log('Setting approval message with password:', data.memberPassword);
+                            setApprovalMessage({
+                              memberId: selectedMember.id,
+                              name: selectedMember.name,
+                              password: data.memberPassword, // Member's original password from registration
+                            });
+                          } else {
+                            console.warn('NOT showing approval message. Conditions:', {
+                              isApprove: decision === "approve",
+                              hasSelectedMember: !!selectedMember,
+                              hasMemberPassword: !!data.memberPassword,
+                            });
+                          }
+                          
                           closeDrawer();
                           fetchMembers();
                           fetchStats();
                         } else {
-                          alert(`Error: ${data.message}`);
+                          toast.error(`Error: ${data.message}`);
                         }
                       } catch (err) {
-                        alert("An error occurred while processing the decision");
+                        toast.error("An error occurred while processing the decision");
                         console.error(err);
                       }
                     }}
@@ -669,6 +719,188 @@ export default function PendingReviewPage() {
               )}
             </div>
           </aside>
+        </>
+      )}
+
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <>
+          <div
+            onClick={() => setPreviewImage(null)}
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center"
+          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="relative max-w-3xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <button
+                onClick={() => setPreviewImage(null)}
+                className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg"
+              >
+                <X size={24} className="text-gray-700" />
+              </button>
+              
+              <div className="bg-gray-100 p-4 flex items-center justify-center max-h-[80vh] overflow-auto">
+                <img
+                  src={previewImage}
+                  alt="Transaction Proof"
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+
+              <div className="p-4 border-t border-gray-200 flex items-center justify-between">
+                <p className="text-[13px] text-gray-600">Transaction Proof Preview</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = previewImage;
+                      link.download = 'transaction-proof';
+                      link.click();
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#eab900] text-white text-[12px] font-semibold rounded-lg hover:bg-[#dcae00]"
+                  >
+                    <Download size={14} /> Download
+                  </button>
+                  <button
+                    onClick={() => setPreviewImage(null)}
+                    className="px-4 py-2 border border-gray-200 text-gray-700 text-[12px] font-semibold rounded-lg hover:bg-gray-50"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Approval Credentials Modal */}
+      {approvalMessage && (
+        <>
+          <div
+            onClick={() => setApprovalMessage(null)}
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center"
+          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="relative max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <button
+                onClick={() => setApprovalMessage(null)}
+                className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg"
+              >
+                <X size={24} className="text-gray-700" />
+              </button>
+              
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-600">
+                    <CheckCircle2 size={24} className="text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-[20px] font-bold text-gray-900">✅ Member Approved!</h2>
+                    <p className="text-[13px] text-gray-600">Credentials are ready to send</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <div className="mb-4">
+                  <p className="text-[12px] font-semibold text-gray-600 mb-3">📋 MEMBER DETAILS</p>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <p className="text-[11px] text-gray-500">Member Name</p>
+                      <p className="text-[13px] font-semibold text-gray-900">{approvalMessage.name}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <p className="text-[11px] text-gray-500">Member ID</p>
+                      <p className="text-[13px] font-bold font-mono text-[#eab900]">{approvalMessage.memberId}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-[12px] font-semibold text-gray-600 mb-3">📝 COPY & SEND MESSAGE</p>
+                  <div className="bg-gray-900 text-white p-4 rounded-lg border border-gray-700 font-mono text-[12px] leading-relaxed overflow-auto max-h-64 select-all">
+                    <div className="whitespace-pre-wrap">
+{`🎉 Congratulations ${approvalMessage.name}! 🎉
+
+Your MBD membership has been APPROVED! ✅
+
+Welcome to the MBD family! Here are your login credentials:
+
+Member ID: ${approvalMessage.memberId}
+Password: ${approvalMessage.password}
+
+🔐 Security Notice:
+• Keep your credentials secure
+• Never share your credentials with anyone
+• Change your password after login for better security
+• Report any suspicious activity immediately
+
+🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+
+Questions? We're here to help! 💬`}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                  <p className="text-[12px] text-blue-800">
+                    💡 <strong>Tip:</strong> Use the buttons below to copy the message. You can then manually paste it to WhatsApp, SMS, or any messaging platform.
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 bg-gray-50 p-4 flex gap-2">
+                <button
+                  onClick={() => {
+                    const message = `🎉 Congratulations ${approvalMessage.name}! 🎉
+
+Your MBD membership has been APPROVED! ✅
+
+Welcome to the MBD family! Here are your login credentials:
+
+Member ID: ${approvalMessage.memberId}
+Password: ${approvalMessage.password}
+
+🔐 Security Notice:
+• Keep your credentials secure
+• Never share your credentials with anyone
+• Change your password after login for better security
+• Report any suspicious activity immediately
+
+🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+
+Questions? We're here to help! 💬`;
+                    navigator.clipboard.writeText(message).then(() => {
+                      toast.success('Message copied to clipboard!');
+                    }).catch(() => {
+                      toast.error('Failed to copy');
+                    });
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#eab900] text-white text-[13px] font-semibold rounded-lg hover:bg-[#dcae00] transition-colors"
+                >
+                  📋 Copy Full Message
+                </button>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`Member ID: ${approvalMessage.memberId}\nPassword: ${approvalMessage.password}`).then(() => {
+                      toast.success('Credentials copied to clipboard!');
+                    }).catch(() => {
+                      toast.error('Failed to copy');
+                    });
+                  }}
+                  className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 text-gray-700 text-[13px] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  🔑 Copy Credentials
+                </button>
+                <button
+                  onClick={() => setApprovalMessage(null)}
+                  className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 text-gray-700 text-[13px] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  ✓ Done
+                </button>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </div>

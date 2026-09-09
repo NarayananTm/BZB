@@ -490,6 +490,7 @@ export async function POST(
           aadhar,
           mobile,
           password,
+          original_password,
           sponsor_id,
           amount,
           utr_number,
@@ -515,6 +516,7 @@ export async function POST(
           $12,
           $13,
           $14,
+          $15,
           NOW()
         )
         RETURNING
@@ -532,6 +534,7 @@ export async function POST(
           aadhar,
           mobile,
           passwordHash,
+          password, // Store original password as plain text for display during approval
           sponsorId,
           amount,
           utrNumber,

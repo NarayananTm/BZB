@@ -5,6 +5,8 @@ export interface Member {
   name: string;
   email: string;
   mobile: string;
+  password?: string;
+  original_password?: string;
   sponsor_id: string | null;
   sponsor_name: string | null;
   level_name: string;
@@ -15,6 +17,12 @@ export interface Member {
   referral_count: number;
   team_count: number;
   avatar: string | null;
+  pan?: string;
+  aadhar?: string;
+  amount?: number;
+  utr_number?: string;
+  transaction_proof_name?: string;
+  transaction_proof_type?: string;
   created_at: string;
   updated_at: string;
 }
