@@ -6,6 +6,7 @@ import {
 import bcrypt from 'bcryptjs';
 
 import { getPool } from '@/lib/postgres';
+import { generateUserId } from '@/lib/idGenerator';
 
 export async function POST(
   request: NextRequest
@@ -26,6 +27,11 @@ export async function POST(
       String(
         formData.get('name') || ''
       ).trim();
+
+    const email =
+      String(
+        formData.get('email') || ''
+      ).trim().toLowerCase();
 
     const pan =
       String(
@@ -89,6 +95,7 @@ export async function POST(
 
     if (
       !name ||
+      !email ||
       !pan ||
       !aadhar ||
       !mobile ||
@@ -103,6 +110,16 @@ export async function POST(
           success: false,
           message:
             'Required fields are missing',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Invalid email address',
         },
         { status: 400 }
       );
@@ -466,7 +483,9 @@ export async function POST(
         `
         INSERT INTO members
         (
+          id,
           name,
+          email,
           pan,
           aadhar,
           mobile,
@@ -494,6 +513,8 @@ export async function POST(
           $10,
           $11,
           $12,
+          $13,
+          $14,
           NOW()
         )
         RETURNING
@@ -504,7 +525,9 @@ export async function POST(
           created_at
         `,
         [
+          generateUserId(),
           name,
+          email,
           pan,
           aadhar,
           mobile,

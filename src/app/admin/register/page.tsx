@@ -27,6 +27,7 @@ interface Sponsor {
 
 interface RegisterForm {
   name: string;
+  email: string;
   pan: string;
   aadhar: string;
   mobile: string;
@@ -53,6 +54,7 @@ const QR_IMAGE = '/images/admin/upi/upi-qr-code.png';
 
 const INITIAL_FORM: RegisterForm = {
   name: '',
+  email: '',
   pan: '',
   aadhar: '',
   mobile: '',
@@ -318,6 +320,10 @@ export default function RegisterPage() {
       return 'Please enter your name.';
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      return 'Please enter a valid email address.';
+    }
+
     if (!form.pan.trim()) {
       return 'Please enter your PAN number.';
     }
@@ -436,6 +442,9 @@ export default function RegisterPage() {
       const name =
         form.name.trim();
 
+      const email =
+        form.email.trim().toLowerCase();
+
       const pan =
         form.pan
           .trim()
@@ -471,6 +480,11 @@ export default function RegisterPage() {
       formData.append(
         'name',
         name
+      );
+
+      formData.append(
+        'email',
+        email
       );
 
       formData.append(
@@ -856,6 +870,19 @@ export default function RegisterPage() {
                 onChange={(value) =>
                   updateField(
                     'name',
+                    value
+                  )
+                }
+              />
+
+              <FormInput
+                label="Email Address"
+                value={form.email}
+                placeholder="Email Address"
+                type="email"
+                onChange={(value) =>
+                  updateField(
+                    'email',
                     value
                   )
                 }
