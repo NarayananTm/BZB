@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/postgres';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const memberId = params.id;
 
@@ -24,9 +24,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     const { transaction_proof, transaction_proof_name, transaction_proof_type } = result[0];
+    const imageBytes = Uint8Array.from(transaction_proof);
 
     // Return the image with appropriate headers
-    return new NextResponse(transaction_proof, {
+    return new NextResponse(imageBytes, {
       status: 200,
       headers: {
         'Content-Type': transaction_proof_type || 'application/octet-stream',

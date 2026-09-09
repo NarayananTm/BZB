@@ -6,15 +6,15 @@ import { Member } from '@/services/memberService';
 /**
  * Extended member type for registration details
  */
-export interface MemberRegistration extends Member {
+export interface MemberRegistration extends Omit<Member, 'sponsor_name'> {
   pan?: string;
   aadhar?: string;
   amount?: number;
   utr_number?: string;
   transaction_proof_name?: string;
   transaction_proof_type?: string;
-  sponsor_name?: string;
-  sponsor_mobile?: string;
+  sponsor_name?: string | null;
+  sponsor_mobile?: string | null;
 }
 
 /**

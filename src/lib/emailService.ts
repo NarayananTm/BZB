@@ -18,7 +18,7 @@ export async function sendApprovalEmail(
 ): Promise<EmailResponse> {
   try {
     const subject = "🎉 MBD Membership Approved - Welcome Onboard!";
-    
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -97,6 +97,7 @@ export async function sendApprovalEmail(
     console.log(`   Subject: ${subject}`);
     console.log(`   Member ID: ${memberId}`);
     console.log(`   Name: ${memberName}`);
+    console.log(`   Preview length: ${htmlContent.length}`);
 
     // TODO: Replace with actual email provider
     // Example with SendGrid:
@@ -153,9 +154,9 @@ export async function sendRejectionEmail(
 ): Promise<EmailResponse> {
   try {
     const subject = "Your MBD Membership Application Status";
-    
-    const reasonText = reason 
-      ? `<p><strong>Reason for Rejection:</strong><br>${reason}</p>` 
+
+    const reasonText = reason
+      ? `<p><strong>Reason for Rejection:</strong><br>${reason}</p>`
       : '<p>Your application did not meet our criteria at this time.</p>';
 
     const htmlContent = `
@@ -204,6 +205,8 @@ export async function sendRejectionEmail(
 
     console.log(`📧 Rejection email sent to ${email}`);
     console.log(`   Member: ${memberName}`);
+    console.log(`   Subject: ${subject}`);
+    console.log(`   Message preview length: ${htmlContent.length}`);
 
     return {
       success: true,

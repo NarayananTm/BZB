@@ -38,6 +38,7 @@ Questions? We're here to help! 💬`;
     console.log(`📲 WhatsApp sent to ${phoneNumber}:`);
     console.log(`   Member: ${memberName}`);
     console.log(`   Member ID: ${memberId}`);
+    console.log(`   Message length: ${message.length}`);
 
     // TODO: Replace with actual WhatsApp provider
     // Example with Twilio WhatsApp:
@@ -103,6 +104,7 @@ We appreciate your interest! 🙏`;
 
     console.log(`📲 WhatsApp rejection sent to ${phoneNumber}`);
     console.log(`   Member: ${memberName}`);
+    console.log(`   Message length: ${message.length}`);
 
     return {
       success: true,
@@ -126,6 +128,7 @@ export async function sendWhatsAppMessage(
 ): Promise<WhatsAppResponse> {
   try {
     console.log(`📲 WhatsApp to ${phoneNumber}: ${message}`);
+    console.log(`   Message length: ${message.length}`);
 
     return {
       success: true,
