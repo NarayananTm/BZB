@@ -1,17 +1,36 @@
 import { NextResponse } from 'next/server';
-import { comparePassword, findUserByEmailOrMobile } from '@/lib/postgres';
+import { comparePassword, findUserByEmailOrMobile, queryOne } from '@/lib/postgres';
 import { signToken } from '@/lib/jwt';
+
+type MemberLoginRecord = {
+  id: string;
+  fullName: string;
+  email: string;
+  mobile: string;
+  password: string;
+};
+
+async function findMemberByLogin(login: string): Promise<MemberLoginRecord | null> {
+  return queryOne<MemberLoginRecord>(
+    `SELECT id, name AS "fullName", email, mobile, password
+     FROM members
+     WHERE id = $1 OR LOWER(email) = LOWER($1) OR mobile = $1
+     LIMIT 1`,
+    [login],
+  );
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { email: login, password } = body;
 
-    if (!email || !password) {
-      return NextResponse.json({ success: false, message: 'Email and password are required' }, { status: 400 });
+    if (!login || !password) {
+      return NextResponse.json({ success: false, message: 'Member ID, email, or mobile and password are required' }, { status: 400 });
     }
 
-    const user = await findUserByEmailOrMobile(email);
+    const member = await findMemberByLogin(login);
+    const user = member || await findUserByEmailOrMobile(login);
 
     if (!user) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });

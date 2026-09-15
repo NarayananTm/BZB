@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminFromRequest } from '@/lib/adminAuth';
 import { getMemberProfile, updateMemberProfile, getPool } from '@/lib/postgres';
+import { verifyToken } from '@/lib/jwt';
+
+function getProfileSession(request: NextRequest) {
+  const admin = getAdminFromRequest(request);
+  if (admin) return admin;
+
+  const memberToken = request.cookies.get('bzb_token')?.value;
+  if (!memberToken) return null;
+
+  try {
+    return verifyToken(memberToken);
+  } catch {
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
-  const admin = getAdminFromRequest(request);
+  const admin = getProfileSession(request);
   if (!admin) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   
   try {
@@ -70,7 +85,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const admin = getAdminFromRequest(request);
+  const admin = getProfileSession(request);
   if (!admin) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   try {
     const existingProfile = await getMemberProfile(admin.id?.toString());
@@ -98,7 +113,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const admin = getAdminFromRequest(request);
+  const admin = getProfileSession(request);
   if (!admin) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   try {
     const currentProfile = await getMemberProfile(admin.id?.toString());

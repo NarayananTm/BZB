@@ -55,16 +55,18 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const isMemberId = /^MBD/i.test(form.userId.trim());
+      const res = await fetch(isMemberId ? '/api/login' : '/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          emailOrUsername: form.userId.trim(),
-          password: form.password,
-        }),
+        body: JSON.stringify(
+          isMemberId
+            ? { email: form.userId.trim(), password: form.password }
+            : { emailOrUsername: form.userId.trim(), password: form.password },
+        ),
       });
 
       const data = await res.json();

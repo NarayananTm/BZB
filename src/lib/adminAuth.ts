@@ -29,7 +29,10 @@ export function   getAdminFromRequest(request: NextRequest): AdminTokenPayload |
 }
 
 export async function getAdminSessionUser(): Promise<AdminTokenPayload | null> {
-  const token = (await cookies()).get('bzb_admin_token')?.value;
+  const cookieStore = await cookies();
+  const token =
+    cookieStore.get('bzb_admin_token')?.value ??
+    cookieStore.get('bzb_token')?.value;
   if (!token) return null;
   try {
     return verifyToken(token) as unknown as AdminTokenPayload;

@@ -65,7 +65,7 @@ export default function LoginPage() {
                 <div className="flex-1 bg-black/30 p-8 sm:p-12">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-slate-200">Email or Mobile</label>
+                            <label className="mb-2 block text-sm font-medium text-slate-200">Member ID, Email, or Mobile</label>
                             <input
                                 name="email"
                                 type="text"
@@ -73,7 +73,7 @@ export default function LoginPage() {
                                 onChange={handleChange}
                                 required
                                 className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm outline-none ring-0"
-                                placeholder="Enter your email or mobile"
+                                placeholder="Enter your Member ID, email, or mobile"
                             />
                         </div>
                         <div>

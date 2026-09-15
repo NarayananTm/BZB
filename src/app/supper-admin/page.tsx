@@ -11,8 +11,8 @@ export default function SuperAdminPage() {
     const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('super_admin_logged_in') === 'true';
     
     if (isLoggedIn) {
-      // Redirect to pending review if already logged in
-      router.push('/supper-admin/PendingReview');
+      // Redirect to dashboard if already logged in
+      router.push('/supper-admin/Dashboard');
     } else {
       // Redirect to login if not logged in
       router.push('/supper-admin/login');
@@ -25,6 +25,6 @@ export default function SuperAdminPage() {
         <Loader size={32} className="animate-spin text-[#eab900]" />
         <p className="text-gray-600">Redirecting...</p>
       </div>
-    </div>
+    </div> 
   );
 }

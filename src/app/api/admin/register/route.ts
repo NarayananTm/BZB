@@ -493,6 +493,7 @@ export async function POST(
           original_password,
           sponsor_id,
           amount,
+          wallet_balance,
           utr_number,
           transaction_proof,
           transaction_proof_name,
@@ -517,6 +518,7 @@ export async function POST(
           $13,
           $14,
           $15,
+          $16,
           NOW()
         )
         RETURNING
@@ -536,6 +538,7 @@ export async function POST(
           passwordHash,
           password, // Store original password as plain text for display during approval
           sponsorId,
+          amount,
           amount,
           utrNumber,
           proofBuffer,

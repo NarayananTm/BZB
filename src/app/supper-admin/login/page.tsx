@@ -32,7 +32,7 @@ export default function SuperAdminLoginPage() {
         localStorage.setItem("super_admin_logged_in", "true");
         
         // Redirect to pending review page
-        router.push("/supper-admin/PendingReview");
+        router.push("/supper-admin/Dashboard");
       } else {
         setError(data.message || "Login failed");
       }

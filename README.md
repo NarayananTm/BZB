@@ -36,6 +36,16 @@ public/
 └── images/          # Static images
 ```
 
+## Documentation
+
+### Super Admin Module
+- **[PENDING_REVIEW_INTEGRATION.md](./PENDING_REVIEW_INTEGRATION.md)** - Complete integration guide for member approval workflow
+- **[TESTING_VALIDATION_PLAN.md](./TESTING_VALIDATION_PLAN.md)** - Comprehensive testing checklist with 36 test cases
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture and design patterns
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Quick start guide
+- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - API and component reference
+- **[STRUCTURE.md](./STRUCTURE.md)** - Project structure and navigation
+
 ## Getting Started
 
 ### Prerequisites

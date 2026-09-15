@@ -835,7 +835,7 @@ Password: ${approvalMessage.password}
 • Change your password after login for better security
 • Report any suspicious activity immediately
 
-🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+🔗 Member Portal: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
 
 Questions? We're here to help! 💬`}
                     </div>
@@ -867,7 +867,7 @@ Password: ${approvalMessage.password}
 • Change your password after login for better security
 • Report any suspicious activity immediately
 
-🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+🔗 Member Portal: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
 
 Questions? We're here to help! 💬`;
                     navigator.clipboard.writeText(message).then(() => {
