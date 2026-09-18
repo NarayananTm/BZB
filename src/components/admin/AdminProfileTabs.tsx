@@ -19,10 +19,8 @@ type MemberDocument = {
 
 const kycDocuments = [
   'PAN Card',
-  'Bank Cheque Leaf / Passbook First Page',
   'Address Proof / Aadhaar Card',
   'Passport Size Photo',
-  'Bank QR Code',
 ];
 
 const emptyProfile: Profile = {
