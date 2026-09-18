@@ -115,11 +115,11 @@ export const metadata: Metadata = {
 
 export default function BZBPage() {
 
-  const token = cookies().get('bzb_token')?.value;
+  // const token = cookies().get('bzb_token')?.value;
 
-  if (!token) {
-    redirect('/login');
-  }
+  // if (!token) {
+  //   redirect('/login');
+  // }
   return (
     <>
 
