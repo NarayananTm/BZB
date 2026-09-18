@@ -43,13 +43,13 @@ const [showProfileMenu, setShowProfileMenu] = useState(false);
       setUserName("");
     }
   };
-console.log("Navigation component mounted and event listeners added.");
+
   loadUser();
 
   window.addEventListener("scroll", handleScroll);
   window.addEventListener("userChanged", loadUser);
   setShowProfileMenu(false);
-  console.log("Navigation component mounted and event listeners added.");
+
 
   return () => {
     window.removeEventListener("scroll", handleScroll);
