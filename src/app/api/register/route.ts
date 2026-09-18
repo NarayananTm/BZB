@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createExcelIfNotExists, hashPassword, readUsers, saveUser } from '@/lib/excel';
+import { hashPassword, readUsers, registerUser } from '@/lib/postgres';
+import { generateUserId } from '@/lib/idGenerator';
 
 export async function POST(request: Request) {
   try {
@@ -22,27 +23,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Passwords do not match' }, { status: 400 });
     }
 
-    await createExcelIfNotExists();
     const users = await readUsers();
 
-    if (users.some((user) => user.Email.toLowerCase() === email.toLowerCase())) {
+    if (users.some((user) => user.email.toLowerCase() === email.toLowerCase())) {
       return NextResponse.json({ success: false, message: 'Email already exists' }, { status: 409 });
     }
 
-    if (users.some((user) => user.Mobile === mobile)) {
+    if (users.some((user) => user.mobile === mobile)) {
       return NextResponse.json({ success: false, message: 'Mobile already exists' }, { status: 409 });
     }
 
-    const hashedPassword = hashPassword(password);
-    await saveUser({
-      FullName: fullName,
-      Email: email,
-      Mobile: mobile,
-      Password: hashedPassword,
-      CreatedDate: new Date().toISOString(),
+    const userId = generateUserId();
+    await registerUser({
+      id: userId,
+      fullName,
+      email,
+      mobile,
+      password: hashPassword(password),
     });
 
-    return NextResponse.json({ success: true, message: 'Registration Successful' });
+    return NextResponse.json({ success: true, message: 'Registration Successful', userId });
   } catch (error) {
     console.error('Register error:', error);
     return NextResponse.json({ success: false, message: 'Registration failed' }, { status: 500 });

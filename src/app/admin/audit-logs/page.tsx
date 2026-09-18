@@ -1,7 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { adminAuditLogs } from '@/data/admin/auditLogs';
+import { getAllAuditLogs } from '@/services/auditLogService';
 
-export default function AdminAuditLogsPage() {
+export default async function AdminAuditLogsPage() {
+  const logs = await getAllAuditLogs();
   return (
     <AdminLayout title="Audit Logs">
       <div className="space-y-8">
@@ -21,13 +22,13 @@ export default function AdminAuditLogsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white">
-                {adminAuditLogs.map((log) => (
+                {logs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50">
                     <td className="px-4 py-4 font-medium text-slate-900">{log.id}</td>
-                    <td className="px-4 py-4">{log.user}</td>
+                    <td className="px-4 py-4">{log.user_name}</td>
                     <td className="px-4 py-4">{log.action}</td>
                     <td className="px-4 py-4">{log.target}</td>
-                    <td className="px-4 py-4">{log.date}</td>
+                    <td className="px-4 py-4">{new Date(log.log_date).toLocaleString('en-IN')}</td>
                     <td className={`px-4 py-4 font-semibold ${log.status === 'Success' ? 'text-emerald-700' : 'text-rose-700'}`}>
                       {log.status}
                     </td>

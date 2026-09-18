@@ -31,7 +31,7 @@ pb-10
       {/* ================= Background ================= */}
 
       <Image
-        src="/images/hero/BZB hom baner.png"
+        src="/images/hero/MBD hom baner.png"
         alt="Hero Background"
         fill
         priority
@@ -157,7 +157,7 @@ lg:gap-10
               Future with
 
               <span className="text-[#F3C300]">
-                {" "}BZB
+                {" "}MBD
               </span>
 
             </h1>
@@ -203,7 +203,7 @@ sm:mt-5
                 animate-[fadeInLeft_1.4s_ease]
               "
             >
-              Join BZB and become part of a community where real estate
+              Join MBD and become part of a community where real estate
               opportunities meet rewarding referrals.
 
               Explore trusted projects, grow your network,
@@ -228,7 +228,7 @@ sm:mt-10
             >
 
               <Button
-                href="/bzb"
+                href="/mbd"
                 className="
                   h-14
 
@@ -328,8 +328,8 @@ xl:w-[460px]
 
 
               <Image
-                src="/images/hero/BZB Mobile App.png"
-                alt="BZB Mobile App"
+                src="/images/hero/MBD Mobile App.png"
+                alt="MBD Mobile App"
 
                 width={420}
                 height={760}

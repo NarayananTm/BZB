@@ -1,20 +1,21 @@
 export const ROUTES = {
   HOME: '/',
-  BZB: '/bzb',
+  MBD: '/mbd',
   REFERRAL: '/referral',
   ABOUT: '/about',
   CONTACT: '/contact',
   MEMBER: '/member',
   ADMIN: '/admin',
-  MEMBER_DASHBOARD: '/bzb',
+  Dashboard: '/admin/login',
+  MEMBER_DASHBOARD: '/mbd',
   // MEMBER_DASHBOARD: '/member/dashboard',
   // MEMBER_PROFILE: '/member/profile',
-  MEMBER_PROFILE: '/bzb',
+  MEMBER_PROFILE: '/mbd',
 } as const;
 
 export const NAVIGATION_LINKS = [
   { label: 'Home', href: ROUTES.HOME },
-  { label: 'BZB', href: ROUTES.BZB },
+  { label: 'MBD', href: ROUTES.MBD },
   { label: 'Referral', href: ROUTES.REFERRAL },
   { label: 'About', href: ROUTES.ABOUT },
   { label: 'Contact', href: ROUTES.CONTACT },
@@ -22,7 +23,7 @@ export const NAVIGATION_LINKS = [
 
 export const FOOTER_LINKS = {
   quickLinks: [
-    { label: 'BZB', href: ROUTES.BZB },
+    { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About', href: ROUTES.ABOUT },
     { label: 'Contact Us', href: ROUTES.CONTACT },
@@ -35,7 +36,7 @@ export const FOOTER_LINKS = {
 } as const;
 
 export const COMPANY_INFO = {
-  name: 'BZB',
+  name: 'MBD',
   tagline: 'Born to Win',
   fullTagline: 'Invest. Refer. Grow. Reward.',
   description: 'Building Dreams. Creating Opportunities.',

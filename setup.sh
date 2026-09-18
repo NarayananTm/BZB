@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# BZB Platform - Quick Setup Script
+# MBD Platform - Quick Setup Script
 # This script automates the initial setup
 
-echo "🚀 BZB Platform - Initialization Script"
+echo "🚀 MBD Platform - Initialization Script"
 echo "========================================"
 echo ""
 

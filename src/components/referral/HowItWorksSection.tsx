@@ -5,7 +5,7 @@ import Image from "next/image";
 const steps = [
   {
     title: "Become a Member",
-    text: "Register as a BZB member and activate your membership to receive your unique Referral ID and QR Code.",
+    text: "Register as a MBD member and activate your membership to receive your unique Referral ID and QR Code.",
   },
   {
     title: "Share Your Referral",
@@ -78,7 +78,7 @@ export default function HowItWorksSection() {
             {/* Watermark */}
 
             <Image
-              src="/images/referral/BZB Watermark.png"
+              src="/images/referral/MBD Watermark.png"
               alt=""
               width={500}
               height={500}

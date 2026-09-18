@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET || 'bzb-dev-secret';
 
 export interface AuthTokenPayload {
-  id: number;
+  id: string;
   email: string;
   name: string;
   mobile?: string;

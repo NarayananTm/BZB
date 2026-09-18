@@ -7,7 +7,7 @@ const faqs = [
   {
     question: "Is joining the referral program free?",
     answer:
-      "The referral program is available for registered BZB members.",
+      "The referral program is available for registered MBD members.",
   },
   {
     question: "How do I share my referral?",

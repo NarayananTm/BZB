@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
     const router = useRouter();
     const [form, setForm] = useState({ email: '', password: '' });
-    const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +17,6 @@ export default function LoginPage() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setLoading(true);
-        setMessage('');
 
         try {
             const response = await fetch('/api/login', {
@@ -43,10 +42,10 @@ export default function LoginPage() {
                 })
             );
             window.dispatchEvent(new Event("userChanged"));
-            setMessage('Login Successful');
-            router.push('/bzb');
+            toast.success('Login successful');
+            router.push('/mbd');
         } catch (error) {
-            setMessage(error instanceof Error ? error.message : 'Login failed');
+            toast.error(error instanceof Error ? error.message : 'Login failed');
         } finally {
             setLoading(false);
         }
@@ -57,7 +56,7 @@ export default function LoginPage() {
             <div className="mx-auto flex max-w-6xl flex-col overflow-hidden rounded-[32px] border border-white/10 bg-white/10 shadow-2xl backdrop-blur-xl lg:flex-row">
                 <div className="flex-1 bg-black/20 p-8 sm:p-12 lg:p-16">
                     <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#FFD31A]">Member Login</p>
-                    <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Welcome back to BZB</h1>
+                    <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Welcome back to MBD</h1>
                     <p className="max-w-md text-base text-slate-300 sm:text-lg">
                         Sign in to continue your journey, manage referrals, and unlock your member benefits.
                     </p>
@@ -66,7 +65,7 @@ export default function LoginPage() {
                 <div className="flex-1 bg-black/30 p-8 sm:p-12">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-slate-200">Email or Mobile</label>
+                            <label className="mb-2 block text-sm font-medium text-slate-200">Member ID, Email, or Mobile</label>
                             <input
                                 name="email"
                                 type="text"
@@ -74,7 +73,7 @@ export default function LoginPage() {
                                 onChange={handleChange}
                                 required
                                 className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm outline-none ring-0"
-                                placeholder="Enter your email or mobile"
+                                placeholder="Enter your Member ID, email, or mobile"
                             />
                         </div>
                         <div>
@@ -102,12 +101,11 @@ export default function LoginPage() {
                             <Link href="/register" className="text-[#FFD31A] hover:underline">
                                 Register
                             </Link>
-                            <button type="button" className="hover:text-white">
+                            <Link href="/forgot-password" className="text-[#FFD31A] hover:underline">
                                 Forgot Password
-                            </button>
+                            </Link>
                         </div>
 
-                        {message ? <p className="text-sm text-[#FFD31A]">{message}</p> : null}
                     </form>
                 </div>
             </div>

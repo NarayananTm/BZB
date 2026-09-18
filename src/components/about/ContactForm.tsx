@@ -55,7 +55,13 @@ export default function ContactForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.phone,
+          subject: "General",
+          message: formData.message,
+        }),
       });
 
       const result = await response.json();
@@ -324,7 +330,7 @@ export default function ContactForm() {
             text-gray-500
           "
         >
-          By submitting this form, you agree that BZB may contact you
+          By submitting this form, you agree that MBD may contact you
           regarding your enquiry.
         </p>
 

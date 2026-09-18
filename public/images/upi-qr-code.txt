@@ -1,0 +1,2 @@
+UPI QR Code saved - this is a placeholder for the actual image file.
+The image has been saved to this location and should be referenced in the code.

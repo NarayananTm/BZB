@@ -127,7 +127,7 @@ export default function ReferralSection() {
                 lg:text-[22px]
               "
             >
-              Invite your friends and family to join the BZB community.
+              Invite your friends and family to join the MBD community.
 
               <br />
               <br />

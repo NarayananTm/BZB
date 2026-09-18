@@ -1,26 +1,66 @@
 "use client";
 
 import React, { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Users, TrendingUp, FileText, Database, BarChart3, Wallet, Gift, ChevronRight } from 'lucide-react';
+import type { Referral } from '@/services/referralService';
+import type { Earning } from '@/services/earningService';
+import type { Topup } from '@/services/topupService';
+import type { Withdrawal } from '@/services/withdrawalService';
+import type { Payout } from '@/services/payoutService';
 
-type Referral = {
-  id: string;
-  memberName: string;
-  joinDate?: string;
-  sponsor?: string;
-  level?: string;
-};
+interface Props {
+  referrals: Referral[];
+  earnings?: Earning[];
+  topups?: Topup[];
+  withdrawals?: Withdrawal[];
+  payouts?: Payout[];
+}
 
-export default function ProfileInteractive({ referrals }: { referrals: Referral[] }) {
+export default function ProfileInteractive({ referrals, earnings = [], topups = [], withdrawals = [], payouts = [] }: Props) {
+  const router = useRouter();
   const [active, setActive] = useState<string>('direct');
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setLoggingOut(true);
+
+      // Call logout API endpoint
+      const response = await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+
+      // Clear any local session data
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Redirect to login
+      router.replace('/admin/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still redirect even if API call fails
+      localStorage.clear();
+      sessionStorage.clear();
+      router.replace('/admin/login');
+    }
+  };
 
   const menu = [
-    { key: 'direct', label: 'My Direct Members' },
-    { key: 'topups', label: 'My Downline Top ups' },
-    { key: 'reports', label: 'Top-ups Reports' },
-    { key: 'earnings', label: 'My Earnings' },
-    { key: 'level', label: 'My Level Income' },
-    { key: 'withdrawal', label: 'My Withdrawal' },
-    { key: 'payout', label: 'My Payout' },
+    { key: 'direct', label: 'My Direct Members', icon: Users },
+    { key: 'topups', label: 'My Downline Top ups', icon: TrendingUp },
+    { key: 'reports', label: 'Top-ups Reports', icon: FileText },
+    { key: 'earnings', label: 'My Earnings', icon: Database },
+    { key: 'level', label: 'My Level Income', icon: BarChart3 },
+    { key: 'withdrawal', label: 'My Withdrawal', icon: Wallet },
+    { key: 'payout', label: 'My Payout', icon: Gift },
   ];
 
   const tableConfig = useMemo(() => {
@@ -30,13 +70,13 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
           title: 'My Downline Top-ups',
           subtitle: '',
           columns: ['No', 'Date', 'Member ID', 'Name', 'Status', 'Amount Rs.'],
-          rows: referrals.map((r, idx) => [
+          rows: topups.map((t, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.joinDate ?? '-',
-            r.id.replace('REF-', ''),
-            r.memberName,
-            '-',
-            idx === 0 ? 'Rs.200' : '-',
+            t.topup_date ?? '-',
+            t.member_id ?? '-',
+            t.member_name ?? '-',
+            t.status,
+            `Rs.${Number(t.amount).toLocaleString('en-IN')}`,
           ]),
         };
       case 'reports':
@@ -44,11 +84,11 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
           title: 'My Top-up Report',
           subtitle: '',
           columns: ['No', 'Date', 'Status', 'Amount Rs.'],
-          rows: referrals.map((r, idx) => [
+          rows: topups.map((t, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.joinDate ?? '-',
-            '-',
-            idx === 0 ? 'Rs.200' : '-',
+            t.topup_date ?? '-',
+            t.status,
+            `Rs.${Number(t.amount).toLocaleString('en-IN')}`,
           ]),
         };
       case 'earnings':
@@ -56,11 +96,11 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
           title: 'My Earnings',
           subtitle: '',
           columns: ['No', 'Date', 'Type', 'Earnings Rs.'],
-          rows: referrals.map((r, idx) => [
+          rows: earnings.map((e, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.joinDate ?? '-',
-            '-',
-            idx === 0 ? 'Rs.200' : '-',
+            e.earn_date ?? '-',
+            e.source ?? '-',
+            `Rs.${Number(e.amount).toLocaleString('en-IN')}`,
           ]),
         };
       case 'level':
@@ -68,13 +108,13 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
           title: 'My Level Income',
           subtitle: '',
           columns: ['No', 'Date', 'Member ID', 'Amount', 'Level', 'Status'],
-          rows: referrals.map((r, idx) => [
+          rows: earnings.map((e, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.joinDate ?? '-',
-            r.id.replace('REF-', ''),
-            idx === 0 ? 'Rs.200' : '-',
-            r.level ?? '-',
-            r.memberName,
+            e.earn_date ?? '-',
+            e.member_id ?? '-',
+            `Rs.${Number(e.amount).toLocaleString('en-IN')}`,
+            e.level_name ?? '-',
+            e.status,
           ]),
         };
       case 'withdrawal':
@@ -82,24 +122,25 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
           title: 'My Withdrawal Reqs',
           subtitle: '',
           columns: ['No', 'Date', 'Amount', 'Net Pay', 'Withdraw Type', 'Status'],
-          rows: referrals.map((r, idx) => [
+          rows: withdrawals.map((w, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.joinDate ?? '-',
-            idx === 0 ? 'Rs.200' : '-',
-            idx === 0 ? 'Rs.200' : '-',
-            '-',
-            '-',
+            w.requested_date ?? '-',
+            `Rs.${Number(w.amount).toLocaleString('en-IN')}`,
+            `Rs.${Number(w.amount).toLocaleString('en-IN')}`,
+            w.payout_method ?? '-',
+            w.status,
           ]),
         };
       case 'payout':
         return {
           title: 'My Payout',
           subtitle: '',
-          columns: ['No', 'Date', 'Amount'],
-          rows: referrals.map((r, idx) => [
+          columns: ['No', 'Date', 'Plan', 'Amount'],
+          rows: payouts.map((p, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.joinDate ?? '-',
-            idx === 0 ? 'Rs.200' : '-',
+            p.payout_date ?? '-',
+            p.plan ?? '-',
+            `Rs.${Number(p.amount).toLocaleString('en-IN')}`,
           ]),
         };
       default:
@@ -110,71 +151,207 @@ export default function ProfileInteractive({ referrals }: { referrals: Referral[
           rows: referrals.map((r, idx) => [
             String(idx + 1).padStart(2, '0'),
             r.id.replace('REF-', ''),
-            r.memberName,
-            r.joinDate ?? '-',
-            r.sponsor ?? '-',
-            r.level ?? '-',
+            r.member_name ?? '-',
+            r.join_date ?? '-',
+            r.sponsor_name ?? '-',
+            r.level_name ?? '-',
           ]),
         };
     }
-  }, [active, referrals]);
+  }, [active, referrals, earnings, topups, withdrawals, payouts]);
 
   return (
-    <div className=" px-3 py-2">
-      <div className="flex items-start gap-8">
-        <aside className="w-[260px]">
-          <div className="rounded-[12px] border border-[#F0F0F0] bg-white p-4">
-            <h3 className="text-sm font-medium text-slate-500">My Team</h3>
-            <ul className="mt-4 text-sm text-[#666] divide-y divide-[#F3F3F3]">
-              {menu.map((m) => (
-                <li key={m.key} className="py-3">
-                  <button
-                    onClick={() => setActive(m.key)}
-                    className={`w-full text-left flex items-center gap-2 px-2 py-1 rounded ${
-                      active === m.key ? 'font-semibold text-slate-900' : 'text-slate-500'
-                    }`}
-                    aria-current={active === m.key ? 'page' : undefined}
-                  >
-                    <span className={`w-1 h-6 rounded-r ${active === m.key ? 'bg-[#E5C500]' : 'bg-transparent'}`} />
-                    <span className="flex-1 pl-2">{m.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className="w-full bg-white">
+      {/* Mobile & Tablet Vertical Menu Layout */}
+      <div className="lg:hidden">
+        {/* Menu Header */}
+        <div className="border-b border-[#F0F0F0] px-3 sm:px-4 py-3 sm:py-4">
+          <h3 className="text-sm sm:text-base font-medium text-slate-900">My Team</h3>
+        </div>
 
-          <div className="mt-6">
-            <button className="w-full rounded-lg bg-[#E5C500] px-6 py-4 font-semibold text-slate-900 shadow-sm">Logout</button>
-          </div>
-        </aside>
+        {/* Menu Items - Vertical List */}
+        <div className="divide-y divide-[#F0F0F0]">
+          {menu.map((m) => {
+            const Icon = m.icon;
+            return (
+              <button
+                key={m.key}
+                onClick={() => setActive(m.key)}
+                className={`w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-3 sm:py-4 transition-colors text-left ${
+                  active === m.key
+                    ? 'bg-yellow-50 border-l-4 border-l-[#E5C500]'
+                    : 'bg-white border-l-4 border-l-transparent hover:bg-slate-50'
+                }`}
+                aria-current={active === m.key ? 'page' : undefined}
+              >
+                <Icon className={`h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 ${
+                  active === m.key ? 'text-[#E5C500]' : 'text-slate-400'
+                }`} />
+                <span className={`flex-1 text-sm sm:text-base ${
+                  active === m.key ? 'font-semibold text-slate-900' : 'text-slate-600'
+                }`}>
+                  {m.label}
+                </span>
+                <ChevronRight className={`h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 ${
+                  active === m.key ? 'text-[#E5C500]' : 'text-slate-300'
+                }`} />
+              </button>
+            );
+          })}
+        </div>
 
-        <main className="flex-1">
-          <div className="mt-0 rounded-[12px] border border-[#F0F0F0] bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900">{tableConfig.title}</h2>
-            {tableConfig.subtitle && <p className="mt-2 text-sm text-slate-500">{tableConfig.subtitle}</p>}
+        {/* Table Section */}
+        <div className="px-3 sm:px-4 py-4 sm:py-6 border-t border-[#F0F0F0]">
+          <h2 className="text-base sm:text-lg font-semibold text-slate-900">{tableConfig.title}</h2>
+          {tableConfig.subtitle && <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">{tableConfig.subtitle}</p>}
 
-            <div className="mt-6 overflow-auto max-h-[53vh]">
-              <table className="min-w-full table-auto text-sm text-slate-700">
-                <thead>
-                  <tr className="text-left">
-                    {tableConfig.columns.map((col) => (
-                      <th key={col} className="px-6 py-3 border-b border-[#EFEFEF] text-sm text-slate-500">{col}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableConfig.rows.map((row, rIdx) => (
-                    <tr key={rIdx} className="odd:bg-white even:bg-[#FBFBFB] align-top">
+          <div className="mt-4 sm:mt-6 overflow-x-auto max-h-[50vh] rounded-lg border border-[#F0F0F0]">
+            <table className="w-full table-auto text-xs sm:text-sm text-slate-700">
+              <thead>
+                <tr className="text-left bg-slate-50 sticky top-0">
+                  {tableConfig.columns.map((col, idx) => (
+                    <th
+                      key={col}
+                      className={`px-2 sm:px-3 py-2 sm:py-3 border-b border-[#EFEFEF] text-xs sm:text-xs font-medium text-slate-500 whitespace-nowrap ${
+                        idx > 1 && idx <= 3 && 'hidden sm:table-cell' ||
+                        idx > 3 && 'hidden md:table-cell'
+                      }`}
+                    >
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tableConfig.rows.length > 0 ? (
+                  tableConfig.rows.map((row, rIdx) => (
+                    <tr key={rIdx} className={`${rIdx % 2 === 0 ? 'bg-white' : 'bg-[#FBFBFB]'} hover:bg-slate-50 transition-colors`}>
                       {row.map((cell, cIdx) => (
-                        <td key={cIdx} className="px-6 py-4 border-b border-[#F6F6F6] align-middle">{cell}</td>
+                        <td
+                          key={cIdx}
+                          className={`px-2 sm:px-3 py-2 sm:py-3 border-b border-[#F6F6F6] text-xs sm:text-sm ${
+                            cIdx > 1 && cIdx <= 3 && 'hidden sm:table-cell' ||
+                            cIdx > 3 && 'hidden md:table-cell'
+                          }`}
+                        >
+                          <div className="break-words">{cell}</div>
+                        </td>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={tableConfig.columns.length} className="px-3 sm:px-4 py-8 sm:py-12 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="text-4xl text-slate-300">👥</div>
+                        <p className="text-sm text-slate-500">No records found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-        </main>
+        </div>
+
+        {/* Logout Button */}
+        <div className="px-3 sm:px-4 py-4 sm:py-6 border-t border-[#F0F0F0]">
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="w-full rounded-lg bg-[#E5C500] px-4 py-3 sm:py-4 text-base sm:text-base font-semibold text-slate-900 shadow-sm hover:bg-[#D4B300] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loggingOut ? 'Logging out...' : 'Logout'}
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Horizontal Layout */}
+      <div className="hidden lg:block">
+        <div className="flex items-start gap-8 p-6">
+          {/* Sidebar */}
+          <aside className="w-[280px] flex-shrink-0">
+            <div className="rounded-[12px] border border-[#F0F0F0] bg-white p-4">
+              <h3 className="text-sm font-medium text-slate-500 mb-4">My Team</h3>
+              <ul className="divide-y divide-[#F3F3F3]">
+                {menu.map((m) => {
+                  const Icon = m.icon;
+                  return (
+                    <li key={m.key} className="py-3">
+                      <button
+                        onClick={() => setActive(m.key)}
+                        className={`w-full text-left flex items-center gap-3 px-2 py-1 rounded transition-colors ${
+                          active === m.key ? 'font-semibold text-slate-900' : 'text-slate-500 hover:text-slate-700'
+                        }`}
+                        aria-current={active === m.key ? 'page' : undefined}
+                      >
+                        <Icon className={`h-5 w-5 flex-shrink-0 ${active === m.key ? 'text-[#E5C500]' : 'text-slate-400'}`} />
+                        <span className={`flex-1 ${active === m.key ? 'font-semibold text-slate-900' : 'text-slate-600'}`}>
+                          {m.label}
+                        </span>
+                        <ChevronRight className={`h-4 w-4 ${active === m.key ? 'text-[#E5C500]' : 'text-slate-300'}`} />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="mt-6">
+              <button
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="w-full rounded-lg bg-[#E5C500] px-6 py-4 font-semibold text-slate-900 shadow-sm hover:bg-[#D4B300] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loggingOut ? 'Logging out...' : 'Logout'}
+              </button>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1">
+            <div className="rounded-[12px] border border-[#F0F0F0] bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-slate-900">{tableConfig.title}</h2>
+              {tableConfig.subtitle && <p className="mt-2 text-sm text-slate-500">{tableConfig.subtitle}</p>}
+
+              <div className="mt-6 overflow-x-auto max-h-[53vh] rounded-lg">
+                <table className="min-w-full table-auto text-sm text-slate-700">
+                  <thead>
+                    <tr className="text-left bg-slate-50 sticky top-0">
+                      {tableConfig.columns.map((col) => (
+                        <th key={col} className="px-6 py-3 border-b border-[#EFEFEF] text-sm text-slate-500 font-medium">
+                          {col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableConfig.rows.length > 0 ? (
+                      tableConfig.rows.map((row, rIdx) => (
+                        <tr key={rIdx} className={`${rIdx % 2 === 0 ? 'bg-white' : 'bg-[#FBFBFB]'} hover:bg-slate-50 transition-colors`}>
+                          {row.map((cell, cIdx) => (
+                            <td key={cIdx} className="px-6 py-4 border-b border-[#F6F6F6]">
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={tableConfig.columns.length} className="px-6 py-12 text-center">
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="text-5xl text-slate-300">👥</div>
+                            <p className="text-sm text-slate-500">No records found</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

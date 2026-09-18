@@ -1,4 +1,4 @@
-# BZB Platform - Setup Guide
+# MBD Platform - Setup Guide
 
 ## Prerequisites
 
@@ -99,7 +99,7 @@ Create a file named `.env.local` in the project root:
 
 ```bash
 # Application
-NEXT_PUBLIC_SITE_NAME=BZB Platform
+NEXT_PUBLIC_SITE_NAME=MBD Platform
 NEXT_PUBLIC_API_URL=https://api.bzb.com
 
 # Database (required for persistent users and production data)
@@ -192,7 +192,7 @@ Create `.vscode/settings.json`:
 ```bash
 git init
 git add .
-git commit -m "Initial commit: BZB platform setup with Phases 1-3"
+git commit -m "Initial commit: MBD platform setup with Phases 1-3"
 ```
 
 ### Create Feature Branch

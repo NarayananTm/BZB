@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { toast } from 'sonner';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -13,7 +16,6 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
   });
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +25,6 @@ export default function RegisterPage() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    setMessage('');
 
     try {
       const response = await fetch('/api/register', {
@@ -38,10 +39,10 @@ export default function RegisterPage() {
         throw new Error(data.message || 'Registration failed');
       }
 
-      setMessage('Registration Successful');
+      toast.success('Registration successful');
       router.push('/login');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Registration failed');
+      toast.error(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ export default function RegisterPage() {
       <div className="mx-auto flex max-w-6xl flex-col overflow-hidden rounded-[32px] border border-white/10 bg-white/10 shadow-2xl backdrop-blur-xl lg:flex-row">
         <div className="flex-1 bg-black/20 p-8 sm:p-12 lg:p-16">
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#FFD31A]">Create Account</p>
-          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Join the BZB community</h1>
+          <h1 className="mb-4 text-4xl font-bold sm:text-5xl">Join the MBD community</h1>
           <p className="max-w-md text-base text-slate-300 sm:text-lg">
             Register to unlock access to referral benefits, member opportunities, and exclusive updates.
           </p>
@@ -135,10 +136,21 @@ export default function RegisterPage() {
               </Link>
             </div>
 
-            {message ? <p className="text-sm text-[#FFD31A]">{message}</p> : null}
           </form>
         </div>
       </div>
     </main>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#111827,_#020617)] px-4 py-24 text-white" />
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

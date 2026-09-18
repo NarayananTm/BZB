@@ -54,7 +54,7 @@ export default function AboutPreviewSection() {
                 lg:text-[22px]
               "
             >
-              BZB is a trusted platform that combines Builders &
+              MBD is a trusted platform that combines Builders &
               Developers with a dynamic referral-based membership
               ecosystem.
             </p>
@@ -107,8 +107,8 @@ export default function AboutPreviewSection() {
           <div className="flex justify-center">
 
             <Image
-              src="/images/logo/BZB Logo.png"
-              alt="BZB Logo"
+              src="/images/hero/magimai b&d.png"
+              alt="MBD Logo"
 
               width={420}
               height={420}

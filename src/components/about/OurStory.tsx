@@ -55,7 +55,7 @@ export default function OurStory() {
           >
             Founded with the vision of delivering high-quality
             developments and meaningful member experiences,
-            BZB has grown into a platform where innovation,
+            MBD has grown into a platform where innovation,
             trust, and opportunity come together.
           </p>
 
@@ -83,7 +83,7 @@ export default function OurStory() {
             Every project we undertake reflects our commitment
             to excellence, transparency, customer satisfaction,
             and long-term value creation for every member of the
-            BZB community.
+            MBD community.
           </p>
 
         </div>

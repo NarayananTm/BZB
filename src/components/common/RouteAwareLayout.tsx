@@ -8,12 +8,13 @@ import Footer from '@/components/common/Footer';
 export default function RouteAwareLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname() || '';
   const isAdminRoute = pathname.startsWith('/admin');
+  const isSuperAdminRoute = pathname.startsWith('/supper-admin');
 
   return (
     <>
-      {!isAdminRoute && <Navigation />}
+      {!isAdminRoute && !isSuperAdminRoute && <Navigation />}
       {children}
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isSuperAdminRoute && <Footer />}
     </>
   );
 }

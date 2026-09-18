@@ -1,10 +1,10 @@
-# BZB Platform - Born to Win
+# MBD Platform - Born to Win
 
 A modern real estate and referral platform built with Next.js, React, and TypeScript.
 
 ## Project Overview
 
-BZB is a comprehensive real estate platform featuring:
+MBD is a comprehensive real estate platform featuring:
 - **Property Investment**: Curated real estate investment opportunities
 - **Referral Program**: Multi-level referral system with rewards
 - **Member Dashboard**: Personalized member tracking and management
@@ -35,6 +35,16 @@ src/
 public/
 └── images/          # Static images
 ```
+
+## Documentation
+
+### Super Admin Module
+- **[PENDING_REVIEW_INTEGRATION.md](./PENDING_REVIEW_INTEGRATION.md)** - Complete integration guide for member approval workflow
+- **[TESTING_VALIDATION_PLAN.md](./TESTING_VALIDATION_PLAN.md)** - Comprehensive testing checklist with 36 test cases
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture and design patterns
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Quick start guide
+- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - API and component reference
+- **[STRUCTURE.md](./STRUCTURE.md)** - Project structure and navigation
 
 ## Getting Started
 
@@ -158,7 +168,7 @@ export default Component;
 Create a `.env.local` file:
 
 ```
-NEXT_PUBLIC_SITE_NAME=BZB Platform
+NEXT_PUBLIC_SITE_NAME=MBD Platform
 NEXT_PUBLIC_API_URL=https://api.bzb.com
 ```
 
@@ -182,7 +192,7 @@ See `Dockerfile` for containerization setup.
 
 ## License
 
-All rights reserved © 2024 BZB Platform
+All rights reserved © 2024 MBD Platform
 
 ## Support
 

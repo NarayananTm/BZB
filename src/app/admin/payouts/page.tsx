@@ -1,11 +1,14 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { getAdminPayouts } from '@/services/adminFinanceService';
+import { getAllPayouts } from '@/services/payoutService';
+import StatusUpdateBadge from '@/components/admin/StatusUpdateBadge';
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminPayoutsPage() {
-  const adminPayouts = await getAdminPayouts();
-  const completed = adminPayouts.filter((payout) => payout.status === 'Completed').length;
-  const scheduled = adminPayouts.filter((payout) => payout.status === 'Scheduled').length;
-  const failed = adminPayouts.filter((payout) => payout.status === 'Failed').length;
+  const adminPayouts = await getAllPayouts();
+  const completed = adminPayouts.filter((p) => p.status === 'Completed').length;
+  const scheduled = adminPayouts.filter((p) => p.status === 'Scheduled').length;
+  const failed = adminPayouts.filter((p) => p.status === 'Failed').length;
 
   return (
     <AdminLayout title="Payouts">
@@ -50,11 +53,13 @@ export default async function AdminPayoutsPage() {
                 {adminPayouts.map((payout) => (
                   <tr key={payout.id} className="hover:bg-slate-50">
                     <td className="px-4 py-4 font-medium text-slate-900">{payout.id}</td>
-                    <td className="px-4 py-4">{payout.memberName}</td>
+                    <td className="px-4 py-4">{payout.member_name}</td>
                     <td className="px-4 py-4">{payout.plan}</td>
-                    <td className="px-4 py-4">{payout.amount}</td>
-                    <td className="px-4 py-4">{payout.payoutDate}</td>
-                    <td className="px-4 py-4 text-slate-600">{payout.status}</td>
+                    <td className="px-4 py-4">Rs.{Number(payout.amount).toLocaleString('en-IN')}</td>
+                    <td className="px-4 py-4">{payout.payout_date}</td>
+                    <td className="px-4 py-4">
+                      <StatusUpdateBadge id={payout.id} current={payout.status} endpoint="/api/admin/payouts" options={['Scheduled','Completed','Failed']} />
+                    </td>
                   </tr>
                 ))}
               </tbody>

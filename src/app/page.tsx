@@ -8,9 +8,9 @@ import ContactSection from "@/components/sections/home/ContactSection";
 import '@/styles/home-animations.css';
 
 export const metadata: Metadata = {
-  title: "Home | BZB - Born to Win",
+  title: "Home | MBD - Born to Win",
   description:
-    "Build your future with BZB. Invest in real estate, grow your network through referrals, and unlock exclusive rewards.",
+    "Build your future with MBD. Invest in real estate, grow your network through referrals, and unlock exclusive rewards.",
 };
 
 export default function HomePage() {

@@ -51,7 +51,7 @@ export default function WhoWeAre() {
               animate-[bzbFadeUp_1s_ease]
             "
           >
-            BZB is a trusted platform that combines Builders &
+            MBD is a trusted platform that combines Builders &
             Developers with a dynamic referral-based membership
             ecosystem.
           </p>

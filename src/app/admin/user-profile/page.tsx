@@ -1,22 +1,17 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { getAdminMembers } from '@/services/adminMemberService';
 import AdminProfileTabs from '@/components/admin/AdminProfileTabs';
-import DashboardHeader from '@/components/admin/DashboardHeader';
+export const dynamic = "force-dynamic";
 
 export default async function AdminProfilePage() {
-  const adminMembers = await getAdminMembers();
-  const member = adminMembers[0];
-
   return (
     <AdminLayout title="Profile">
-      <div className="space-y-1 mt-1 max-h-[calc(100vh-150px)] ">
+      <div className="space-y-1 mt-1 max-h-[calc(100vh-10px)] ">
         <section className="">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <DashboardHeader />
                 <div>
-                  <div className="mt-2 text-sm text-slate-500">{member?.id} <a className="ml-2 text-slate-500" href="#">↗</a></div>
+                  <h1 className="text-[30px] font-semibold text-[#111111]">Member Profile</h1>
                 </div>
               </div>
 

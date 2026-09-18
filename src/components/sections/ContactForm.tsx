@@ -51,12 +51,21 @@ const ContactForm: FC = () => {
     setLoading(true);
 
     try {
+      // Combine firstName and lastName into fullName
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+      
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          fullName,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        }),
       });
 
       const result = await response.json();

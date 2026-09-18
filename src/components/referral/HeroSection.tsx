@@ -8,7 +8,7 @@ import ReferralModal from "./ReferralModal";
 
 
 export default function HeroSection() {
-  const [open,setOpen]=useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <section className="relative overflow-hidden bg-[#171515] min-h-screen flex items-center">
 
@@ -122,11 +122,11 @@ export default function HeroSection() {
 
                 </div>
 
-              ))}c
+              ))}
 
             </div>
 
-                       <Image
+            <Image
               src="/images/referral/Referral Program QR Code.png"
               alt="Referral QR Code"
               width={520}
@@ -168,7 +168,7 @@ export default function HeroSection() {
               lg:text-left
 
               lg:pl-6
-
+           
               animate-[fadeInRight_1s_ease]
             "
           >
@@ -215,10 +215,10 @@ export default function HeroSection() {
                 lg:leading-8
               "
             >
-              At BZB, every referral is an opportunity to grow.
+              At MBD, every referral is an opportunity to grow.
 
               Invite your friends, family and professional contacts
-              to join the BZB community.
+              to join the MBD community.
 
               As your network expands, you'll progress through referral
               levels and become eligible for exclusive rewards,
@@ -226,7 +226,7 @@ export default function HeroSection() {
             </p>
 
             <Button
-      
+
               className="
                 mt-10
 
@@ -248,7 +248,7 @@ export default function HeroSection() {
                 hover:bg-primary-800
                 hover:scale-105
               "
-              onClick={()=>setOpen(true)}
+              onClick={() => setOpen(true)}
             >
 
               Start Referring
@@ -256,12 +256,12 @@ export default function HeroSection() {
               <ArrowRight className="ml-2 h-5 w-5" />
 
             </Button>
-<ReferralModal
-open={open}
-onClose={()=>setOpen(false)}
-/>
+            <ReferralModal
+              open={open}
+              onClose={() => setOpen(false)}
+            />
           </div>
-                  
+
 
         </div>
 

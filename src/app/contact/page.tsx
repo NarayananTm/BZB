@@ -8,10 +8,10 @@ import ContactInfo from '@/components/sections/ContactInfo';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Contact Us | BZB - Born to Win',
+  title: 'Contact Us | MBD - Born to Win',
   description:
-    'Get in touch with BZB. Contact us for inquiries about properties, investment opportunities, or the referral program.',
-  keywords: ['contact', 'get in touch', 'support', 'inquiry', 'BZB'],
+    'Get in touch with MBD. Contact us for inquiries about properties, investment opportunities, or the referral program.',
+  keywords: ['contact', 'get in touch', 'support', 'inquiry', 'MBD'],
 };
 
 export default function ContactPage() {
@@ -21,11 +21,11 @@ export default function ContactPage() {
       <Hero
         title={
           <span>
-            Get in Touch with <span className="gradient-text">BZB</span>
+            Get in Touch with <span className="gradient-text">MBD</span>
           </span>
         }
         subtitle="We're here to help"
-        description="Have questions about our properties, investment opportunities, or the referral program? Contact us today and let us help you get started on your journey with BZB."
+        description="Have questions about our properties, investment opportunities, or the referral program? Contact us today and let us help you get started on your journey with MBD."
       >
         <Link href="#contact-form">
           <Button>Send Message</Button>
@@ -208,9 +208,9 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: 'About BZB',
+              title: 'About MBD',
               description: 'Learn more about our company and mission',
-              link: '/bzb',
+              link: '/mbd',
             },
             {
               title: 'Referral Program',
@@ -245,7 +245,7 @@ export default function ContactPage() {
             <Link href="#contact-form">
               <Button>Send Message</Button>
             </Link>
-            <Link href="/bzb">
+            <Link href="/mbd">
               <Button variant="secondary">Become a Member</Button>
             </Link>
           </div>

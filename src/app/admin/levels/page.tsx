@@ -1,8 +1,9 @@
 import AdminLayout from '@/components/admin/AdminLayout';
-import { getAdminLevels } from '@/services/adminLevelService';
+import { getAllLevels } from '@/services/levelService';
+export const dynamic = "force-dynamic";
 
 export default async function AdminLevelsPage() {
-  const adminLevels = await getAdminLevels();
+  const adminLevels = await getAllLevels();
   return (
     <AdminLayout title="Levels">
       <div className="space-y-8">
@@ -18,9 +19,9 @@ export default async function AdminLevelsPage() {
               </div>
               <div className="mt-6 space-y-3 text-sm text-slate-600">
                 <p>{level.description}</p>
-                <p><span className="font-semibold text-slate-950">Required referrals:</span> {level.requiredReferrals}</p>
-                <p><span className="font-semibold text-slate-950">Members:</span> {level.members}</p>
-                <p><span className="font-semibold text-slate-950">Completion:</span> {level.completion}%</p>
+              <p><span className="font-semibold text-slate-950">Required referrals:</span> {level.required_referrals}</p>
+              <p><span className="font-semibold text-slate-950">Members:</span> {level.members_count}</p>
+              <p><span className="font-semibold text-slate-950">Completion:</span> {level.completion_pct}%</p>
               </div>
             </div>
           ))}

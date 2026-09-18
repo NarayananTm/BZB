@@ -1,5 +1,6 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAdminMembers } from '@/services/adminMemberService';
+export const dynamic = "force-dynamic";
 
 export default async function AdminTeamPage() {
   const adminMembers = await getAdminMembers();
