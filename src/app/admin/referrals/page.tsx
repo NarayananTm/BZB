@@ -6,7 +6,7 @@ import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCa
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
 // import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
-import { getMemberByEmail, getMemberById } from '@/services/memberService';
+import { getAllMembers, getMemberByEmail, getMemberById } from '@/services/memberService';
 import { getReferralsBySponsor } from '@/services/referralService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
@@ -18,6 +18,21 @@ export default async function AdminReferralsPage() {
   const userId = member?.id || session?.id?.toString() || '';
   const referrals = userId ? await getReferralsBySponsor(userId) : [];
   const progress = referrals ? Math.min(100, Math.round((referrals.length / 9) * 100)) : 0;
+  const allMembers = await getAllMembers();
+  const chartStart = new Date();
+  chartStart.setMonth(chartStart.getMonth() - 6, 1);
+  chartStart.setHours(0, 0, 0, 0);
+  const memberCountData = Array.from({ length: 7 }, (_, index) => {
+    const monthEnd = new Date(chartStart);
+    monthEnd.setMonth(chartStart.getMonth() + index + 1, 0);
+    monthEnd.setHours(23, 59, 59, 999);
+    return allMembers.filter((item) => new Date(item.joining_date) <= monthEnd).length;
+  });
+  const memberCountLabels = Array.from({ length: 7 }, (_, index) => {
+    const month = new Date(chartStart);
+    month.setMonth(chartStart.getMonth() + index);
+    return month.toLocaleDateString('en-US', { month: 'short' });
+  });
   
   const displayName = member?.name || session?.name || 'User';
   const mobile = member?.mobile || session?.mobile ;
@@ -50,7 +65,7 @@ export default async function AdminReferralsPage() {
 
         <section className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-[42%_15%_40%]">
           <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
-            <MemberAnalyticsCard data={[5, 12, 8, 20, 35, 22, 28]} />
+            <MemberAnalyticsCard data={memberCountData} labels={memberCountLabels} />
             <ReferGrowCard direct={referrals.length} referrals={me?.team_count ?? 0} total={referrals.length + (me?.team_count ?? 0)} />
           </div>
 

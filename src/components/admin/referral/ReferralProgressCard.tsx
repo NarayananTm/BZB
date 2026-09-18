@@ -210,7 +210,7 @@ export default function ReferralProgressCard({
         </div>
 
         {/* Bottom Text */}
-        <div className="absolute top:[450px] left-0 w-full text-center">
+        <div className="absolute top-[450px] left-0 w-full text-center">
           <p className="text-[10px] text-[#777777]">
             3 to 5 referrals
           </p>
