@@ -10,7 +10,7 @@ import ReferralModal from "./ReferralModal";
 export default function HeroSection() {
   const [open, setOpen] = useState(false);
   return (
-    <section className="relative overflow-hidden bg-[#171515] min-h-screen flex items-center">
+    <section className="relative overflow-hidden bg-[#171515] min-h-screen flex items-center mt-10">
 
       {/* Background */}
 
@@ -181,7 +181,7 @@ export default function HeroSection() {
 
                 leading-[1.1]
 
-                text-[34px]
+                text-[30px]
                 sm:text-[42px]
                 md:text-[48px]
                 lg:text-[54px]
@@ -198,7 +198,7 @@ export default function HeroSection() {
 
             <p
               className="
-                mt-8
+                mt-5
 
                 mx-auto
                 lg:mx-0
@@ -207,8 +207,8 @@ export default function HeroSection() {
 
                 text-gray-300
 
-                text-[20px]
-                sm:text-[24px]
+                text-base
+                sm:text-[20px]
                 lg:text-[24px]
 
                 leading-7
@@ -228,11 +228,11 @@ export default function HeroSection() {
             <Button
 
               className="
-                mt-10
+                mt-6
 
-                h-14
+                h-12
 
-                px-10
+                px-6
 
                 rounded-lg
 
@@ -240,6 +240,7 @@ export default function HeroSection() {
 
                 text-white
 
+                text-sm
                 font-semibold
 
                 transition-all

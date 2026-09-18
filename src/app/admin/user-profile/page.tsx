@@ -11,7 +11,7 @@ export default async function AdminProfilePage() {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div>
-                  <h1 className="text-[30px] font-semibold text-[#111111]">Member Profile</h1>
+                  <h1 className="text-2xl font-semibold text-[#111111] sm:text-[30px]">Member Profile</h1>
                 </div>
               </div>
 

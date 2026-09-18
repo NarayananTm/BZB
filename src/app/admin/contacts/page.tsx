@@ -56,7 +56,7 @@ export default function ContactsAdminPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">Contact Submissions</h1>
+          <h1 className="text-2xl font-bold mb-2 sm:text-3xl lg:text-4xl">Contact Submissions</h1>
           <p className="text-slate-400">View all messages from your website visitors</p>
         </div>
 

@@ -14,58 +14,65 @@ const reasons = [
 
 export default function WhyChoose() {
   return (
-    <section className="relative bg-[#0E0E0E] overflow-hidden">
+    <section className="relative min-h-[321px] overflow-hidden bg-black sm:min-h-[420px] lg:min-h-0">
 
       <div className="max-w-[1600px] mx-auto">
 
-        <div className="grid lg:grid-cols-2 min-h-[760px]">
+        <div className="grid min-h-[321px] lg:min-h-[760px] lg:grid-cols-2">
 
           {/* ================= LEFT ================= */}
 
-          <div className="relative flex items-center">
+          <div className="relative flex items-start lg:items-center">
 
-            <div className="px-20">
+            <div className="mt-11 px-10 lg:mt-10">
 
               <h2
                 className="
                   text-white
-                  text-[30px]
+                  text-[25px]
+                  sm:text-[35px]
+                  lg:text-[50px]
+                  2xl:text-[60px]
                   font-semibold
-                  mb-24
+                  mb-8
+                  lg:mb-7
                 "
               >
                 Why Choose MBD ?
               </h2>
 
-              <div className="space-y-5">
+              <div className="space-y-2 lg:space-y-2">
 
                 {reasons.map((item) => (
                   <div
                     key={item}
-                    className="flex items-center gap-6"
+                    className="flex items-center gap-1 lg:gap-6"
                   >
                     <div
                       className="
-                        w-12
-                        h-12
-                        rounded-full
-                        bg-white/5
+                        h-4
+                        w-4
                         flex
                         items-center
                         justify-center
+                        lg:h-12
+                        lg:w-12
+                        lg:rounded-full
+                        lg:bg-white/5
                       "
                     >
                       <Check
-                        size={24}
+                        size={16}
                         strokeWidth={3}
-                        className="text-[#D4AF11]"
+                        className="text-[#555] lg:text-[#D4AF11]"
                       />
                     </div>
 
                     <span
                       className="
                         text-white
-                        text-[30px]
+                        text-[15px]
+                        lg:text-[30px]
                         font-normal
                       "
                     >
@@ -82,7 +89,7 @@ export default function WhyChoose() {
 
           {/* ================= RIGHT ================= */}
 
-          <div className="relative overflow-hidden">
+          <div className="relative hidden overflow-hidden lg:block">
 
             {/* Helmet Image */}
 
@@ -105,6 +112,10 @@ export default function WhyChoose() {
           </div>
 
         </div>
+
+        <div className="absolute bottom-0 left-0 h-[3px] w-full bg-[#D4AF11]" />
+        <div className="absolute bottom-[7px] left-0 h-[2px] w-[76%] bg-[#D4AF11]" />
+        <div className="absolute bottom-[12px] left-0 h-[2px] w-[72%] bg-[#D4AF11]" />
 
       </div>
 

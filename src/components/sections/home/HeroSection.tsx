@@ -8,22 +8,22 @@ export default function HeroSection() {
     <section
       className="
         relative
-
+mt-20
         overflow-hidden
 
         bg-black
 
-       min-h-[760px]
+      min-h-[378px]
 sm:min-h-[850px]
 lg:min-h-[950px]
 
        flex
 
-items-end
+items-center
 
 lg:items-center
 
-pt-24
+pt-0
 
 pb-10
       "
@@ -53,9 +53,9 @@ pb-10
           bg-gradient-to-r
          
         "
-         // from-black/75
-          // via-black/45
-          // to-black/10
+      // from-black/75
+      // via-black/45
+      // to-black/10
       />
 
       {/* Polygon */}
@@ -103,7 +103,7 @@ lg:bottom-0
 
           max-w-[1500px]
 
-          px-5
+          px-9
           sm:px-8
           lg:px-12
         "
@@ -115,7 +115,7 @@ lg:bottom-0
 
             items-center
 
-           gap-4
+           gap-0
 sm:gap-8
 lg:gap-10
 
@@ -128,10 +128,10 @@ lg:gap-10
 
           <div
             className="
-              order-2
+              order-1
               lg:order-1
 
-              text-center
+              text-left
               lg:text-left
 
               animate-[fadeInLeft_1s_ease]
@@ -145,7 +145,7 @@ lg:gap-10
 
                 text-white
 
-                text-[38px]
+                text-[28px]
                 sm:text-[48px]
                 md:text-[56px]
                 lg:text-[64px]
@@ -164,14 +164,14 @@ lg:gap-10
 
             <h2
               className="
-               mt-3
+               mt-1
 sm:mt-5
 
                 font-semibold
 
                 text-[#F3C300]
 
-                text-[22px]
+                text-base
                 sm:text-[26px]
                 md:text-[30px]
                 lg:text-[34px]
@@ -187,16 +187,16 @@ sm:mt-5
                 mx-auto
                 lg:mx-0
 
-                mt-6
+                mt-2
 
                 max-w-[580px]
 
                 text-gray-300
 
-                leading-8
+                leading-[1.45]
                 lg:leading-9
 
-                text-[16px]
+                text-sm
                 sm:text-[18px]
                 lg:text-[20px]
 
@@ -215,12 +215,12 @@ sm:mt-5
 
             <div
               className="
-               mt-7
+               mt-3
 sm:mt-10
 
                 flex
 
-                justify-center
+                justify-start
                 lg:justify-start
 
                 animate-[fadeInUp_1.6s_ease]
@@ -230,18 +230,19 @@ sm:mt-10
               <Button
                 href="/mbd"
                 className="
-                  h-14
+                  h-8
 
-                  w-full
+                  w-[110px]
                   sm:w-auto
 
-                  rounded-xl
+                  rounded-md
 
                   bg-[#BEA311]
 
-                  px-10
+                  px-3
 
-                  text-lg
+                  text-[10px]
+                  whitespace-nowrap
 
                   font-semibold
 
@@ -268,14 +269,14 @@ sm:mt-10
           <div
             className="
               
-              order-1
-mb-8
+              order-2
+mb-0
 lg:mb-0
               lg:order-2
 
               flex
 
-              justify-center
+              justify-end
               lg:justify-end
 
               animate-[fadeInRight_1.2s_ease]
@@ -304,8 +305,8 @@ lg:mb-0
                 className="
                   absolute
 
-                  h-[220px]
-                  w-[220px]
+                  h-[140px]
+                  w-[140px]
 
 md:w-[280px]
 
@@ -320,7 +321,7 @@ xl:w-[460px]
 
                   bg-[#BEA311]/20
 
-                  blur-[90px]
+                  blur-[55px]
 
                   animate-pulse
                 "
@@ -343,7 +344,7 @@ xl:w-[460px]
 
                   h-auto
 
-                  w-[70px]
+                  w-[130px]
                   sm:w-[280px]
                   md:w-[340px]
                   lg:w-[420px]

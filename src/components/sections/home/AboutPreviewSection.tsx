@@ -3,7 +3,7 @@ import { Button } from "@/components";
 
 export default function AboutPreviewSection() {
   return (
-    <section className="bg-gray-100 py-16 lg:py-24 overflow-hidden">
+    <section className="bg-gray-100 py-10 lg:py-24 overflow-hidden">
       <div className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-12">
 
         <div className="grid items-center gap-16 lg:grid-cols-2">

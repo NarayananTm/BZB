@@ -34,7 +34,7 @@ export default function FAQSection() {
 
       <div className="max-w-[1250px] mx-auto px-8">
 
-        <h2 className="text-[30px] font-semibold text-black mb-14">
+        <h2 className="text-[25px] sm:text-[30px] lg:text-[30px] font-semibold text-black mb-14">
           Frequently Asked Questions
         </h2>
 
@@ -68,12 +68,12 @@ export default function FAQSection() {
               >
                 <div className="text-left">
 
-                  <h3 className="text-[25px] font-semibold text-black">
+                  <h3 className="text-[20px] sm:text-[20px] lg:text-[30px] font-semibold text-black">
                     {item.question}
                   </h3>
 
                   {open === index && (
-                    <p className="mt-3 text-[20px] leading-8 text-gray-500">
+                    <p className="mt-3 text-[15px] sm:text-[20px] lg:text-[20px] leading-8 text-gray-500">
                       {item.answer}
                     </p>
                   )}

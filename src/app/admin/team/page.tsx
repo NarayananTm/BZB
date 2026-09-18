@@ -15,7 +15,7 @@ export default async function AdminTeamPage() {
         <section className="grid gap-6 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
             <p className="text-sm text-slate-500">Total Team Members</p>
-            <p className="mt-4 text-4xl font-semibold text-slate-950">{adminMembers.reduce((sum, member) => sum + member.teamCount, 0)}</p>
+            <p className="mt-4 text-2xl font-semibold text-slate-950 sm:text-3xl md:text-4xl">{adminMembers.reduce((sum, member) => sum + member.teamCount, 0)}</p>
           </div>
           <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
             <p className="text-sm text-slate-500">Average Referrals</p>

@@ -3,56 +3,44 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+
 import { ROUTES } from '@/utils/constants';
+import { Menu, X } from 'lucide-react';
 
 export default function Navigation() {
-
+ 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+ useEffect(() => {
+  const handleScroll = () => {
+    setIsScrolled(window.scrollY > 10);
+  };
 
-    const loadUser = () => {
-      const storedUser = localStorage.getItem("bzb_user");
+  window.addEventListener("scroll", handleScroll);
 
-      if (storedUser) {
-      
-      } else {
-      
-      }
-    };
-
-    loadUser();
-
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("userChanged", loadUser);
-
-
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("userChanged", loadUser);
-
-    };
-  }, []);
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+    
+   
+  };
+}, []);
 
   const links = [
     { label: 'Home', href: ROUTES.HOME },
     { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About Us', href: ROUTES.ABOUT },
-    { label: 'Dashboard', href: ROUTES.Dashboard },
+     { label: 'Dashboard', href: ROUTES.Dashboard },
   ];
-
 
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-        ? "bg-black/90 backdrop-blur-md shadow-lg"
-        : "bg-black/20 backdrop-blur-sm"
+          ? "bg-black/90 backdrop-blur-md shadow-lg"
+          : "bg-black/20 backdrop-blur-sm"
         }`}
     >
       <div className="max-w-[1450px] mx-auto h-[88px] px-8 xl:px-12 flex items-center justify-between">
@@ -66,7 +54,7 @@ export default function Navigation() {
               width={220}
               height={120}
               priority
-              className="object-contain"
+              className="h-auto w-[140px] object-contain sm:w-[170px] lg:w-[220px]"
             />
 
             {/* <div className="flex flex-col leading-none">
@@ -95,22 +83,37 @@ export default function Navigation() {
         </div>
 
         {/* Desktop Button */}
-        <div className="hidden lg:flex">
-          <div className="relative">
-
-
-
-
-          </div>
-
-        </div>
+      
 
         {/* Mobile Menu Button */}
-
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden text-white"
+        >
+          {isMobileMenuOpen ? <X size={30} /> : <Menu size={30} />}
+        </button>
       </div>
 
       {/* Mobile Menu */}
+      <div
+        className={`lg:hidden overflow-hidden transition-all duration-300 ${isMobileMenuOpen ? "max-h-[400px]" : "max-h-0"
+          }`}
+      >
+        <div className="bg-black/95 backdrop-blur-xl px-8 py-6 space-y-5">
+          {links.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-[#FFD31A] text-lg font-medium hover:text-white transition sm:text-xl"
+            >
+              {item.label}
+            </Link>
+          ))}
 
+          
+        </div>
+      </div>
     </nav>
   );
 }

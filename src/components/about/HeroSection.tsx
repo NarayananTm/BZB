@@ -48,7 +48,7 @@ export default function HeroSection() {
           relative
           z-20
 
-          mx-auto
+          mx-10
 
           flex
 
@@ -61,7 +61,7 @@ export default function HeroSection() {
           items-center
 
           px-5
-          sm:px-8
+          sm:px-6
           lg:px-40
           xl:px-52
 

@@ -4,7 +4,7 @@ export default function VisionMission() {
   return (
     <section className="relative -mt-8 pb-28">
 
-      <div className="max-w-[1500px] mx-auto px-8 lg:px-12">
+      <div className="max-w-[1500px] mx-auto px-3 lg:px-12">
 
         <div
           className="
@@ -18,12 +18,14 @@ export default function VisionMission() {
 
             {/* ================= LEFT ================= */}
 
-            <div className="px-14 py-14">
+            <div className="px-8 py-8 lg:px-14 lg:py-14">
 
               <h2
                 className="
                   text-white
-                  text-[30px]
+                  text-[25px]
+                  sm:text-[30px]
+                  lg:text-[30px]
                   font-semibold
                 "
               >
@@ -34,7 +36,9 @@ export default function VisionMission() {
                 className="
                   mt-5
                   text-white/90
-                  text-[20px]
+                  text-[15px]
+                  sm:text-[20px]
+                  lg:text-[20px]
                   leading-8
                 "
               >
@@ -51,12 +55,14 @@ export default function VisionMission() {
 
             {/* ================= RIGHT ================= */}
 
-            <div className="relative px-14 py-14 border-t lg:border-t-0 lg:border-l border-white/15">
+            <div className="relative px-8 py-8 lg:px-14 lg:py-14 border-t lg:border-t-0 lg:border-l border-white/15">
 
               <h2
                 className="
                   text-white
-                  text-[30px]
+                  text-[25px]
+                  sm:text-[30px]
+                  lg:text-[30px]
                   font-semibold
                 "
               >
@@ -68,7 +74,9 @@ export default function VisionMission() {
                   mt-5
                   space-y-4
                   text-white/90
-                  text-[20px]
+                  text-[15px]
+                  sm:text-[20px]
+                  lg:text-[20px]
                   leading-5
                   list-disc
                   pl-7

@@ -80,14 +80,16 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="bg-[#FAFAFA] py-28">
+    <section className="bg-[#FAFAFA] py-6 sm:py-8 lg:py-24">
       <div className="max-w-[1500px] mx-auto px-8 lg:px-12">
 
         {/* Heading */}
 
         <h2
           className="
-            text-[50px]
+            text-[25px]
+            sm:text-[30px]
+            lg:text-[30px]
             font-semibold
             text-[#111]
             leading-tight
@@ -100,7 +102,9 @@ export default function ContactSection() {
           className="
             mt-6
             max-w-[760px]
-            text-[20px]
+            text-[15px]
+            sm:text-[20px]
+            lg:text-[20px]
             leading-6
             text-[#666]
           "
@@ -147,6 +151,7 @@ export default function ContactSection() {
                   px-8
 
                   text-[20px]
+                  
 
                   placeholder:text-gray-400
 

@@ -16,22 +16,22 @@ export default async function AdminPayoutsPage() {
         <section className="grid gap-6 sm:grid-cols-3">
           <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
             <p className="text-sm text-slate-500">Total payouts</p>
-            <p className="mt-4 text-4xl font-semibold text-slate-950">{adminPayouts.length}</p>
+            <p className="mt-4 text-2xl font-semibold text-slate-950 sm:text-3xl md:text-4xl">{adminPayouts.length}</p>
           </div>
           <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
             <p className="text-sm text-slate-500">Completed</p>
-            <p className="mt-4 text-4xl font-semibold text-slate-950">{completed}</p>
+            <p className="mt-4 text-2xl font-semibold text-slate-950 sm:text-3xl md:text-4xl">{completed}</p>
           </div>
           <div className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
             <p className="text-sm text-slate-500">Scheduled</p>
-            <p className="mt-4 text-4xl font-semibold text-slate-950">{scheduled}</p>
+            <p className="mt-4 text-2xl font-semibold text-slate-950 sm:text-3xl md:text-4xl">{scheduled}</p>
           </div>
         </section>
 
         <section className="rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-2xl font-semibold text-slate-950">Payout history</h2>
+              <h2 className="text-xl font-semibold text-slate-950 sm:text-2xl">Payout history</h2>
               <p className="text-sm text-slate-500">Review payout lifecycle and track scheduled disbursements.</p>
             </div>
             <div className="rounded-3xl bg-slate-50 px-4 py-2 text-sm text-slate-600">{failed} failed</div>

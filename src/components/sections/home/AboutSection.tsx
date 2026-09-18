@@ -10,7 +10,7 @@ export default function AboutSection() {
         overflow-hidden
         bg-white
 
-        py-12
+        py-6
         sm:py-16
         lg:py-0
       "
@@ -46,6 +46,9 @@ export default function AboutSection() {
           <div
             className="
               order-1
+
+              hidden
+              lg:flex
 
               flex
               justify-center
@@ -157,7 +160,7 @@ export default function AboutSection() {
 
               max-w-[760px]
 
-              text-center
+              text-left
               xl:text-left
 
               animate-[fadeInRight_1s_ease]
@@ -170,7 +173,7 @@ export default function AboutSection() {
 
                 text-black
 
-                text-[24px]
+                text-[15px]
                 sm:text-[28px]
                 lg:text-[30px]
               "
@@ -188,7 +191,7 @@ export default function AboutSection() {
 
                 text-[#707070]
 
-                text-[34px]
+                text-[20px]
                 sm:text-[42px]
                 md:text-[46px]
                 lg:text-[50px]
@@ -208,7 +211,7 @@ export default function AboutSection() {
 
                 text-[#666]
 
-                text-[16px]
+                text-[12px]
                 sm:text-[18px]
                 lg:text-[22px]
               "
@@ -227,7 +230,7 @@ export default function AboutSection() {
 
                 text-[#666]
 
-                text-[16px]
+                text-[12px]
                 sm:text-[18px]
                 lg:text-[22px]
               "
@@ -247,7 +250,7 @@ export default function AboutSection() {
 
                 text-[#666]
 
-                text-[16px]
+                text-[12px]
                 sm:text-[18px]
                 lg:text-[22px]
               "

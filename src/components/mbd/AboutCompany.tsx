@@ -122,7 +122,7 @@ export default function AboutCompany() {
                   font-semibold
                   text-white
 
-                  text-[30px]
+                  text-[22px]
                   sm:text-[26px]
                   lg:text-[30px]
                 "
@@ -139,8 +139,9 @@ export default function AboutCompany() {
                   leading-8
                   lg:leading-10
 
-                  text-[25px]
-                  sm:text-[25px]
+                  text-[15px]
+                  sm:text-[18px]
+                  md:text-[20px]
                   lg:text-[25px]
                 "
               >
@@ -159,8 +160,9 @@ export default function AboutCompany() {
                   leading-8
                   lg:leading-10
 
-                  text-[25px]
-                  sm:text-[25px]
+                  text-[15px]
+                  sm:text-[18px]
+                  md:text-[20px]
                   lg:text-[25px]
                 "
               >

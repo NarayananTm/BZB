@@ -26,13 +26,13 @@ const services = [
 export default function OurServices() {
   return (
     <section className="bg-[#F8F8F8] py-16 lg:py-24 overflow-hidden">
-      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-[1600px] px-5 sm:px-6 lg:px-10">
 
         {/* Heading */}
 
-        <div className="mb-10 lg:mb-16">
-          <h2 className=" text-[30px]
-                    lg:text-[30px]  font-semibold text-[#111] animate-[fadeInLeft_.8s_ease]">
+        <div className="mb-8 lg:mb-16">
+          <h2 className=" text-[25px]
+          sm:text-[30px] lg:text-[30px]  font-semibold text-[#111] animate-[fadeInLeft_.8s_ease]">
             Our Services
           </h2>
         </div>
@@ -104,7 +104,8 @@ export default function OurServices() {
 
                 <h3
                   className="
-                    text-[25px]
+                    text-[20px]
+                    sm:text-[25px]
                     lg:text-[25px]
 
                     font-semibold
@@ -128,7 +129,8 @@ export default function OurServices() {
 
                     flex-1
 
-                    text-[20px]
+                    text-[15px]
+                    sm:text-[20px]
                     lg:text-[20px]
 
                     leading-8
