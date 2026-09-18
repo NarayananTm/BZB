@@ -16,8 +16,6 @@ import VisionMission from '@/components/mbd/VisionMission';
 import AboutCompany from '@/components/mbd/AboutCompany';
 import FeatureCards from '@/components/mbd/FeatureCards';
 
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'About MBD | Born to Win',
