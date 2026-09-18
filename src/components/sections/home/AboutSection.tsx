@@ -285,7 +285,7 @@ export default function AboutSection() {
                   rounded-lg
 
                   bg-[#BEA311]
-
+mb-10
                   px-10
 
                   text-lg

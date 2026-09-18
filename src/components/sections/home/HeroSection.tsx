@@ -53,9 +53,9 @@ pb-10
           bg-gradient-to-r
          
         "
-      // from-black/75
-      // via-black/45
-      // to-black/10
+         // from-black/75
+          // via-black/45
+          // to-black/10
       />
 
       {/* Polygon */}
@@ -119,7 +119,7 @@ lg:bottom-0
 sm:gap-8
 lg:gap-10
 
-            grid-cols-1
+            grid-cols-[1fr_0.78fr]
 
             lg:grid-cols-[48%_52%]
           "
@@ -145,7 +145,7 @@ lg:gap-10
 
                 text-white
 
-                text-[28px]
+                text-[21px]
                 sm:text-[48px]
                 md:text-[56px]
                 lg:text-[64px]
@@ -171,7 +171,7 @@ sm:mt-5
 
                 text-[#F3C300]
 
-                text-base
+                text-[11px]
                 sm:text-[26px]
                 md:text-[30px]
                 lg:text-[34px]
@@ -196,7 +196,7 @@ sm:mt-5
                 leading-[1.45]
                 lg:leading-9
 
-                text-sm
+                text-[10px]
                 sm:text-[18px]
                 lg:text-[20px]
 
@@ -230,7 +230,7 @@ sm:mt-10
               <Button
                 href="/mbd"
                 className="
-                  h-8
+                  h-11
 
                   w-[110px]
                   sm:w-auto
