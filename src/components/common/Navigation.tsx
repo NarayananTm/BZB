@@ -3,82 +3,56 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import {
-  Menu,
-  X,
-  UserCircle2,
-  LogOut,
-  ChevronDown,
-  LayoutDashboard,
-} from "lucide-react";
 import { ROUTES } from '@/utils/constants';
 
 export default function Navigation() {
-  const router = useRouter();
+
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userName, setUserName] = useState('');
-const [userEmail, setUserEmail] = useState('');
-const [showProfileMenu, setShowProfileMenu] = useState(false);
 
- useEffect(() => {
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 10);
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
 
-  const loadUser = () => {
-    const storedUser = localStorage.getItem("bzb_user");
+    const loadUser = () => {
+      const storedUser = localStorage.getItem("bzb_user");
 
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUserName(
-        user.fullName ||
-        user.name ||
-        user.email ||
-        "Member"
-      );
-      setUserEmail(user.email || "");
-    } else {
-      setUserName("");
-    }
-  };
+      if (storedUser) {
+      
+      } else {
+      
+      }
+    };
 
-  loadUser();
+    loadUser();
 
-  window.addEventListener("scroll", handleScroll);
-  window.addEventListener("userChanged", loadUser);
-  setShowProfileMenu(false);
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("userChanged", loadUser);
 
 
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-    window.removeEventListener("userChanged", loadUser);
-   
-  };
-}, []);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("userChanged", loadUser);
+
+    };
+  }, []);
 
   const links = [
     { label: 'Home', href: ROUTES.HOME },
     { label: 'MBD', href: ROUTES.MBD },
     { label: 'Referral', href: ROUTES.REFERRAL },
     { label: 'About Us', href: ROUTES.ABOUT },
-     { label: 'Dashboard', href: ROUTES.Dashboard },
+    { label: 'Dashboard', href: ROUTES.Dashboard },
   ];
 
-  const handleLogout = async () => {
-    localStorage.removeItem('bzb_token');
-    localStorage.removeItem('bzb_user');
-    await fetch('/api/logout', { method: 'POST' });
-    setUserName('');
-    router.push('/login');
-  };
+
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-          ? "bg-black/90 backdrop-blur-md shadow-lg"
-          : "bg-black/20 backdrop-blur-sm"
+        ? "bg-black/90 backdrop-blur-md shadow-lg"
+        : "bg-black/20 backdrop-blur-sm"
         }`}
     >
       <div className="max-w-[1450px] mx-auto h-[88px] px-8 xl:px-12 flex items-center justify-between">
@@ -122,21 +96,21 @@ const [showProfileMenu, setShowProfileMenu] = useState(false);
 
         {/* Desktop Button */}
         <div className="hidden lg:flex">
-           <div className="relative">
+          <div className="relative">
 
 
-   
 
-  </div>
-      
+
+          </div>
+
         </div>
 
         {/* Mobile Menu Button */}
-       
+
       </div>
 
       {/* Mobile Menu */}
-    
+
     </nav>
   );
 }
