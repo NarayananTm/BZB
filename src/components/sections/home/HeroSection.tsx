@@ -63,22 +63,30 @@ pb-10
       <Image
         src="/images/hero/Yellow Polygon.png"
         alt=""
-        width={900}
-        height={600}
+        width={1200}
+        height={900}
         priority
         quality={100}
         className="
           absolute
 
-          -bottom-10
-right-0
+          top-[150px]
+          right-[-90px]
+          bottom-auto
 
-lg:bottom-0
+          w-[250px]
+          max-w-none
 
-          w-[180px]
-          sm:w-[260px]
-          md:w-[360px]
+          sm:top-[-40px]
+          sm:right-[-430px]
+          sm:w-[980px]
+
+          lg:bottom-0
+
+          lg:top-auto
+          lg:right-1
           lg:w-[520px]
+
           xl:w-[620px]
 
           h-auto
@@ -304,7 +312,7 @@ lg:mb-0
               <div
                 className="
                   absolute
-
+ sm:hidden
                   h-[140px]
                   w-[140px]
 
@@ -370,7 +378,7 @@ xl:w-[460px]
               <div
                 className="
                   absolute
-
+ 
                   bottom-10
                   right-8
 

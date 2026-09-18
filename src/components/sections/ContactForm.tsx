@@ -90,12 +90,12 @@ const ContactForm: FC = () => {
       className="mt-5"
     >
 
-      <div className="grid lg:grid-cols-2 gap-x-20 gap-y-12">
+      <div className="grid gap-x-5 gap-y-6 lg:grid-cols-2 lg:gap-x-20 lg:gap-y-12">
                 {/* ================= First Name ================= */}
 
         <div>
 
-          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+          <label className="mb-2 block text-[16px] font-semibold text-[#343434] lg:mb-4 lg:text-[22px]">
             First Name
           </label>
 
@@ -108,17 +108,21 @@ const ContactForm: FC = () => {
             required
             className="
               w-full
-              h-[72px]
+              h-12
+              lg:h-[72px]
 
-              rounded-xl
+              rounded-lg
+              lg:rounded-xl
 
               bg-[#353535]
 
               text-white
 
-              px-8
+              px-4
+              lg:px-8
 
-              text-[20px]
+              text-[14px]
+              lg:text-[20px]
 
               placeholder:text-gray-400
 
@@ -140,7 +144,7 @@ const ContactForm: FC = () => {
 
         <div>
 
-          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+          <label className="mb-2 block text-[16px] font-semibold text-[#343434] lg:mb-4 lg:text-[22px]">
             Last Name
           </label>
 
@@ -153,17 +157,21 @@ const ContactForm: FC = () => {
             required
             className="
               w-full
-              h-[72px]
+              h-12
+              lg:h-[72px]
 
-              rounded-xl
+              rounded-lg
+              lg:rounded-xl
 
               bg-[#353535]
 
               text-white
 
-              px-8
+              px-4
+              lg:px-8
 
-              text-[20px]
+              text-[14px]
+              lg:text-[20px]
 
               placeholder:text-gray-400
 
@@ -185,7 +193,7 @@ const ContactForm: FC = () => {
 
         <div>
 
-          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+          <label className="mb-2 block text-[16px] font-semibold text-[#343434] lg:mb-4 lg:text-[22px]">
             Email Address
           </label>
 
@@ -198,17 +206,21 @@ const ContactForm: FC = () => {
             required
             className="
               w-full
-              h-[72px]
+              h-12
+              lg:h-[72px]
 
-              rounded-xl
+              rounded-lg
+              lg:rounded-xl
 
               bg-[#353535]
 
               text-white
 
-              px-8
+              px-4
+              lg:px-8
 
-              text-[20px]
+              text-[14px]
+              lg:text-[20px]
 
               placeholder:text-gray-400
 
@@ -230,7 +242,7 @@ const ContactForm: FC = () => {
 
         <div>
 
-          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+          <label className="mb-2 block text-[16px] font-semibold text-[#343434] lg:mb-4 lg:text-[22px]">
             Phone Number
           </label>
 
@@ -243,17 +255,21 @@ const ContactForm: FC = () => {
             required
             className="
               w-full
-              h-[72px]
+              h-12
+              lg:h-[72px]
 
-              rounded-xl
+              rounded-lg
+              lg:rounded-xl
 
               bg-[#353535]
 
               text-white
 
-              px-8
+              px-4
+              lg:px-8
 
-              text-[20px]
+              text-[14px]
+              lg:text-[20px]
 
               placeholder:text-gray-400
 
@@ -274,7 +290,7 @@ const ContactForm: FC = () => {
 
         <div>
 
-          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+          <label className="mb-2 block text-[16px] font-semibold text-[#343434] lg:mb-4 lg:text-[22px]">
             Subject
           </label>
 
@@ -289,17 +305,21 @@ const ContactForm: FC = () => {
                 appearance-none
 
                 w-full
-                h-[72px]
+                h-12
+                lg:h-[72px]
 
-                rounded-xl
+                rounded-lg
+                lg:rounded-xl
 
                 bg-[#353535]
 
                 text-white
 
-                px-8
+                px-4
+                lg:px-8
 
-                text-[20px]
+                text-[14px]
+                lg:text-[20px]
 
                 outline-none
 
@@ -344,16 +364,19 @@ const ContactForm: FC = () => {
             </select>
 
             <ChevronRight
-              size={28}
+              size={22}
               className="
                 absolute
-                right-6
+                right-4
+                lg:right-6
                 top-1/2
                 -translate-y-1/2
 
                 rotate-90
 
                 text-white
+                lg:h-7
+                lg:w-7
 
                 pointer-events-none
               "
@@ -367,7 +390,7 @@ const ContactForm: FC = () => {
 
         <div>
 
-          <label className="block text-[#343434] text-[22px] font-semibold mb-4">
+          <label className="mb-2 block text-[16px] font-semibold text-[#343434] lg:mb-4 lg:text-[22px]">
             Message
           </label>
 
@@ -385,16 +408,20 @@ const ContactForm: FC = () => {
             className="
               w-full
 
-              rounded-xl
+              rounded-lg
+              lg:rounded-xl
 
               bg-[#353535]
 
               text-white
 
-              px-8
-              py-6
+              px-4
+              py-4
+              lg:px-8
+              lg:py-6
 
-              text-[20px]
+              text-[14px]
+              lg:text-[20px]
 
               placeholder:text-gray-400
 
@@ -424,17 +451,21 @@ const ContactForm: FC = () => {
             disabled={loading}
 
             className="
-              h-[72px]
+              h-12
+              lg:h-[72px]
 
-              min-w-[260px]
+              min-w-[180px]
+              lg:min-w-[260px]
 
-              rounded-xl
+              rounded-lg
+              lg:rounded-xl
 
               bg-[#BEA311]
 
               text-white
 
-              text-[20px]
+              text-[15px]
+              lg:text-[20px]
 
               font-semibold
 

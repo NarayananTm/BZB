@@ -81,13 +81,13 @@ export default function ContactSection() {
 
   return (
     <section className="bg-[#FAFAFA] py-6 sm:py-8 lg:py-24">
-      <div className="max-w-[1500px] mx-auto px-8 lg:px-12">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-8 lg:px-12">
 
         {/* Heading */}
 
         <h2
           className="
-            text-[25px]
+            text-[22px]
             sm:text-[30px]
             lg:text-[30px]
             font-semibold
@@ -100,9 +100,10 @@ export default function ContactSection() {
 
         <p
           className="
-            mt-6
+            mt-4
+            sm:mt-6
             max-w-[760px]
-            text-[15px]
+            text-[14px]
             sm:text-[20px]
             lg:text-[20px]
             leading-6
@@ -119,15 +120,15 @@ export default function ContactSection() {
 
         <form
           onSubmit={handleSubmit}
-          className="mt-8"
+          className="mt-6 sm:mt-8"
         >
 
-          <div className="grid lg:grid-cols-2 gap-x-20 gap-y-10">
+          <div className="grid gap-x-20 gap-y-6 sm:gap-y-8 lg:grid-cols-2 lg:gap-y-10">
                         {/* ================= First Name ================= */}
 
             <div>
 
-              <label className="block text-[22px] font-semibold mb-4">
+              <label className="mb-2 block text-base font-semibold sm:mb-3 sm:text-lg lg:mb-4 lg:text-[22px]">
                 First Name
               </label>
 
@@ -140,17 +141,17 @@ export default function ContactSection() {
                 required
                 className="
                   w-full
-                  h-[72px]
+                  h-12 sm:h-14 lg:h-[72px]
 
-                  rounded-xl
+                  rounded-lg lg:rounded-xl
 
                   bg-[#353535]
 
                   text-white
 
-                  px-8
+                  px-4 sm:px-6 lg:px-8
 
-                  text-[20px]
+                  text-sm sm:text-base lg:text-[20px]
                   
 
                   placeholder:text-gray-400
@@ -173,7 +174,7 @@ export default function ContactSection() {
 
             <div>
 
-              <label className="block text-[22px] font-semibold mb-4">
+              <label className="mb-2 block text-base font-semibold sm:mb-3 sm:text-lg lg:mb-4 lg:text-[22px]">
                 Last Name
               </label>
 
@@ -186,17 +187,17 @@ export default function ContactSection() {
                 required
                 className="
                   w-full
-                  h-[72px]
+                  h-12 sm:h-14 lg:h-[72px]
 
-                  rounded-xl
+                  rounded-lg lg:rounded-xl
 
                   bg-[#353535]
 
                   text-white
 
-                  px-8
+                  px-4 sm:px-6 lg:px-8
 
-                  text-[20px]
+                  text-sm sm:text-base lg:text-[20px]
 
                   placeholder:text-gray-400
 
@@ -218,7 +219,7 @@ export default function ContactSection() {
 
             <div>
 
-              <label className="block text-[22px] font-semibold mb-4">
+              <label className="mb-2 block text-base font-semibold sm:mb-3 sm:text-lg lg:mb-4 lg:text-[22px]">
                 Email Address
               </label>
 
@@ -231,17 +232,17 @@ export default function ContactSection() {
                 required
                 className="
                   w-full
-                  h-[72px]
+                  h-12 sm:h-14 lg:h-[72px]
 
-                  rounded-xl
+                  rounded-lg lg:rounded-xl
 
                   bg-[#353535]
 
                   text-white
 
-                  px-8
+                  px-4 sm:px-6 lg:px-8
 
-                  text-[20px]
+                  text-sm sm:text-base lg:text-[20px]
 
                   placeholder:text-gray-400
 
@@ -263,7 +264,7 @@ export default function ContactSection() {
 
             <div>
 
-              <label className="block text-[22px] font-semibold mb-4">
+              <label className="mb-2 block text-base font-semibold sm:mb-3 sm:text-lg lg:mb-4 lg:text-[22px]">
                 Phone Number
               </label>
 
@@ -276,17 +277,17 @@ export default function ContactSection() {
                 required
                 className="
                   w-full
-                  h-[72px]
+                  h-12 sm:h-14 lg:h-[72px]
 
-                  rounded-xl
+                  rounded-lg lg:rounded-xl
 
                   bg-[#353535]
 
                   text-white
 
-                  px-8
+                  px-4 sm:px-6 lg:px-8
 
-                  text-[20px]
+                  text-sm sm:text-base lg:text-[20px]
 
                   placeholder:text-gray-400
 
@@ -307,7 +308,7 @@ export default function ContactSection() {
 
             <div>
 
-              <label className="block text-[22px] font-semibold mb-4">
+              <label className="mb-2 block text-base font-semibold sm:mb-3 sm:text-lg lg:mb-4 lg:text-[22px]">
                 Subject
               </label>
 
@@ -322,17 +323,17 @@ export default function ContactSection() {
                     appearance-none
 
                     w-full
-                    h-[72px]
+                    h-12 sm:h-14 lg:h-[72px]
 
-                    rounded-xl
+                    rounded-lg lg:rounded-xl
 
                     bg-[#353535]
 
                     text-white
 
-                    px-8
+                    px-4 sm:px-6 lg:px-8
 
-                    text-[20px]
+                    text-sm sm:text-base lg:text-[20px]
 
                     outline-none
 
@@ -376,10 +377,10 @@ export default function ContactSection() {
                 </select>
 
                 <ChevronRight
-                  size={28}
+                  size={22}
                   className="
                     absolute
-                    right-6
+                    right-4 sm:right-6
                     top-1/2
                     -translate-y-1/2
                     rotate-90
@@ -407,11 +408,11 @@ export default function ContactSection() {
                 type="submit"
                 disabled={loading}
                 className="
-                  h-[72px]
+                  h-12 sm:h-14 lg:h-[72px]
 
-                  px-12
+                  w-full px-5 sm:w-auto sm:px-8 lg:px-12
 
-                  rounded-xl
+                  rounded-lg lg:rounded-xl
 
                   bg-[#D4AF11]
 
@@ -423,7 +424,7 @@ export default function ContactSection() {
 
                   text-white
 
-                  text-[20px]
+                  text-sm sm:text-base lg:text-[20px]
 
                   font-semibold
 
