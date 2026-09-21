@@ -17,6 +17,13 @@ interface Props {
   payouts?: Payout[];
 }
 
+function formatCellValue(value: unknown): string {
+  if (value == null) return '-';
+  if (value instanceof Date) return value.toLocaleDateString('en-IN');
+  if (typeof value === 'object') return JSON.stringify(value);
+  return String(value);
+}
+
 export default function ProfileInteractive({ referrals, earnings = [], topups = [], withdrawals = [], payouts = [] }: Props) {
   const router = useRouter();
   const [active, setActive] = useState<string>('direct');
@@ -234,7 +241,7 @@ export default function ProfileInteractive({ referrals, earnings = [], topups = 
                             cIdx > 3 && 'hidden md:table-cell'
                           }`}
                         >
-                          <div className="break-words">{cell}</div>
+                          <div className="break-words">{formatCellValue(cell)}</div>
                         </td>
                       ))}
                     </tr>
@@ -331,7 +338,7 @@ export default function ProfileInteractive({ referrals, earnings = [], topups = 
                         <tr key={rIdx} className={`${rIdx % 2 === 0 ? 'bg-white' : 'bg-[#FBFBFB]'} hover:bg-slate-50 transition-colors`}>
                           {row.map((cell, cIdx) => (
                             <td key={cIdx} className="px-6 py-4 border-b border-[#F6F6F6]">
-                              {cell}
+                              {formatCellValue(cell)}
                             </td>
                           ))}
                         </tr>

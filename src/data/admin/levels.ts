@@ -13,7 +13,7 @@ export const adminLevels: AdminLevel[] = [
   {
     id: 'level-1',
     name: 'Level 1',
-    requiredReferrals: 3,
+    requiredReferrals: 5,
     reward: 'Bike Reward',
     members: 1240,
     completion: 85,
@@ -23,7 +23,7 @@ export const adminLevels: AdminLevel[] = [
   {
     id: 'level-2',
     name: 'Level 2',
-    requiredReferrals: 5,
+    requiredReferrals: 50,
     reward: 'Car Reward',
     members: 620,
     completion: 62,
@@ -33,7 +33,7 @@ export const adminLevels: AdminLevel[] = [
   {
     id: 'level-3',
     name: 'Level 3',
-    requiredReferrals: 8,
+    requiredReferrals: 125,
     reward: 'Luxury House Reward',
     members: 320,
     completion: 42,

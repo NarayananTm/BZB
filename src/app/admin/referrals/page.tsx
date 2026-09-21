@@ -6,8 +6,7 @@ import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCa
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
 // import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
-import { getAllMembers, getMemberByEmail, getMemberById } from '@/services/memberService';
-import { getReferralsBySponsor } from '@/services/referralService';
+import { getAllMembers, getMemberByEmail, getMemberById, getMembersReferredBy, getTeamMembers } from '@/services/memberService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
 
@@ -16,8 +15,12 @@ export default async function AdminReferralsPage() {
   const me = session?.email ? await getMemberByEmail(session.email) : null;
   const member = me;
   const userId = member?.id || session?.id?.toString() || '';
-  const referrals = userId ? await getReferralsBySponsor(userId) : [];
-  const progress = referrals ? Math.min(100, Math.round((referrals.length / 9) * 100)) : 0;
+  const directMembers = member
+    ? await getTeamMembers(member.id)
+    : session?.name && session.email
+      ? await getMembersReferredBy(session.name, session.email)
+      : [];
+  const directMemberCount = directMembers.length;
   const allMembers = await getAllMembers();
   const chartStart = new Date();
   chartStart.setMonth(chartStart.getMonth() - 6, 1);
@@ -56,7 +59,7 @@ export default async function AdminReferralsPage() {
                 <DashboardHeader userName={displayName} />
                 <div>
                   <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">{userId} <a className="ml-2 text-slate-500" href="#">↗</a></div>
-                  <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">{referrals.length} referrals</div>
+                  <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-slate-500">{directMemberCount} referrals</div>
                 </div>
               </div>
             </div>
@@ -66,11 +69,11 @@ export default async function AdminReferralsPage() {
         <section className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-[42%_15%_40%]">
           <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
             <MemberAnalyticsCard data={memberCountData} labels={memberCountLabels} />
-            <ReferGrowCard direct={referrals.length} referrals={me?.team_count ?? 0} total={referrals.length + (me?.team_count ?? 0)} />
+            <ReferGrowCard direct={directMemberCount} referrals={me?.team_count ?? 0} total={directMemberCount + (me?.team_count ?? 0)} />
           </div>
 
           <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
-            <ReferralProgressCard percent={progress} />
+            <ReferralProgressCard referralCount={directMemberCount} />
           </div>
 
           <div>

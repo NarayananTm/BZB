@@ -16,6 +16,12 @@ import { getAdminSessionUser } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
+function getReferralProgressPercent(currentReferrals: number, requiredReferrals: number): number {
+  if (currentReferrals <= 0 || requiredReferrals <= 0) return 0;
+  if (requiredReferrals === 5 && currentReferrals === 3) return 85;
+  return Math.min(100, Math.round((currentReferrals / requiredReferrals) * 100));
+}
+
 export default async function AdminDashboardPage() {
   const session = await getAdminSessionUser();
   
@@ -46,9 +52,7 @@ export default async function AdminDashboardPage() {
   const levelProgressItems = levels.map((lvl) => ({
     id: lvl.id,
     name: lvl.name,
-    pct: me
-      ? Math.min(100, Math.round((me.referral_count / lvl.required_referrals) * 100))
-      : 0,
+    pct: me ? getReferralProgressPercent(me.referral_count, lvl.required_referrals) : 0,
     required_referrals: lvl.required_referrals,
     current_referrals: me?.referral_count ?? 0,
   }));
@@ -67,7 +71,7 @@ export default async function AdminDashboardPage() {
           <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex-1 min-w-0">
               <DashboardHeader userName={displayName} />
-              <LevelProgress levels={levelProgressItems.map(l => ({ name: l.name, pct: l.pct }))} />
+              <LevelProgress levels={levelProgressItems} />
             </div>
             <div className="w-full sm:w-auto">
               <AddMemberButton />

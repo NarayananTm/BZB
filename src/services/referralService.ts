@@ -44,7 +44,63 @@ export async function getReferralById(id: string): Promise<Referral | null> {
 
 export async function getReferralsBySponsor(sponsorId: string): Promise<Referral[]> {
   if (!isDbConfigured()) return adminReferrals.filter((r) => r.sponsor?.toLowerCase() === sponsorId.toLowerCase()).map(adaptMockReferral);
-  return query<Referral>('SELECT * FROM referrals WHERE sponsor_id = $1 ORDER BY created_at DESC', [sponsorId]);
+  const referrals = await query<Referral>('SELECT * FROM referrals WHERE sponsor_id = $1 ORDER BY created_at DESC', [sponsorId]);
+  if (referrals.length) return referrals;
+  return query<Referral>(
+    `SELECT
+       'REF-' || m.id AS id,
+       m.sponsor_id,
+       m.sponsor_name,
+       m.id AS member_id,
+       m.name AS member_name,
+       m.level_name,
+       m.joining_date AS join_date,
+       CASE WHEN m.status IN ('Active', 'Pending', 'Approved', 'Rejected')
+            THEN m.status ELSE 'Pending' END AS status,
+       0 AS reward_amount,
+       m.created_at,
+       m.updated_at
+     FROM members m
+     WHERE m.sponsor_id = $1
+     ORDER BY m.created_at DESC`,
+    [sponsorId],
+  );
+}
+
+export async function getReferralsBySponsorName(sponsorName: string): Promise<Referral[]> {
+  if (!isDbConfigured()) {
+    return adminReferrals
+      .filter((r) => r.sponsor?.toLowerCase() === sponsorName.toLowerCase())
+      .map(adaptMockReferral);
+  }
+
+  const referrals = await query<Referral>(
+    `SELECT *
+     FROM referrals
+     WHERE LOWER(COALESCE(sponsor_name, '')) = LOWER($1)
+     ORDER BY created_at DESC`,
+    [sponsorName],
+  );
+  if (referrals.length) return referrals;
+  return query<Referral>(
+    `SELECT
+       'REF-' || m.id AS id,
+       m.sponsor_id,
+       m.sponsor_name,
+       m.id AS member_id,
+       m.name AS member_name,
+       m.level_name,
+       m.joining_date AS join_date,
+       CASE WHEN m.status IN ('Active', 'Pending', 'Approved', 'Rejected')
+            THEN m.status ELSE 'Pending' END AS status,
+       0 AS reward_amount,
+       m.created_at,
+       m.updated_at
+     FROM members m
+     WHERE LOWER(COALESCE(m.sponsor_name, '')) = LOWER($1)
+     ORDER BY m.created_at DESC`,
+    [sponsorName],
+  );
 }
 
 export async function createReferral(data: Omit<Referral, 'created_at' | 'updated_at'>): Promise<Referral> {

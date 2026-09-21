@@ -17,7 +17,7 @@ import type { Member } from '@/services/memberService';
 type Dashboard = {
   total_members: number; total_earnings: number; total_withdrawals: number; total_topups: number;
   pending_withdrawals: number; pending_topups: number; unread_notifications: number;
-  levels: { name: string; pct: number }[];
+  levels: { name: string; pct: number; current_referrals?: number; required_referrals?: number }[];
 };
 type Admin = { id: number; name: string; email: string; role: string };
 type Profile = {

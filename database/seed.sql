@@ -12,19 +12,13 @@ ON CONFLICT (username) DO NOTHING;
 
 -- Levels
 INSERT INTO levels (id, name, required_referrals, reward, members_count, completion_pct, status, description) VALUES
-  ('level-1', 'Level 1', 3, 'Bike Reward',         1240, 85, 'Active', 'Complete 3 direct referrals to unlock the Level 1 reward package.'),
-  ('level-2', 'Level 2', 5, 'Car Reward',           620,  62, 'Active', 'Reach Level 2 by completing 5 direct referrals and maintaining active status.'),
-  ('level-3', 'Level 3', 8, 'Luxury House Reward',  320,  42, 'Active', 'Meet the Level 3 criteria for premium reward eligibility.')
+  ('level-1', 'Level 1', 5, 'Bike Reward',         1240, 85, 'Active', 'Complete 5 direct referrals to unlock the Level 1 reward package.'),
+  ('level-2', 'Level 2', 50, 'Car Reward',           620,  62, 'Active', 'Reach Level 2 by completing 50 direct referrals and maintaining active status.'),
+  ('level-3', 'Level 3', 125, 'Luxury House Reward',  320,  42, 'Active', 'Meet the Level 3 criteria for premium reward eligibility.')
 ON CONFLICT (id) DO NOTHING;
 
 -- Members
-INSERT INTO members (id, name, email, mobile, sponsor_name, level_name, status, joining_date, total_earnings, wallet_balance, referral_count, team_count) VALUES
-  ('BZB9827341', 'Mahimai Dass J', 'mahimai@bzbgroup.com',   '6381987654', 'Company',     'Level 3', 'Approved',  '2026-05-18', 28540.00, 9100.00, 32, 64),
-  ('BZB9601381', 'Kavi',           'kavi@bzbgroup.com',      '9876543210', 'Mahimai Dass J', 'Level 2', 'Active', '2026-07-01', 12850.00, 2400.00, 18, 30),
-  ('BZB9899333', 'Vetrivel N',     'vetrivel@bzbgroup.com',  '6381612345', 'Mahimai Dass J', 'Level 3', 'Active', '2026-06-26', 18760.00, 4010.00, 25, 48),
-  ('BZB9635120', 'Priya Srinivasan','priya.s@bzbgroup.com',  '9123456780', 'Kavi',        'Level 1', 'Pending',   '2026-07-15',  1750.00,  880.00,  8, 12),
-  ('BZB9700291', 'Rahul Mehta',    'rahul@bzbgroup.com',     '9156782340', 'Vetrivel N',  'Level 2', 'Inactive',  '2026-06-30',  6320.00, 1120.00, 13, 22)
-ON CONFLICT (id) DO NOTHING;
+
 
 -- Referrals
 INSERT INTO referrals (id, sponsor_id, sponsor_name, member_name, level_name, join_date, status, reward_amount) VALUES
