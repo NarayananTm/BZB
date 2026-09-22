@@ -47,8 +47,8 @@ export function useDashboardData(refreshInterval: number = 30000) {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, refreshInterval);
-    return () => clearInterval(interval);
+    // const interval = setInterval(fetchData, refreshInterval);
+    // return () => clearInterval(interval);
   }, [refreshInterval]);
 
   return state;

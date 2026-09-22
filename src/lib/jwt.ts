@@ -7,6 +7,8 @@ export interface AuthTokenPayload {
   email: string;
   name: string;
   mobile?: string;
+  role?: string;
+  joining_date?: string;
 }
 
 export function signToken(payload: AuthTokenPayload) {

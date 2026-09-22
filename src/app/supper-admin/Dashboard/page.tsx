@@ -34,7 +34,7 @@ type DashboardData = {
     total_topups: number;
     pending_topups: number;
     unread_notifications: number;
-    levels: Array<{ name: string; members_count: number; percentage: number }>;
+    levels: Array<{ name: string; reward: string | null; members_count: number; percentage: number }>;
   };
   financialStats: {
     total_income: number;
@@ -45,6 +45,16 @@ type DashboardData = {
     total_platform_balance: number;
   };
   topMembers: any[];
+  pendingRequests: Array<{
+    type: "member_registration" | "withdrawal" | "topup" | "referral";
+    requested_date: string;
+  }>;
+  recentActivities: Array<{
+    type: string;
+    description: string;
+    timestamp: string;
+    status: string;
+  }>;
 };
 
 function Arrow() {
@@ -177,6 +187,38 @@ function Notification({
   );
 }
 
+function formatDate(value: string | null | undefined) {
+  if (!value) return "Recently";
+  const [year, month, day] = String(value).slice(0, 10).split("-");
+  return year && month && day ? `${day}/${month}/${year}` : "Recently";
+}
+
+function formatRelativeTime(timestamp: string, now: number | null) {
+  if (now === null) return "Recently";
+  const elapsed = now - new Date(timestamp).getTime();
+  const minutes = Math.max(0, Math.floor(elapsed / 60000));
+
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+
+  const days = Math.floor(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+function getActivityTitle(type: string) {
+  const titles: Record<string, string> = {
+    member_joined: "New Member Registration",
+    referral_created: "New Referral",
+    earning_created: "New Earning",
+    withdrawal_requested: "New Withdrawal Request",
+  };
+
+  return titles[type] || "Platform Activity";
+}
+
 function Reward({
   rank,
   title,
@@ -209,15 +251,27 @@ export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [search, setSearch] = useState("");
+  const [currentTime, setCurrentTime] = useState<number | null>(null);
+
+  useEffect(() => {
+    setCurrentTime(Date.now());
+  }, []);
 
   // Fetch dashboard data from API
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/super-admin/dashboard');
+        const token = localStorage.getItem('super_admin_token');
+        const response = await fetch('/api/super-admin/dashboard', {
+          credentials: 'include',
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
         
         if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            router.push('/supper-admin/login');
+          }
           throw new Error(`Failed to fetch dashboard data: ${response.statusText}`);
         }
         
@@ -226,17 +280,15 @@ export default function DashboardPage() {
           setDashboardData(result.data);
           
           // Transform top members to match Member type
-          if (result.data.topMembers && result.data.topMembers.length > 0) {
-            const transformedMembers = result.data.topMembers.map((m: any) => ({
-              name: m.name || 'Unknown',
-              id: m.id || '',
-              level: m.level_name || 'Level 1',
-              status: (m.status || 'Pending') as Status,
-              joined: m.joining_date ? new Date(m.joining_date).toLocaleDateString() : 'Recently',
-              avatar: m.name ? m.name.charAt(0).toUpperCase() : '?',
-            }));
-            setMembers(transformedMembers);
-          }
+          const transformedMembers = (result.data.topMembers || []).map((m: any) => ({
+            name: m.name || 'Unknown',
+            id: m.id || '',
+            level: m.level_name || 'Level 1',
+            status: (m.status || 'Pending') as Status,
+            joined: formatDate(m.joining_date),
+            avatar: m.name ? m.name.charAt(0).toUpperCase() : '?',
+          }));
+          setMembers(transformedMembers);
         }
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
@@ -246,9 +298,9 @@ export default function DashboardPage() {
     };
 
     fetchDashboardData();
-    // Refresh data every 30 seconds
-    const interval = setInterval(fetchDashboardData, 30000);
-    return () => clearInterval(interval);
+    // // Refresh data every 30 seconds
+    // const interval = setInterval(fetchDashboardData, 30000);
+    // return () => clearInterval(interval);
   }, []);
 
   // Handle member click - navigate to pending review page
@@ -258,6 +310,9 @@ export default function DashboardPage() {
 
   // Navigate to pending review page
   const navigateToPendingReview = () => {
+    router.push('/supper-admin/members/pending');
+  };
+  const navigateToMembers = () => {
     router.push('/supper-admin/members/pending');
   };
 
@@ -284,6 +339,8 @@ export default function DashboardPage() {
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('en-IN').format(num);
   };
+
+  const recentActivities = (dashboardData?.recentActivities || []).slice(0, 3);
 
   if (loading) {
     return (
@@ -328,7 +385,7 @@ export default function DashboardPage() {
                     icon="▣"
                     tone="orange"
                     label="Pending Requests"
-                    value={formatNumber((dashboardData?.dashboardStats.pending_members || 0) + (dashboardData?.dashboardStats.pending_withdrawals || 0))}
+                    value={formatNumber((dashboardData?.dashboardStats.pending_referrals || 0))}
                     note="Requires attention"
                     noteType="warning"
                   />
@@ -336,7 +393,7 @@ export default function DashboardPage() {
 
                 <section className="panel financial-panel">
                   <div className="panel-heading">
-                    <h2>Financial Overview</h2>
+                    <h2 className="text-black">Financial Overview</h2>
                     <button className="text-link">View All Details <Arrow /></button>
                   </div>
 
@@ -378,9 +435,11 @@ export default function DashboardPage() {
 
                 <div className="lower-grid">
                   <section className="panel levels-panel">
-                    <div className="panel-heading">
-                      <h2>Member Level Distribution</h2>
-                      <button className="text-link">Manage Levels <Arrow /></button>
+                    <div className="panel-heading ">
+                      <h2 className="text-black">Member Level Distribution</h2>
+                      <button className="text-link" onClick={navigateToMembers}>
+                        Manage Levels <Arrow />
+                      </button>
                     </div>
 
                     {dashboardData?.dashboardStats.levels.map((level, idx) => (
@@ -402,8 +461,11 @@ export default function DashboardPage() {
 
                   <section className="panel members-panel">
                     <div className="panel-heading">
-                      <h2>Recent Members</h2>
-                      <button className="text-link">See All <Arrow /></button>
+                      <h2 className="text-black">Recent Members</h2>
+                      
+                      <button className="text-link" onClick={navigateToMembers}>
+                        See All <Arrow />
+                      </button>
                     </div>
 
                     <div className="table-search">
@@ -433,13 +495,13 @@ export default function DashboardPage() {
                             style={{ cursor: 'pointer' }}
                           >
                             <span className="member-cell">
-                              <span className="member-avatar">{member.avatar}</span>
-                              {member.name}
+                              <span className="member-avatar">{member.avatar || '?'}</span>
+                              <span>{member.name || 'Unknown member'}</span>
                             </span>
-                            <span>{member.id}</span>
-                            <span>{member.level}</span>
-                            <span><StatusPill status={member.status} /></span>
-                            <span>{member.joined}</span>
+                            <span>{member.id || '—'}</span>
+                            <span>{member.level || '—'}</span>
+                            <span><StatusPill status={member.status || 'Pending'} /></span>
+                            <span>{member.joined || 'Recently'}</span>
                             <button 
                               className="more"
                               onClick={(e) => {
@@ -463,16 +525,23 @@ export default function DashboardPage() {
                 <section className="rewards">
                   <div className="rewards-heading">
                     <div>
-                      <h2>Rewards &amp; Achievements</h2>
+                      <h2 className="text-white">Rewards &amp; Achievements</h2>
                       <p>Manage achievement levels and reward configuration</p>
                     </div>
                     <button className="primary-button">Manage Rewards <Arrow /></button>
                   </div>
 
                   <div className="reward-grid">
-                    <Reward rank="1" title="Level 1" name="Bike Reward" qualified={`${dashboardData?.dashboardStats.levels[0]?.members_count || 0} Qualified`} visual="🏍️" />
-                    <Reward rank="2" title="Level 2" name="Car Reward" qualified={`${dashboardData?.dashboardStats.levels[1]?.members_count || 0} Qualified`} visual="🚗" />
-                    <Reward rank="3" title="Level 3" name="House Reward" qualified={`${dashboardData?.dashboardStats.levels[2]?.members_count || 0} Qualified`} visual="🏠" />
+                    {(dashboardData?.dashboardStats.levels || []).slice(0, 3).map((level, idx) => (
+                      <Reward
+                        key={level.name}
+                        rank={String(idx + 1)}
+                        title={level.name}
+                        name={level.reward || `${level.name} Reward`}
+                        qualified={`${formatNumber(level.members_count)} Qualified`}
+                        visual={["🏍️", "🚗", "🏠"][idx] || "🏆"}
+                      />
+                    ))}
                   </div>
                 </section>
               </div>
@@ -480,7 +549,7 @@ export default function DashboardPage() {
               <aside className="right-column">
                 <section className="panel pending-panel">
                   <div className="panel-heading">
-                    <h2>Pending Actions</h2>
+                    <h2 className="text-black">Pending Actions</h2>
                     <button className="text-link">View All <Arrow /></button>
                   </div>
 
@@ -489,7 +558,7 @@ export default function DashboardPage() {
                   <ActionRow 
                     icon="♙" 
                     title="Member Approvals" 
-                    sub={`${dashboardData?.dashboardStats.pending_members || 0} Pending`} 
+                    sub={`${dashboardData?.dashboardStats.pending_members || 0} Pending`}
                     tone="purple"
                     onClick={navigateToPendingReview}
                   />
@@ -498,7 +567,7 @@ export default function DashboardPage() {
 
                 <section className="panel network-panel">
                   <div className="panel-heading">
-                    <h2>Referral Network</h2>
+                    <h2 className="text-black">Referral Network</h2>
                     <button className="text-link">View Network <Arrow /></button>
                   </div>
                   <div className="muted">Total Referral Connections</div>
@@ -518,13 +587,20 @@ export default function DashboardPage() {
 
                 <section className="panel notifications-panel">
                   <div className="panel-heading">
-                    <h2>Notifications</h2>
+                    <h2 className="text-black">Notifications</h2>
                     <button className="text-link">View All <Arrow /></button>
                   </div>
 
-                  <Notification icon="⇩" tone="red" title="New Withdrawal Request" text={`${dashboardData?.dashboardStats.pending_withdrawals || 0} withdrawals awaiting review`} time="5 min ago" />
-                  <Notification icon="♙" tone="green" title="New Member Registration" text={`${dashboardData?.dashboardStats.pending_members || 0} pending approvals - A new member has joined the platform.`} time="Recently" />
-                  <Notification icon="⇧" tone="blue" title="Pending Top-up Requests" text={`${dashboardData?.dashboardStats.pending_topups || 0} top-up requests require review.`} time="1 hour ago" />
+                  {recentActivities.length > 0 ? recentActivities.map((activity) => (
+                    <Notification
+                      key={`${activity.type}-${activity.timestamp}`}
+                      icon={activity.type === "withdrawal_requested" ? "⇩" : activity.type === "member_joined" ? "♙" : "⇧"}
+                      tone={activity.type === "withdrawal_requested" ? "red" : activity.type === "member_joined" ? "green" : "blue"}
+                      title={getActivityTitle(activity.type)}
+                      text={activity.description}
+                      time={formatRelativeTime(activity.timestamp, currentTime)}
+                    />
+                  )) : <div className="empty-state">No recent activity</div>}
                 </section>
               </aside>
             </section>
@@ -720,14 +796,14 @@ const styles = `
 
   .stat-copy { min-width: 0; padding-top: 1px; }
   .muted { color: #757575; font-size: 10px; }
-  .stat-copy strong { display: block; font-size: 19px; margin-top: 5px; letter-spacing: -.3px; }
+  .stat-copy strong { display: block; color: #171717; font-size: 19px; margin-top: 5px; letter-spacing: -.3px; }
   .stat-note { margin-top: 12px; font-size: 10px; color: #777; }
   .stat-note.positive { color: #49aa48; }
   .stat-note.warning { color: #e98b42; }
 
   .panel { padding: 15px 14px; }
   .panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .panel-heading h2, .rewards h2 { font-size: 14px; margin: 0; letter-spacing: -.15px; }
+  .panel-heading h2, .rewards h2 { color: #000000; font-size: 14px; margin: 0; letter-spacing: -.15px; }
   .text-link { border: 0; background: transparent; color: #444; font-size: 10px; white-space: nowrap; padding: 2px; }
   .arrow { font-size: 17px; vertical-align: -1px; margin-left: 4px; }
 
@@ -735,7 +811,7 @@ const styles = `
   .financial-card { padding: 15px 14px 13px; border-radius: 9px; }
   .financial-top { display: flex; align-items: center; gap: 10px; }
   .financial-top .icon-bubble { width: 40px; height: 40px; font-size: 18px; }
-  .financial-top strong { display: block; font-size: 16px; margin-top: 3px; }
+  .financial-top strong { display: block; color: #171717; font-size: 16px; margin-top: 3px; }
   .financial-subtitle { color: #888; font-size: 9px; margin: 9px 0 13px; min-height: 12px; }
   .gold-button {
     border: 0;
@@ -754,7 +830,7 @@ const styles = `
   .level-row:first-of-type { border-top: 0; padding-top: 2px; }
   .level-row .icon-bubble { width: 38px; height: 38px; font-size: 17px; }
   .level-info { min-width: 0; }
-  .level-info strong { display: block; font-size: 11px; }
+  .level-info strong { display: block; color: #171717; font-size: 11px; }
   .level-info span { display: block; font-size: 9px; color: #555; margin-top: 2px; }
   .progress { height: 7px; background: #eee; border-radius: 20px; margin-top: 7px; overflow: hidden; }
   .progress i { display: block; height: 100%; border-radius: inherit; background: #e6bd00; }
@@ -770,6 +846,9 @@ const styles = `
   }
   .table-head { padding: 2px 0 9px; color: #666; font-size: 9px; }
   .table-row { min-height: 38px; border-top: 1px solid #f0f0ef; font-size: 9px; color: #313131; }
+  .table-row > * { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .table-row .member-cell { overflow: hidden; }
+  .table-row .member-cell > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .member-cell { display: flex; align-items: center; gap: 7px; font-weight: 500; }
   .member-avatar { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #e9ecef; color: #39414b; font-size: 8px; font-weight: 800; }
   .status { display: inline-flex; padding: 6px 9px; border-radius: 5px; font-size: 8px; }
@@ -779,40 +858,40 @@ const styles = `
   .more { border: 0; background: transparent; font-size: 16px; color: #666; padding: 0; }
 
   .rewards {
-    color: #fff;
+    color: #000000;
     border-radius: 10px;
     padding: 15px 18px;
     background: linear-gradient(115deg, #171819, #262728);
     border: 1px solid #151515;
   }
   .rewards-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
-  .rewards h2 { color: #fff; font-size: 14px; }
+  .rewards h2 { color: #ffff; font-size: 14px; }
   .rewards p { color: #bbb; font-size: 9px; margin: 4px 0 0; }
   .rewards .primary-button { min-height: 31px; font-size: 10px; padding: 0 13px; }
   .reward-grid { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14px; }
   .reward { position: relative; min-height: 68px; display: grid; grid-template-columns: 30px 92px 1fr; align-items: center; gap: 7px; padding: 5px 13px; }
   .reward + .reward { border-left: 1px solid #686868; }
-  .rank { width: 27px; height: 27px; border-radius: 50%; background: #e5b900; color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 800; align-self: start; }
+  .rank { width: 27px; height: 27px; border-radius: 50%; background: #e5b900; color: #000000; display: grid; place-items: center; font-size: 11px; font-weight: 800; align-self: start; }
   .reward:nth-child(2) .rank { background: #ee9138; }
   .reward:nth-child(3) .rank { background: #8a5ed0; }
-  .reward-art { font-size: 48px; text-align: center; filter: drop-shadow(0 5px 4px rgba(0,0,0,.45)); }
+  .reward-art {  color: #ccc; font-size: 48px; text-align: center; filter: drop-shadow(0 5px 4px rgba(0,0,0,.45)); }
   .reward-copy span, .reward-copy strong, .reward-copy small { display: block; }
-  .reward-copy span { font-size: 9px; color: #d2d2d2; }
-  .reward-copy strong { font-size: 11px; margin-top: 2px; }
+  .reward-copy span { color: #ccc; font-size: 9px; color: #d2d2d2; }
+  .reward-copy strong {  color: #ccc; font-size: 11px; margin-top: 2px; }
   .reward-copy small { color: #ccc; font-size: 9px; margin-top: 5px; }
 
   .action-row { display: grid; grid-template-columns: 38px 1fr auto; gap: 9px; align-items: center; padding: 10px 0; border-top: 1px solid #f0f0ee; }
   .action-row:first-of-type { border-top: 0; }
   .action-row .icon-bubble { width: 36px; height: 36px; font-size: 17px; }
   .action-row strong, .action-row span { display: block; }
-  .action-row strong { font-size: 10px; }
+  .action-row strong { color: #171717; font-size: 10px; }
   .action-row span { color: #555; font-size: 9px; margin-top: 3px; }
   .review-button { border: 0; background: #fff8dc; color: #444; border-radius: 5px; min-width: 68px; height: 28px; font-size: 9px; }
   .review-button .arrow { font-size: 13px; }
 
-  .network-total { font-size: 20px; font-weight: 700; margin: 5px 0 13px; }
-  .network-body { display: grid; grid-template-columns: 1fr 88px; gap: 5px; align-items: center; }
-  .network-list { display: grid; gap: 10px; }
+  .network-total {  color: #000000; font-size: 20px; font-weight: 700; margin: 5px 0 13px; }
+  .network-body { color: #000000;display: grid; grid-template-columns: 1fr 88px; gap: 5px; align-items: center; }
+  .network-list { color: #000000;display: grid; gap: 10px; }
   .network-list div { display: grid; grid-template-columns: 9px 1fr auto; gap: 6px; align-items: center; font-size: 9px; }
   .network-list b { font-weight: 500; }
   .dot { width: 7px; height: 7px; border-radius: 50%; display: block; }
@@ -831,7 +910,7 @@ const styles = `
   .notification-row:first-of-type { border-top: 0; }
   .notification-row .icon-bubble { width: 34px; height: 34px; font-size: 15px; }
   .notification-copy strong, .notification-copy span { display: block; }
-  .notification-copy strong { font-size: 9px; }
+  .notification-copy strong { color: #171717; font-size: 9px; }
   .notification-copy span { font-size: 8px; color: #777; margin-top: 4px; line-height: 1.35; }
   .notification-row small { color: #888; font-size: 8px; white-space: nowrap; }
 
@@ -880,7 +959,7 @@ const styles = `
   /* Members Review Styles */
   .members-review-container { padding: 20px 0; }
   .members-review-header { margin-bottom: 24px; }
-  .members-review-header h2 { margin: 0 0 4px; font-size: 24px; }
+  .members-review-header h2 {  color: #000000; margin: 0 0 4px; font-size: 24px; }
   .members-review-header p { margin: 0; color: #666; font-size: 13px; }
 
   .members-list-view { display: grid; gap: 16px; }

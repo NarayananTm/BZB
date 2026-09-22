@@ -13,26 +13,26 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: '▦', label: 'Dashboard', key: 'Dashboard' },
+  { icon: '▦', label: 'Dashboard', key: 'Dashboard', route: '/supper-admin/Dashboard' },
   { 
     icon: '♙', 
     label: 'Members', 
     key: 'Members',
     subItems: [
       { label: 'All Members', key: 'AllMembers', route: '/supper-admin/members' },
-      { label: 'Add Member', key: 'AddMember', route: '/supper-admin/members/add' },
-      { label: 'Bulk Upload', key: 'BulkUpload', route: '/supper-admin/members/bulk' },
+      // { label: 'Add Member', key: 'AddMember', route: '/supper-admin/members/add' },
+      // { label: 'Bulk Upload', key: 'BulkUpload', route: '/supper-admin/members/bulk' },
       { label: 'Member Approvals', key: 'MemberApprovals', route: '/supper-admin/members/pending' },
     ]
   },
   { icon: '♧', label: 'Referrals', key: 'Referrals' },
-  { icon: '▣', label: 'Income & Wallets', key: 'Income' },
-  { icon: '⇩', label: 'Withdrawals', key: 'Withdrawals' },
-  { icon: '⇧', label: 'Top-up Requests', key: 'Topups' },
-  { icon: '♜', label: 'Rewards', key: 'Rewards' },
-  { icon: '▤', label: 'Reports', key: 'Reports' },
+//  { icon: '▣', label: 'Income & Wallets', key: 'Income' },
+  // { icon: '⇩', label: 'Withdrawals', key: 'Withdrawals' },
+  // { icon: '⇧', label: 'Top-up Requests', key: 'Topups' },
+  // { icon: '♜', label: 'Rewards', key: 'Rewards' },
+  // { icon: '▤', label: 'Reports', key: 'Reports' },
   { icon: '⚙', label: 'Settings', key: 'Settings' },
-  { icon: '♙', label: 'Admin Management', key: 'AdminMgmt' },
+  // { icon: '♙', label: 'Admin Management', key: 'AdminMgmt' },
 ];
 
 export default function Sidebar({
@@ -288,7 +288,7 @@ export default function Sidebar({
         </div>
 
         <nav className="nav-list">
-          {navItems.map(({ icon, label, key, subItems }) => (
+          {navItems.map(({ icon, label, key, route, subItems }) => (
             <div key={key}>
               <button
                 className={`nav-item ${activeNav === key ? 'active' : ''} ${
@@ -298,7 +298,7 @@ export default function Sidebar({
                   if (subItems) {
                     toggleExpand(key);
                   } else {
-                    handleNavClick(key);
+                    handleNavClick(key, route);
                   }
                 }}
                 aria-label={label}
@@ -329,7 +329,7 @@ export default function Sidebar({
           ))}
         </nav>
 
-        <div className="health">
+        {/* <div className="health">
           <div className="health-title">
             <span>Platform Health</span>
             <i />
@@ -338,7 +338,7 @@ export default function Sidebar({
             <span className="shield">✓</span>
             <span>All Systems Operational</span>
           </div>
-        </div>
+        </div> */}
 
         <button className="logout" onClick={onLogout}>
           <span>⇥</span> Logout

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { signToken } from '@/lib/jwt';
 
 export async function POST(request: NextRequest) {
   try {
@@ -6,18 +7,27 @@ export async function POST(request: NextRequest) {
 
     // Validate credentials
     if (username === 'supperadmin' && password === 'supperadmin@123') {
+      const token = signToken({
+        id: 'superadmin',
+        email: 'supperadmin@bzb.com',
+        name: 'Super Admin',
+        mobile: '',
+        role: 'superadmin',
+        joining_date: new Date().toISOString(),
+      });
+
       // Create response with success
       const response = NextResponse.json(
         { 
           success: true, 
           message: 'Login successful',
-          token: Buffer.from(`${username}:${Date.now()}`).toString('base64')
+          token,
         },
         { status: 200 }
       );
 
       // Set secure cookie
-      response.cookies.set('super_admin_auth', 'true', {
+      response.cookies.set('bzb_admin_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',

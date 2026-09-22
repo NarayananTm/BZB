@@ -3,6 +3,13 @@ import MembersTable from '../components/MembersTable';
 
 export const dynamic = 'force-dynamic';
 
+function formatMemberDate(value: string | null | undefined) {
+  if (!value) return 'Recently';
+  const datePart = String(value).slice(0, 10);
+  const [year, month, day] = datePart.split('-');
+  return year && month && day ? `${day}/${month}/${year}` : 'Recently';
+}
+
 export default async function SuperAdminMembersPage() {
   const members = await getAllMembers();
   const activeCount = members.filter((member) => member.status === 'Active').length;
@@ -18,9 +25,7 @@ export default async function SuperAdminMembersPage() {
       : member.status === 'Approved'
         ? 'Active'
         : 'Suspended' as 'Active' | 'Pending' | 'Suspended',
-    joined: member.joining_date
-      ? new Date(member.joining_date).toLocaleDateString()
-      : 'Recently',
+    joined: formatMemberDate(member.joining_date),
     avatar: member.avatar || undefined,
   }));
 

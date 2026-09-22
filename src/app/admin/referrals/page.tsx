@@ -6,7 +6,7 @@ import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCa
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
 // import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
-import { getAllMembers, getMemberByEmail, getMemberById, getMembersReferredBy, getTeamMembers } from '@/services/memberService';
+import { getMemberByEmail, getMemberById, getMembersReferredBy, getTeamMembers } from '@/services/memberService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
 
@@ -21,7 +21,6 @@ export default async function AdminReferralsPage() {
       ? await getMembersReferredBy(session.name, session.email)
       : [];
   const directMemberCount = directMembers.length;
-  const allMembers = await getAllMembers();
   const chartStart = new Date();
   chartStart.setMonth(chartStart.getMonth() - 6, 1);
   chartStart.setHours(0, 0, 0, 0);
@@ -29,7 +28,7 @@ export default async function AdminReferralsPage() {
     const monthEnd = new Date(chartStart);
     monthEnd.setMonth(chartStart.getMonth() + index + 1, 0);
     monthEnd.setHours(23, 59, 59, 999);
-    return allMembers.filter((item) => new Date(item.joining_date) <= monthEnd).length;
+    return directMembers.filter((item) => new Date(item.joining_date) <= monthEnd).length;
   });
   const memberCountLabels = Array.from({ length: 7 }, (_, index) => {
     const month = new Date(chartStart);

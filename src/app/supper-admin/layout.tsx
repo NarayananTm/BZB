@@ -96,7 +96,7 @@ export default function SuperAdminLayout({
     };
 
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // Refresh every 30 seconds
+    const interval = setInterval(fetchNotifications, 300000); // Refresh every 5 minutes
     return () => clearInterval(interval);
   }, []);
 

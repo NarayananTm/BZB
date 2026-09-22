@@ -1,4 +1,4 @@
-import { query, queryOne } from '@/lib/postgres';
+import { getPool, query, queryOne } from '@/lib/postgres';
 
 export interface Member {
   id: string;
@@ -10,7 +10,7 @@ export interface Member {
   sponsor_id: string | null;
   sponsor_name: string | null;
   level_name: string;
-  status: 'Active' | 'Inactive' | 'Pending' | 'Approved' | 'Rejected';
+  status: 'Active' | 'Inactive' | 'Pending' | 'Approved' | 'Rejected' | 'Suspended';
   joining_date: string;
   total_earnings: number;
   wallet_balance: number;
@@ -98,8 +98,58 @@ export async function updateMember(id: string, data: Partial<Member>): Promise<M
 }
 
 export async function deleteMember(id: string): Promise<boolean> {
-  const rows = await query('DELETE FROM members WHERE id = $1 RETURNING id', [id]);
-  return rows.length > 0;
+  const client = await getPool().connect();
+
+  try {
+    await client.query('BEGIN');
+    const memberResult = await client.query<{ sponsor_id: string | null }>(
+      'SELECT sponsor_id FROM members WHERE id = $1 FOR UPDATE',
+      [id],
+    );
+    if (memberResult.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return false;
+    }
+
+    const sponsorId = memberResult.rows[0].sponsor_id;
+
+    // Keep financial history, but remove foreign-key links that prevent deletion.
+    await client.query('UPDATE members SET sponsor_id = NULL, sponsor_name = NULL WHERE sponsor_id = $1', [id]);
+    await client.query('DELETE FROM referrals WHERE sponsor_id = $1 OR member_id = $1', [id]);
+    await client.query('UPDATE earnings SET member_id = NULL WHERE member_id = $1', [id]);
+    await client.query('UPDATE topups SET member_id = NULL WHERE member_id = $1', [id]);
+    await client.query('UPDATE withdrawals SET member_id = NULL WHERE member_id = $1', [id]);
+    await client.query('UPDATE payouts SET member_id = NULL WHERE member_id = $1', [id]);
+    await client.query('DELETE FROM members WHERE id = $1', [id]);
+
+    if (sponsorId) {
+      const countResult = await client.query<{ count: string }>(
+        'SELECT COUNT(*)::text AS count FROM members WHERE sponsor_id = $1',
+        [sponsorId],
+      );
+      const referralCount = Number(countResult.rows[0]?.count || 0);
+      const levelResult = await client.query<{ name: string }>(
+        `SELECT name FROM levels
+         WHERE status = 'Active' AND required_referrals <= $1
+         ORDER BY required_referrals DESC LIMIT 1`,
+        [referralCount],
+      );
+      await client.query(
+        `UPDATE members
+         SET referral_count = $1, level_name = $2, updated_at = NOW()
+         WHERE id = $3`,
+        [referralCount, levelResult.rows[0]?.name || 'Level 1', sponsorId],
+      );
+    }
+
+    await client.query('COMMIT');
+    return true;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 export async function getMemberStats() {

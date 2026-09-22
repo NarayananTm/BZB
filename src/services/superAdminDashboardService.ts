@@ -22,6 +22,7 @@ export interface SuperAdminStats {
 
 export interface LevelDistribution {
   name: string;
+  reward: string | null;
   members_count: number;
   percentage: number;
 }
@@ -87,6 +88,7 @@ export async function getSuperAdminDashboardStats(): Promise<SuperAdminStats> {
   const levels = await query<LevelDistribution>(
     `SELECT 
        name,
+       reward,
        members_count,
        CASE 
          WHEN (SELECT COUNT(*) FROM members) = 0 THEN 0

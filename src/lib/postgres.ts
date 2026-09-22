@@ -71,7 +71,7 @@ export function getPool(): PgPool {
     // Keep the per-instance footprint small in serverless deployments.
     max: Math.max(1, Number(process.env.DB_POOL_MAX || 1)),
     idleTimeoutMillis: 10000,
-    connectionTimeoutMillis: 10000,
+    connectionTimeoutMillis: Math.max(1000, Number(process.env.DB_CONNECTION_TIMEOUT_MS || 3000)),
     allowExitOnIdle: true,
   });
 
@@ -87,7 +87,11 @@ export async function query<T = unknown>(sql: string, params?: unknown[]): Promi
     const result = await getPool().query(sql, params);
     return result.rows as T[];
   } catch (err) {
-    console.error('PostgreSQL query failed, returning empty result:', err);
+    const error = err as NodeJS.ErrnoException & { code?: string };
+    const isConnectionTimeout = error.code === 'ETIMEDOUT' || error.message?.includes('timeout exceeded when trying to connect');
+    if (!isConnectionTimeout) {
+      console.error('PostgreSQL query failed, returning empty result:', err);
+    }
     return [];
   }
 }

@@ -62,6 +62,12 @@ const levelClass: Record<string, string> = {
   "Level 3": "bg-violet-50 text-violet-600",
 };
 
+function formatMemberDate(value: string | null | undefined) {
+  if (!value) return "Recently";
+  const [year, month, day] = String(value).slice(0, 10).split("-");
+  return year && month && day ? `${day}/${month}/${year}` : "Recently";
+}
+
 export default function PendingReviewPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -361,8 +367,8 @@ export default function PendingReviewPage() {
                           <td className="px-3 py-4">{member.referral_count}</td>
                           <td className={`px-3 py-4 font-semibold ${member.wallet_balance > 0 ? "text-green-600" : ""}`}>₹{member.wallet_balance}</td>
                           <td className="px-3 py-4">
-                            <div>{new Date(member.created_at).toLocaleDateString()}</div>
-                            <div className="text-[11px] text-gray-500">{new Date(member.created_at).toLocaleTimeString()}</div>
+                            <div>{formatMemberDate(member.created_at)}</div>
+                            <div className="text-[11px] text-gray-500">{String(member.created_at).slice(11, 19)}</div>
                           </td>
                           <td className="relative px-5 py-4">
                             <div className="flex items-center gap-2">
@@ -454,7 +460,7 @@ export default function PendingReviewPage() {
                 <Detail icon={<UserRound />} label="Member ID" value={selectedMember.id} />
                 <Detail icon={<Phone />} label="Mobile Number" value={selectedMember.mobile} />
                 <Detail icon={<Mail />} label="Email Address" value={selectedMember.email} />
-                <Detail icon={<MapPin />} label="Member Since" value={new Date(selectedMember.joining_date || selectedMember.created_at).toLocaleDateString()} />
+                <Detail icon={<MapPin />} label="Member Since" value={formatMemberDate(selectedMember.joining_date || selectedMember.created_at)} />
               </ReviewSection>
 
               <ReviewSection title="Membership Details">
@@ -462,7 +468,7 @@ export default function PendingReviewPage() {
                   <MiniStat label="Membership Level" value={selectedMember.level_name} />
                   <MiniStat label="Referrals" value={String(selectedMember.referral_count)} />
                   <MiniStat label="Wallet Balance" value={`₹${selectedMember.wallet_balance}`} />
-                  <MiniStat label="Submitted On" value={new Date(selectedMember.created_at).toLocaleDateString()} />
+                  <MiniStat label="Submitted On" value={formatMemberDate(selectedMember.created_at)} />
                 </div>
               </ReviewSection>
 
