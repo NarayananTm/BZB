@@ -12,6 +12,11 @@ export default function TeamMembersCard({ members = [] }: { members?: Member[] }
       </div>
       <div className="mt-3 sm:mt-3 space-y-2 overflow-hidden rounded-[10px] sm:rounded-[12px] border border-[#E5E5E5] bg-[#F9F9F9] p-2 sm:p-2">
         <div className="max-h-[350px] space-y-2 overflow-y-auto rounded-[10px] sm:rounded-[12px] pr-2">
+          {members.length === 0 && (
+            <div className="flex h-20 sm:h-24 items-center justify-center rounded-[10px] sm:rounded-[12px] bg-white text-[#111111]">
+              <p className="text-sm sm:text-base font-semibold">No team members found</p>
+            </div>
+          )}
           {members.map((member, index) => (
             <div key={member.id + index} className="flex items-center justify-between rounded-[10px] bg-white px-2 py-1.5 sm:py-2 shadow-sm">
               <div className="flex items-center gap-2 min-w-0">

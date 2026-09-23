@@ -107,7 +107,7 @@ export default function AboutPreviewSection() {
           <div className="flex justify-center">
 
             <Image
-              src="/images/hero/magimai b&d.png"
+              src="/images/hero/MBD icon.svg"
               alt="MBD Logo"
 
               width={420}

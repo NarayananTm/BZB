@@ -17,8 +17,8 @@ export default function Footer() {
 
   const contact = {
     address: 'Head Office : 4-A East Cross Road, Gandhi Nagar, Vellore - 632007',
-    phones: ['77320 05003', '98417 68255'],
-    email: 'bzb000777@gmail.com',
+    phones: ['77320 05003 , 98417 68255'],
+    email: 'magimai777@gmail.com',
   };
 
   return (
@@ -31,7 +31,7 @@ export default function Footer() {
           {/* ================= Left ================= */}
 
           <div className="-mt-12">
-            <div className="flex items-center mt-0 gap-3">
+            <div className="flex items-center mt-4 gap-3">
 
               <Image
                 src="/images/logo/MBD Log.svg"
@@ -119,6 +119,7 @@ export default function Footer() {
                     text-sm
                     leading-7
                     text-gray-400
+                     w-1/2
                   "
                 >
                   {contact.address}
@@ -180,7 +181,7 @@ export default function Footer() {
 
                     transition-colors
                     duration-300
-
+                   
                     hover:text-primary-500
                   "
                 >

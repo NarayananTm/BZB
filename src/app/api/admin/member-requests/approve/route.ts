@@ -4,7 +4,8 @@ import { createMember,  } from '@/services/memberService';
 import { createReferral } from '@/services/referralService';
 import { sendCredentialsSMS } from '@/lib/smsService';
 import { requireAdmin } from '@/lib/adminAuth';
-import { generateUserId, generateReferralId, generatePassword } from '@/lib/idGenerator';
+import { generateMemberId, generateReferralId, generatePassword } from '@/lib/idGenerator';
+import { calculateWalletAllocation } from '@/lib/wallet';
 // import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
@@ -48,10 +49,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate member ID
-    const memberId = generateUserId();
+    const memberId = await generateMemberId();
 
     // Generate temporary password
     const tempPassword = generatePassword();
+    const walletAllocation = calculateWalletAllocation(Number(memberRequest.amount || 0));
     // const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
     // Create member record
@@ -66,7 +68,10 @@ export async function POST(request: NextRequest) {
       status: 'Active',
       joining_date: new Date().toISOString().split('T')[0],
       total_earnings: 0,
-      wallet_balance: 0,
+      wallet_balance: walletAllocation.walletBalance,
+      level_income_wallet: walletAllocation.levelIncomeWallet,
+      mbd_wallet: walletAllocation.mbdWallet,
+      booster_topup: walletAllocation.boosterTopup,
       referral_count: 0,
       team_count: 0,
       avatar: null,

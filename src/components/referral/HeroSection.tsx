@@ -127,7 +127,7 @@ export default function HeroSection() {
             </div>
 
             <Image
-              src="/images/referral/Referral Program QR Code.png"
+              src="/images/referral/Referral Program QR Code.svg"
               alt="Referral QR Code"
               width={520}
               height={720}

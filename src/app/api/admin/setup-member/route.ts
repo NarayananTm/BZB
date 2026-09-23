@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createMember, getMemberById } from '@/services/memberService';
-import { generateUserId } from '@/lib/idGenerator';
+import { generateMemberId } from '@/lib/idGenerator';
 
 export async function POST() {
   try {
-    const memberId = generateUserId();
+    const memberId = await generateMemberId();
 
     // Check if member already exists
     const existing = await getMemberById(memberId);
@@ -29,6 +29,9 @@ export async function POST() {
       joining_date: new Date().toISOString().slice(0, 10),
       total_earnings: 0,
       wallet_balance: 0,
+      level_income_wallet: 0,
+      mbd_wallet: 0,
+      booster_topup: 0,
       referral_count: 0,
       team_count: 0,
       avatar: null,

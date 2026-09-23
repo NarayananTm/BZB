@@ -77,19 +77,20 @@ pb-10
           w-[250px]
           max-w-none
 
-          sm:top-[-40px]
+          sm:top-[200px]
           sm:right-[-430px]
           sm:w-[980px]
 
           lg:bottom-0
 
           lg:top-auto
-          lg:right-1
-          lg:w-[520px]
+          lg:right-[-24 rem]
+          lg:w-[1120px]
 
-          xl:w-[620px]
+          xl:w-[749px]
 
           h-auto
+          xl:h-[600px] 
 
           pointer-events-none
 
@@ -350,8 +351,11 @@ xl:w-[460px]
                   relative
                   z-20
 
-                  h-auto
-
+                   h-[280px]
+              sm:h-[300px]
+              md:h-[800px]
+              lg:h-[800px]
+              xl:h-[800px]
                   w-[130px]
                   sm:w-[280px]
                   md:w-[340px]

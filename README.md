@@ -196,7 +196,7 @@ All rights reserved © 2024 MBD Platform
 
 ## Support
 
-For support, contact: bzb000777@gmail.com
+For support, contact: magimai777@gmail.com
 
 ---
 

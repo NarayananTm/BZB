@@ -86,7 +86,7 @@ export default function VisionMission() {
             {/* Image */}
 
             <Image
-              src="/images/about/vision.png"
+              src="/images/about/vision.svg"
               alt="Vision"
 
               width={700}

@@ -27,7 +27,7 @@ const navItems = [
   },
   { icon: '♧', label: 'Referrals', key: 'Referrals' },
 //  { icon: '▣', label: 'Income & Wallets', key: 'Income' },
-  // { icon: '⇩', label: 'Withdrawals', key: 'Withdrawals' },
+  { icon: '⇩', label: 'Withdrawals', key: 'Withdrawals' },  
   // { icon: '⇧', label: 'Top-up Requests', key: 'Topups' },
   // { icon: '♜', label: 'Rewards', key: 'Rewards' },
   // { icon: '▤', label: 'Reports', key: 'Reports' },

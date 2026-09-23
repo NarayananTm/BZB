@@ -67,8 +67,8 @@ export default function ReferralLevelsSection() {
 
             leading-tight
 
-            text-[50px]
-            sm:text-[50px]
+            text-[25px]
+            sm:text-[30px]
             lg:text-[50px]
 
             animate-[fadeInLeft_1s_ease]
@@ -119,7 +119,8 @@ export default function ReferralLevelsSection() {
                   leading-8
                   lg:leading-9
 
-                  text-[30px]
+                  text-[15px]
+                  sm:text-[15px]
                   lg:text-[30px]
                 "
               >

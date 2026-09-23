@@ -22,6 +22,7 @@ export interface MemberRequest {
   ifsc_code?: string;
   pan?: string;
   g_pay?: string;
+  amount?: number;
   status: 'Pending' | 'Approved' | 'Rejected' | 'Submitted';
   rejection_reason?: string;
   submitted_by_admin_id?: string;

@@ -3,7 +3,7 @@ import WhoWeAre from "@/components/about/WhoWeAre";
 import OurStory from "@/components/about/OurStory";
 import WhatWeDo from "@/components/about/WhatWeDo";
 import VisionMission from "@/components/about/VisionMission";
-import LegalDocuments from "@/components/about/LegalDocuments";
+// import LegalDocuments from "@/components/about/LegalDocuments";
 import ContactSection from "@/components/about/ContactSection";
 import "@/styles/animations.css";
 export default function AboutPage() {
@@ -14,7 +14,7 @@ export default function AboutPage() {
       <OurStory />
       <WhatWeDo />
       <VisionMission />
-      <LegalDocuments />
+      {/* <LegalDocuments /> */}
       <ContactSection />
     </>
   );

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { hashPassword, readUsers, registerUser } from '@/lib/postgres';
-import { generateUserId } from '@/lib/idGenerator';
+import { generateMemberId } from '@/lib/idGenerator';
 
 export async function POST(request: Request) {
   try {
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Mobile already exists' }, { status: 409 });
     }
 
-    const userId = generateUserId();
+    const userId = await generateMemberId();
     await registerUser({
       id: userId,
       fullName,

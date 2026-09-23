@@ -6,7 +6,8 @@ import {
 import bcrypt from 'bcryptjs';
 
 import { getPool } from '@/lib/postgres';
-import { generateUserId } from '@/lib/idGenerator';
+import { generateMemberId } from '@/lib/idGenerator';
+import { calculateWalletAllocation } from '@/lib/wallet';
 
 export async function POST(
   request: NextRequest
@@ -233,6 +234,8 @@ export async function POST(
         { status: 400 }
       );
     }
+
+    const walletAllocation = calculateWalletAllocation(amount);
 
     /*
      * ========================================================
@@ -494,6 +497,9 @@ export async function POST(
           sponsor_id,
           amount,
           wallet_balance,
+          level_income_wallet,
+          mbd_wallet,
+          booster_topup,
           utr_number,
           transaction_proof,
           transaction_proof_name,
@@ -519,6 +525,9 @@ export async function POST(
           $14,
           $15,
           $16,
+          $17,
+          $18,
+          $19,
           NOW()
         )
         RETURNING
@@ -529,7 +538,7 @@ export async function POST(
           created_at
         `,
         [
-          generateUserId(),
+          await generateMemberId(client),
           name,
           email,
           pan,
@@ -539,7 +548,10 @@ export async function POST(
           password, // Store original password as plain text for display during approval
           sponsorId,
           amount,
-          amount,
+          walletAllocation.walletBalance,
+          walletAllocation.levelIncomeWallet,
+          walletAllocation.mbdWallet,
+          walletAllocation.boosterTopup,
           utrNumber,
           proofBuffer,
           proof.name,

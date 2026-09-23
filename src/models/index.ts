@@ -32,6 +32,9 @@ export interface Member {
   joining_date: string;
   total_earnings: number;
   wallet_balance: number;
+  level_income_wallet: number;
+  mbd_wallet: number;
+  booster_topup: number;
   referral_count: number;
   team_count: number;
   avatar: string | null;

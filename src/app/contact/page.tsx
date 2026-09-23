@@ -52,7 +52,7 @@ export default function ContactPage() {
             {
               icon: Mail,
               title: 'Email',
-              details: ['bzb000777@gmail.com'],
+              details: ['magimai777@gmail.com'],
               action: 'Email Us',
             },
             {
@@ -163,10 +163,10 @@ export default function ContactPage() {
                   <div>
                     <p className="font-semibold text-white mb-1">Email</p>
                     <a
-                      href="mailto:bzb000777@gmail.com"
+                      href="mailto:magimai777@gmail.com"
                       className="text-primary-400 hover:text-primary-300 transition-colors"
                     >
-                      bzb000777@gmail.com
+                      magimai777@gmail.com
                     </a>
                   </div>
                 </div>

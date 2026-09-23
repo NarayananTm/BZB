@@ -666,7 +666,7 @@ export default function PendingReviewPage() {
             className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center"
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="relative max-w-3xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="relative flex max-h-[80vh] mt-4 max-w-3xl w-full flex-col bg-white rounded-2xl shadow-2xl overflow-hidden">
               <button
                 onClick={() => setPreviewImage(null)}
                 className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg"
@@ -674,11 +674,11 @@ export default function PendingReviewPage() {
                 <X size={24} className="text-gray-700" />
               </button>
               
-              <div className="bg-gray-100 p-4 flex items-center justify-center max-h-[80vh] overflow-auto">
+              <div className="mt-4 min-h-0 max-h-[calc(80vh-100px)] overflow-auto bg-gray-100 p-4">
                 <img
                   src={previewImage}
                   alt="Transaction Proof"
-                  className="max-w-full max-h-full object-contain"
+                  className="block h-auto w-auto max-w-none object-contain"
                 />
               </div>
 
@@ -717,7 +717,7 @@ export default function PendingReviewPage() {
             className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center"
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="relative max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="relative max-w-2xl mt-16  w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
               <button
                 onClick={() => setApprovalMessage(null)}
                 className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg"
@@ -771,7 +771,7 @@ Password: ${approvalMessage.password}
 • Change your password after login for better security
 • Report any suspicious activity immediately
 
-🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin/login'}/login
 
 Questions? We're here to help! 💬`}
                     </div>

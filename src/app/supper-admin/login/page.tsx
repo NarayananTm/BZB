@@ -130,7 +130,7 @@ export default function SuperAdminLoginPage() {
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-6 p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+          {/* <div className="mt-6 p-4 rounded-lg bg-gray-800/50 border border-gray-700">
             <p className="text-[11px] font-semibold text-gray-400 mb-2">Demo Credentials:</p>
             <p className="text-[12px] text-gray-300">
               <span className="text-gray-400">Username:</span> <span className="text-[#f5c400] font-mono">supperadmin</span>
@@ -138,7 +138,7 @@ export default function SuperAdminLoginPage() {
             <p className="text-[12px] text-gray-300">
               <span className="text-gray-400">Password:</span> <span className="text-[#f5c400] font-mono">supperadmin@123</span>
             </p>
-          </div>
+          </div> */}
         </div>
 
         {/* Footer */}

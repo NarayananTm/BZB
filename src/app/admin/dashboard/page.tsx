@@ -10,7 +10,6 @@ import AddMemberButton from '@/components/admin/AddMemberButton';
 import { getMemberByEmail, getTeamMembers } from '@/services/memberService';
 import { getAllLevels } from '@/services/levelService';
 import { getTopupsByMember } from '@/services/topupService';
-import { getEarningsByMember } from '@/services/earningService';
 import { getMemberProfile } from '@/lib/postgres';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 
@@ -40,14 +39,13 @@ export default async function AdminDashboardPage() {
   const displayName = me?.name || session?.name || 'Member';
   const userGroup = session?.role || 'Member of MBD';
 
-  const [levels, topups, earnings, teamMembers] = me
+  const [levels, topups, teamMembers] = me
     ? await Promise.all([
         getAllLevels(),
         getTopupsByMember(me.id),
-        getEarningsByMember(me.id),
         getTeamMembers(me.id),
       ])
-    : [await getAllLevels(), [], [], []];
+    : [await getAllLevels(), [], []];
 
   const levelProgressItems = levels.map((lvl) => ({
     id: lvl.id,
@@ -58,11 +56,9 @@ export default async function AdminDashboardPage() {
   }));
 
   const topupCount = topups.length;
-  const walletBalance = me?.wallet_balance || Number(me?.amount ?? 0);
+  const walletBalance = me?.level_income_wallet ?? me?.wallet_balance ?? Number(me?.amount ?? 0);
   const totalEarnings = me?.total_earnings ?? 0;
-  const completedEarnings = earnings
-    .filter((e) => e.status === 'Completed')
-    .reduce((s, e) => s + Number(e.amount), 0);
+  const levelIncomeWallet = me?.level_income_wallet ?? 0;
 
   return (
     <AdminLayout title="Dashboard">
@@ -91,8 +87,9 @@ export default async function AdminDashboardPage() {
               <FinancialCardsGrid
                 topupCount={topupCount}
                 walletBalance={walletBalance}
-                boosterTopup={0}
-                levelIncome={completedEarnings}
+                boosterTopup={me?.booster_topup ?? 0}
+                levelIncome={levelIncomeWallet}
+                mbdWallet={me?.mbd_wallet ?? 0}
                 downlinesTopup={0}
               />
             </div>

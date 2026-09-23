@@ -1,3 +1,6 @@
+import { getPool } from '@/lib/postgres';
+import type { PoolClient } from 'pg';
+
 /**
  * Generate unique IDs for different entity types
  */
@@ -9,7 +12,7 @@ export function generateAuditId(): string {
   return `AL-${date}-${rand}`;
 }
 
-/** Generate User ID: MBD-YYMMDD-XXX (e.g., MBD9601381) */
+/** Generate an application identifier for non-member records. */
 export function generateUserId(): string {
   const now = new Date();
   const year = now.getFullYear().toString().slice(-2); // Last 2 digits (e.g., 26 for 2026)
@@ -19,32 +22,36 @@ export function generateUserId(): string {
   return `MBD${year}${month}${day}${rand}`;
 }
 
+/** Generate the next sequential member ID, for example MBD000001. */
+export async function generateMemberId(client?: PoolClient): Promise<string> {
+  const result = await (client ?? getPool()).query<{ sequence: string }>(
+    "SELECT nextval('member_id_sequence') AS sequence",
+  );
+  const sequence = result.rows[0]?.sequence;
+  if (!sequence) throw new Error('Unable to generate member ID');
+  return `MBD${String(sequence).padStart(6, '0')}`;
+}
+
 /**
  * Parse a User ID to extract components
- * @param memberId e.g., "MBD9601381"
- * @returns Object with prefix, year, month, day, random
+ * @param memberId e.g., "MBD000001"
+ * @returns The sequential member number
  */
 export function parseUserId(memberId: string): {
   prefix: string;
-  year: string;
-  month: string;
-  day: string;
-  random: string;
+  sequence: string;
 } | null {
-  const match = memberId.match(/^(MBD)(\d{2})(\d{2})(\d{2})(\d{3})$/);
+  const match = memberId.match(/^(MBD)(\d{6})$/);
   if (!match) return null;
   return {
     prefix: match[1],
-    year: match[2],
-    month: match[3],
-    day: match[4],
-    random: match[5],
+    sequence: match[2],
   };
 }
 
 /** Validate User ID format */
 export function isValidUserId(memberId: string): boolean {
-  return /^MBD\d{7}$/.test(memberId);
+  return /^MBD\d{6}$/.test(memberId);
 }
 
 /** Generate Referral ID: REF-YYYYMMDD-XXX */

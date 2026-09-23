@@ -7,25 +7,25 @@ const services = [
     title: "Builders & Developers",
     description:
       "Creating premium residential and commercial developments.",
-    image: "/images/about/helmet.png",
+    image: "/images/about/helmet.svg",
   },
   {
     title: "Property Investment",
     description:
       "Providing carefully selected investment opportunities.",
-    image: "/images/about/business-card.png",
+    image: "/images/about/business-card.svg",
   },
   {
     title: "Referral Program",
     description:
       "Helping members grow their network and unlock achievements.",
-    image: "/images/about/mobile.png",
+    image: "/images/about/mobile.svg",
   },
   {
     title: "Member Services",
     description:
       "Offering digital tools to manage referrals, payments and memberships.",
-    image: "/images/about/app-icon.png",
+    image: "/images/about/app-icon.svg",
   },
 ];
 

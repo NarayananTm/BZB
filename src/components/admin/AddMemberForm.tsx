@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Upload, Copy, Check } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
@@ -47,6 +47,32 @@ export default function AddMemberForm({
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadSponsorProfile = async () => {
+      try {
+        const response = await fetch('/api/admin/profile');
+        const result = await response.json();
+        const profile = result?.profile;
+        if (!mounted || !response.ok || !profile) return;
+
+        setFormData((previous) => ({
+          ...previous,
+          sponsor_name: sponsorName || profile.name || '',
+        }));
+      } catch {
+        // Keep the supplied sponsor name when the profile request is unavailable.
+      }
+    };
+
+    loadSponsorProfile();
+
+    return () => {
+      mounted = false;
+    };
+  }, [sponsorName]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -259,7 +285,7 @@ export default function AddMemberForm({
               <label className="mb-2 sm:mb-3 block text-xs sm:text-sm font-medium text-slate-700">Our Bank Details</label>
               <div className="rounded-lg border border-slate-200 bg-slate-900 p-3 sm:p-4 text-white w-full sm:w-60">
                 <div className="mb-2 sm:mb-3 flex items-center justify-between">
-                  <div className="h-[28rem] sm:h-[28rem] md:h-[28rem] w-full sm:w-56 md:w-60 rounded-lg p-1">
+                  <div className="h-[17rem] sm:h-[17rem] md:h-[17rem] w-full sm:w-56 md:w-60 rounded-lg p-1">
                     <Image
                       src="/images/admin/upi/upi-qr-code.png"
                       alt="UPI QR Code"

@@ -62,7 +62,7 @@ export default function AboutCompany() {
             {/* Worker */}
 
             <Image
-              src="/images/bzb/worker.png"
+              src="/images/bzb/worker.svg"
               alt="Worker"
               width={460}
               height={700}
@@ -72,10 +72,10 @@ export default function AboutCompany() {
                 relative
                 z-20
 
-                w-[220px]
+                w-[200px]
                 sm:w-[280px]
-                md:w-[360px]
-                lg:w-[460px]
+                md:w-[300px]
+                lg:w-[300px]
 
                 h-auto
 

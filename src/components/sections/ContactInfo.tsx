@@ -38,10 +38,10 @@ const ContactInfo: FC = () => {
           <div>
             <h3 className="text-white font-bold mb-2">Email</h3>
             <a
-              href="mailto:bzb000777@gmail.com"
+              href="mailto:magimai777@gmail.com"
               className="text-primary-500 hover:text-primary-600 transition-colors"
             >
-              bzb000777@gmail.com
+              magimai777@gmail.com
             </a>
           </div>
         </div>

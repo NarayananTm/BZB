@@ -35,12 +35,13 @@ interface Props {
   walletBalance?: number;
   boosterTopup?: number;
   levelIncome?: number;
+  mbdWallet?: number;
   downlinesTopup?: number;
 }
 
-function fmt(n: number) { return `Rs.${n.toLocaleString('en-IN')}`; }
+function fmt(n: number) { return `Rs.${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
 
-export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, boosterTopup = 0, levelIncome = 0, downlinesTopup = 0 }: Props) {
+export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 0, levelIncome = 0, mbdWallet = 0, downlinesTopup = 0 }: Props) {
   const [showWithdrawal, setShowWithdrawal] = useState(false);
   const [showTopup, setShowTopup] = useState(false);
   const [showBoosterTopup, setShowBoosterTopup] = useState(false);
@@ -88,18 +89,18 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
     }
   };
 
-  const openTopup = async () => {
-    setShowTopup(true);
-    setTopupAmount('');
-    try {
-      const response = await fetch('/api/admin/profile');
-      const data = await response.json();
-      if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
-      setMember({ id: data.profile.id, name: data.profile.name || '' });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
-    }
-  };
+  // const openTopup = async () => {
+  //   setShowTopup(true);
+  //   setTopupAmount('');
+  //   try {
+  //     const response = await fetch('/api/admin/profile');
+  //     const data = await response.json();
+  //     if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
+  //     setMember({ id: data.profile.id, name: data.profile.name || '' });
+  //   } catch (error) {
+  //     toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
+  //   }
+  // };
 
   const submitTopup = async () => {
     const requestedAmount = Number(topupAmount);
@@ -127,18 +128,18 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
     }
   };
 
-  const openBoosterTopup = async () => {
-    setShowBoosterTopup(true);
-    setBoosterTopupAmount('');
-    try {
-      const response = await fetch('/api/admin/profile');
-      const data = await response.json();
-      if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
-      setMember({ id: data.profile.id, name: data.profile.name || '' });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
-    }
-  };
+  // const openBoosterTopup = async () => {
+  //   setShowBoosterTopup(true);
+  //   setBoosterTopupAmount('');
+  //   try {
+  //     const response = await fetch('/api/admin/profile');
+  //     const data = await response.json();
+  //     if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
+  //     setMember({ id: data.profile.id, name: data.profile.name || '' });
+  //   } catch (error) {
+  //     toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
+  //   }
+  // };
 
   const submitBoosterTopup = async () => {
     const requestedAmount = Number(boosterTopupAmount);
@@ -171,8 +172,10 @@ export default function FinancialCardsGrid({ topupCount = 0, walletBalance = 0, 
     <>
     <div className="w-full grid gap-2 sm:gap-3 md:gap-3 lg:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
       <Card title="My Income Withdrawal" action="Withdrawal REQ" onAction={openWithdrawal} />
-      <Card title="Top-up Wallet" desc={`(Total Top-up Count : ${topupCount})`} action="Top-up REQ" onAction={openTopup} />
-      <Card title="Booster Top-up" desc="(Top-up from 4th level Income)" value={fmt(boosterTopup)} action="Top-up REQ" onAction={openBoosterTopup} />
+      {/* <Card title="Top-up Wallet" desc={`(Total Top-up Count : ${topupCount})`} action="Top-up REQ" onAction={openTopup} /> */}
+      <Card title="Booster Top-up" desc="(Referral 2%)" value={fmt(boosterTopup)}   />
+      {/* action="Top-up REQ" onAction={openBoosterTopup} */}
+      <Card title="MBD Wallet" desc="(Referral Income)" value={fmt(mbdWallet)} />
       <Card title="Level Income Wallet" desc="Available Level Income" value={fmt(levelIncome)} />
       <Card title="Wallet Balance" desc="Available Amount in Income Wallet" value={fmt(walletBalance)} />
       <Card title="Downlines Top-up" desc="My Downlines Topup to me" value={fmt(downlinesTopup)} />

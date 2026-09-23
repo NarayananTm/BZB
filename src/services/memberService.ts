@@ -14,6 +14,9 @@ export interface Member {
   joining_date: string;
   total_earnings: number;
   wallet_balance: number;
+  level_income_wallet: number;
+  mbd_wallet: number;
+  booster_topup: number;
   referral_count: number;
   team_count: number;
   avatar: string | null;
@@ -61,14 +64,16 @@ export async function createMember(data: Omit<Member, 'created_at' | 'updated_at
   const rows = await query<Member>(
     `INSERT INTO members
        (id, name, email, mobile, sponsor_id, sponsor_name, level_name, status,
-        joining_date, total_earnings, wallet_balance, referral_count, team_count, avatar)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+        joining_date, total_earnings, wallet_balance, level_income_wallet, mbd_wallet,
+        booster_topup, referral_count, team_count, avatar)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
      RETURNING *`,
     [
       data.id, data.name, data.email, data.mobile, data.sponsor_id,
       data.sponsor_name, data.level_name, data.status, data.joining_date,
-      data.total_earnings, data.wallet_balance, data.referral_count,
-      data.team_count, data.avatar,
+      data.total_earnings, data.wallet_balance, data.level_income_wallet,
+      data.mbd_wallet, data.booster_topup, data.referral_count, data.team_count,
+      data.avatar,
     ],
   );
   return rows[0];

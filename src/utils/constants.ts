@@ -31,7 +31,7 @@ export const FOOTER_LINKS = {
   contact: {
     address: '4-A East Cross Road, Gandhi Nagar, Vellore - 632007',
     phone: ['77320 05003', '98417 68255'],
-    email: 'bzb000777@gmail.com',
+    email: 'magimai777@gmail.com',
   },
 } as const;
 

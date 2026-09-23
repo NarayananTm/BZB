@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminFromRequest } from '@/lib/adminAuth';
+import { verifyToken } from '@/lib/jwt';
 import { getMemberProfile, updateMemberAvatar, getPool } from '@/lib/postgres';
 
-export async function POST(request: NextRequest) {
+function getProfileSession(request: NextRequest) {
   const admin = getAdminFromRequest(request);
+  if (admin) return admin;
+
+  const memberToken = request.cookies.get('bzb_token')?.value;
+  if (!memberToken) return null;
+
+  try {
+    return verifyToken(memberToken);
+  } catch {
+    return null;
+  }
+}
+
+export async function POST(request: NextRequest) {
+  const admin = getProfileSession(request);
   if (!admin) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   try {
     const memberId = String(admin.id);

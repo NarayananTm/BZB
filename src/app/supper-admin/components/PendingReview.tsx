@@ -744,7 +744,7 @@ export default function PendingReviewPage() {
                 <X size={24} className="text-gray-700" />
               </button>
               
-              <div className="bg-gray-100 p-4 flex items-center justify-center max-h-[80vh] overflow-auto">
+              <div className="bg-gray-100 p-4 flex items-center justify-center max-h-[60vh] overflow-auto">
                 <img
                   src={previewImage}
                   alt="Transaction Proof"
@@ -841,7 +841,7 @@ Password: ${approvalMessage.password}
 • Change your password after login for better security
 • Report any suspicious activity immediately
 
-🔗 Member Portal: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+🔗 Member Portal: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin/login'}
 
 Questions? We're here to help! 💬`}
                     </div>
@@ -873,7 +873,7 @@ Password: ${approvalMessage.password}
 • Change your password after login for better security
 • Report any suspicious activity immediately
 
-🔗 Member Portal: ${process.env.NEXT_PUBLIC_APP_URL || 'https://yourapp.com'}/login
+🔗 Member Portal: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin/login'}
 
 Questions? We're here to help! 💬`;
                     navigator.clipboard.writeText(message).then(() => {

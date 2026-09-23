@@ -22,6 +22,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const paymentAmount = Number(amount);
+    if (!Number.isFinite(paymentAmount) || paymentAmount <= 0) {
+      return NextResponse.json({ message: 'A valid payment amount is required' }, { status: 400 });
+    }
+
     if (password.length < 6) {
       return NextResponse.json(
         { message: 'Password must be at least 6 characters' },
@@ -49,8 +54,8 @@ export async function POST(request: NextRequest) {
 
     await query(
       `INSERT INTO member_requests (
-        id, sponsor_name, name, mobile, pan, status, created_at, updated_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        id, sponsor_name, name, mobile, pan, amount, status, created_at, updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *`,
       [
         memberId,
@@ -58,6 +63,7 @@ export async function POST(request: NextRequest) {
         name,
         phone_number,
         pan,
+          paymentAmount,
         'Submitted',
         createdAt,
         createdAt,
@@ -75,7 +81,7 @@ export async function POST(request: NextRequest) {
           `TXN-${Date.now()}`,
           memberId,
           aadhar,
-          Number(amount),
+          paymentAmount,
           transaction_utr,
           filePath,
           password,

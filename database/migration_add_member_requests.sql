@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS member_requests (
   ifsc_code             VARCHAR(20),
   pan                   VARCHAR(20),
   g_pay                 VARCHAR(100),
+  amount                NUMERIC(14,2),
   status                VARCHAR(20)     NOT NULL DEFAULT 'Pending',  -- Pending | Approved | Rejected | Submitted
   rejection_reason      TEXT,
   submitted_by_admin_id VARCHAR(50)     REFERENCES admin_users(id),
