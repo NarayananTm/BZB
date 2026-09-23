@@ -338,7 +338,7 @@ xl:w-[460px]
 
 
               <Image
-                src="/images/hero/MBD Mobile App.png"
+                src="/images/hero/MBD Mobile App.svg"
                 alt="MBD Mobile App"
 
                 width={420}
