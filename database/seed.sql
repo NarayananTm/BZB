@@ -3,12 +3,17 @@
 -- Run AFTER schema.sql
 -- ============================================================
 
--- Default admin user  (password: Admin@2025)
--- Hash generated with bcryptjs rounds=10
-INSERT INTO admin_users (username, email, password, role) VALUES
-  ('admin',      'admin@bzbgroup.com',      '$2b$10$YourHashedPasswordHere1111111111111111111111111111', 'superadmin'),
-  ('operations', 'ops@bzbgroup.com',        '$2b$10$YourHashedPasswordHere2222222222222222222222222222', 'admin')
-ON CONFLICT (username) DO NOTHING;
+-- Default admin user (password: Admin@123)
+-- Password hash generated with bcryptjs rounds=10.
+INSERT INTO admin_users (id, username, email, mobile, password, role) VALUES
+  ('ADMIN-001', 'admin', 'magimai777@gmail.com', '7036662777', '$2b$10$2/ehnLYbhHm3DnNY.724.eGwR8CtRuzPbeQLIFAosShR02E6o.p8W', 'superadmin')
+ON CONFLICT (username) DO UPDATE SET
+  email = EXCLUDED.email,
+  mobile = EXCLUDED.mobile,
+  password = EXCLUDED.password,
+  role = EXCLUDED.role,
+  is_active = TRUE,
+  updated_at = NOW();
 
 -- Levels
 INSERT INTO levels (id, name, required_referrals, reward, members_count, completion_pct, status, description) VALUES

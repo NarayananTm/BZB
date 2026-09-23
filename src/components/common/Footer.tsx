@@ -17,7 +17,7 @@ export default function Footer() {
 
   const contact = {
     address: 'Head Office : 4-A East Cross Road, Gandhi Nagar, Vellore - 632007',
-    phones: ['77320 05003 , 98417 68255'],
+    phones: ['77320 05003 , 7036662777'],
     email: 'magimai777@gmail.com',
   };
 
