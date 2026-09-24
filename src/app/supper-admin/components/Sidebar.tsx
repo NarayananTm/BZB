@@ -25,14 +25,14 @@ const navItems = [
       { label: 'Member Approvals', key: 'MemberApprovals', route: '/supper-admin/members/pending' },
     ]
   },
-  { icon: '♧', label: 'Referrals', key: 'Referrals' },
+  { icon: '♧', label: 'Referrals', key: 'Referrals', route: '/supper-admin/referrals' },
 //  { icon: '▣', label: 'Income & Wallets', key: 'Income' },
   { icon: '⇩', label: 'Withdrawals', key: 'Withdrawals' },  
   // { icon: '⇧', label: 'Top-up Requests', key: 'Topups' },
   // { icon: '♜', label: 'Rewards', key: 'Rewards' },
   // { icon: '▤', label: 'Reports', key: 'Reports' },
-  { icon: '⚙', label: 'Settings', key: 'Settings' },
-  // { icon: '♙', label: 'Admin Management', key: 'AdminMgmt' },
+  // { icon: '⚙', label: 'Settings', key: 'Settings' },
+  { icon: '♙', label: 'Admin Management', key: 'AdminMgmt', route: '/supper-admin/admin' },
 ];
 
 export default function Sidebar({

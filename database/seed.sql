@@ -17,9 +17,9 @@ ON CONFLICT (username) DO UPDATE SET
 
 -- Levels
 INSERT INTO levels (id, name, required_referrals, reward, members_count, completion_pct, status, description) VALUES
-  ('level-1', 'Level 1', 5, 'Bike Reward',         1240, 85, 'Active', 'Complete 5 direct referrals to unlock the Level 1 reward package.'),
-  ('level-2', 'Level 2', 50, 'Car Reward',           620,  62, 'Active', 'Reach Level 2 by completing 50 direct referrals and maintaining active status.'),
-  ('level-3', 'Level 3', 125, 'Luxury House Reward',  320,  42, 'Active', 'Meet the Level 3 criteria for premium reward eligibility.')
+  ('level-1', 'Level 1', 5, 'Bike Reward',         0, 0, 'Active', 'Complete 5 direct referrals to unlock the Level 1 reward package.'),
+  ('level-2', 'Level 2', 50, 'Car Reward',           0,  0, 'Active', 'Reach Level 2 by completing 50 direct referrals and maintaining active status.'),
+  ('level-3', 'Level 3', 125, 'Luxury House Reward',  0,  0, 'Active', 'Meet the Level 3 criteria for premium reward eligibility.')
 ON CONFLICT (id) DO NOTHING;
 
 -- Members

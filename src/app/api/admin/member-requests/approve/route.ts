@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMemberRequestById, updateMemberRequestStatus } from '@/services/memberRequestService';
-import { createMember,  } from '@/services/memberService';
-import { createReferral } from '@/services/referralService';
+import { createMember } from '@/services/memberService';
 import { sendCredentialsSMS } from '@/lib/smsService';
 import { requireAdmin } from '@/lib/adminAuth';
-import { generateMemberId, generateReferralId, generatePassword } from '@/lib/idGenerator';
+import { generateMemberId, generatePassword } from '@/lib/idGenerator';
 import { calculateWalletAllocation } from '@/lib/wallet';
 // import bcrypt from 'bcryptjs';
 
@@ -78,29 +77,6 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     } as any);
-
-    // Create referral record if sponsor exists
-    if (memberRequest.sponsor_id) {
-      const referralId = generateReferralId();
-      try {
-        await createReferral({
-          id: referralId,
-          sponsor_id: memberRequest.sponsor_id,
-          sponsor_name: memberRequest.sponsor_name || 'Unknown',
-          member_id: memberId,
-          member_name: memberRequest.name,
-          level_name: 'Level 1',
-          join_date: new Date().toISOString().split('T')[0],
-          status: 'Active',
-          reward_amount: 0,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        } as any);
-      } catch (referralError) {
-        console.error('Error creating referral:', referralError);
-        // Don't fail the entire process if referral creation fails
-      }
-    }
 
     // Send SMS with credentials
     const smsResult = await sendCredentialsSMS(

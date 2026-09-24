@@ -621,143 +621,6 @@ const styles = `
   button, input { font: inherit; }
   button { cursor: pointer; }
 
-  .app-shell {
-    min-height: 100vh;
-    display: flex;
-    background: #f8f8f7;
-  }
-
-  .sidebar {
-    width: 286px;
-    min-height: 100vh;
-    position: fixed;
-    inset: 0 auto 0 0;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 16px 18px;
-    background: linear-gradient(180deg, #151617 0%, #202123 100%);
-    color: white;
-    z-index: 20;
-  }
-
-  .brand {
-    height: 58px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 8px 10px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-  }
-  .brand-mark {
-    width: 34px;
-    font-size: 30px;
-    color: #f2c400;
-    line-height: 1;
-  }
-  .brand-name { color: #f1c400; font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
-  .brand-sub { color: #fff; opacity: .86; font-size: 11px; letter-spacing: .3px; margin-top: 1px; }
-
-  .nav-list { display: grid; gap: 4px; margin-top: 22px; }
-  .nav-item {
-    border: 0;
-    color: #e7e7e7;
-    background: transparent;
-    height: 50px;
-    padding: 0 14px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    text-align: left;
-    font-size: 14px;
-    transition: .2s ease;
-  }
-  .nav-item:hover { background: rgba(255,255,255,.07); }
-  .nav-item.active {
-    color: #fff;
-    background: linear-gradient(90deg, #f0c400, #dcb200);
-    box-shadow: 0 5px 15px rgba(240,196,0,.12);
-  }
-  .nav-icon { width: 18px; text-align: center; font-size: 18px; }
-
-  .health {
-    margin-top: auto;
-    padding: 16px 14px;
-    border: 1px solid rgba(255,255,255,.13);
-    background: rgba(255,255,255,.035);
-    border-radius: 9px;
-  }
-  .health-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 15px;
-  }
-  .health-title i { width: 9px; height: 9px; border-radius: 50%; background: #31ce50; }
-  .health-row { display: flex; align-items: center; gap: 9px; font-size: 11px; color: #dedede; }
-  .shield { width: 17px; height: 17px; border: 1px solid #ddd; border-radius: 5px; display: grid; place-items: center; font-size: 9px; }
-  .logout {
-    margin-top: 25px;
-    background: transparent;
-    color: #e7e7e7;
-    border: 0;
-    padding: 12px 14px;
-    text-align: left;
-    display: flex;
-    gap: 14px;
-    align-items: center;
-  }
-
-  .main {
-    margin-left: 286px;
-    width: calc(100% - 286px);
-    min-width: 0;
-  }
-
-  .header {
-    min-height: 78px;
-    padding: 15px 30px 14px;
-    background: white;
-    border-bottom: 1px solid #ededeb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
-  .header-left { display: flex; align-items: center; gap: 17px; }
-  .hamburger {
-    border: 0; background: transparent; font-size: 22px; color: #444; padding: 5px;
-  }
-  h1 { margin: 0; font-size: 19px; line-height: 1.3; letter-spacing: -.4px; }
-  h1 span { font-size: 15px; }
-  .header p { margin: 4px 0 0; color: #6c6c6c; font-size: 11px; }
-  .header-actions { display: flex; align-items: center; gap: 11px; }
-  .secondary-button, .primary-button {
-    border-radius: 7px;
-    min-height: 38px;
-    padding: 0 15px;
-    font-weight: 700;
-    font-size: 12px;
-  }
-  .secondary-button { border: 1px solid #e4e4e4; background: #fff; color: #303030; }
-  .primary-button { border: 1px solid #d9b000; background: #e9bf00; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
-  .notification { position: relative; border: 0; background: transparent; font-size: 22px; color: #333; padding: 7px; }
-  .notification b {
-    position: absolute; top: 0; right: -2px;
-    min-width: 16px; height: 16px; padding: 0 4px;
-    display: grid; place-items: center;
-    background: #e4b900; color: #fff; border-radius: 10px;
-    font-size: 8px;
-  }
-  .profile { display: flex; align-items: center; gap: 9px; margin-left: 5px; }
-  .profile-avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #27303a; color: #fff; font-size: 11px; font-weight: 800; }
-  .profile-copy { display: grid; gap: 1px; min-width: 88px; }
-  .profile-copy strong { font-size: 11px; }
-  .profile-copy span { color: #777; font-size: 9px; }
-  .chevron { font-size: 15px; }
-
   .content { padding: 20px 30px 24px; max-width: 1900px; margin: auto; }
   .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; }
   .left-column { min-width: 0; display: grid; gap: 16px; align-content: start; }
@@ -915,10 +778,7 @@ const styles = `
   .notification-row small { color: #888; font-size: 8px; white-space: nowrap; }
 
   @media (max-width: 1280px) {
-    .sidebar { width: 235px; }
-    .main { margin-left: 235px; width: calc(100% - 235px); }
     .content { padding: 16px; }
-    .header { padding-left: 18px; padding-right: 18px; }
     .dashboard-grid { grid-template-columns: minmax(0, 1fr) 290px; }
     .stats-grid, .financial-grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -927,22 +787,9 @@ const styles = `
     .dashboard-grid { grid-template-columns: 1fr; }
     .right-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .lower-grid { grid-template-columns: 1fr; }
-    .header-actions .profile-copy, .header-actions .chevron { display: none; }
   }
 
   @media (max-width: 760px) {
-    .sidebar {
-      transform: translateX(-100%);
-      transition: transform .2s ease;
-      width: 270px;
-      box-shadow: 12px 0 30px rgba(0,0,0,.18);
-    }
-    .sidebar.mobile-open { transform: translateX(0); }
-    .main { margin-left: 0; width: 100%; }
-    .header { align-items: flex-start; }
-    .header-actions .secondary-button, .header-actions .notification { display: none; }
-    .header-left { gap: 9px; }
-    .header p { display: none; }
     .content { padding: 12px; }
     .stats-grid, .financial-grid, .right-column { grid-template-columns: 1fr; }
     .reward-grid { grid-template-columns: 1fr; }

@@ -1,5 +1,4 @@
 import { query, queryOne, isDbConfigured } from '@/lib/postgres';
-import { adminReferrals, type AdminReferral } from '@/data/admin/referrals';
 
 export interface Referral {
   id: string;
@@ -15,27 +14,10 @@ export interface Referral {
   updated_at: string;
 }
 
-function adaptMockReferral(r: AdminReferral): Referral {
-  const parseRs = (s: string) => Number(s.replace(/[^0-9.]/g, '')) || 0;
-  return {
-    id: r.id,
-    sponsor_id: null,
-    sponsor_name: r.sponsor ?? null,
-    member_id: null,
-    member_name: r.memberName ?? null,
-    level_name: r.level ?? null,
-    join_date: r.joinDate ?? null,
-    status: r.status,
-    reward_amount: parseRs(r.reward ?? '0'),
-    created_at: r.joinDate ?? '',
-    updated_at: r.joinDate ?? '',
-  };
-}
-
 export async function getAllReferrals(): Promise<Referral[]> {
-  if (!isDbConfigured()) return adminReferrals.map(adaptMockReferral);
+  if (!isDbConfigured()) return [];
   const rows = await query<Referral>('SELECT * FROM referrals ORDER BY created_at DESC');
-  return rows.length ? rows : adminReferrals.map(adaptMockReferral);
+  return rows;
 }
 
 export async function getReferralById(id: string): Promise<Referral | null> {
@@ -43,7 +25,7 @@ export async function getReferralById(id: string): Promise<Referral | null> {
 }
 
 export async function getReferralsBySponsor(sponsorId: string): Promise<Referral[]> {
-  if (!isDbConfigured()) return adminReferrals.filter((r) => r.sponsor?.toLowerCase() === sponsorId.toLowerCase()).map(adaptMockReferral);
+  if (!isDbConfigured()) return [];
   const referrals = await query<Referral>('SELECT * FROM referrals WHERE sponsor_id = $1 ORDER BY created_at DESC', [sponsorId]);
   if (referrals.length) return referrals;
   return query<Referral>(
@@ -68,11 +50,7 @@ export async function getReferralsBySponsor(sponsorId: string): Promise<Referral
 }
 
 export async function getReferralsBySponsorName(sponsorName: string): Promise<Referral[]> {
-  if (!isDbConfigured()) {
-    return adminReferrals
-      .filter((r) => r.sponsor?.toLowerCase() === sponsorName.toLowerCase())
-      .map(adaptMockReferral);
-  }
+  if (!isDbConfigured()) return [];
 
   const referrals = await query<Referral>(
     `SELECT *

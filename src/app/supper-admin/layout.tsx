@@ -100,11 +100,42 @@ export default function SuperAdminLayout({
     return () => clearInterval(interval);
   }, []);
 
-  // Get admin info from localStorage
+  // Keep the shared header in sync with the editable profile.
   useEffect(() => {
-    const name = localStorage.getItem('admin_name') || 'Super Admin';
-    setAdminName(name);
-  }, []);
+    const readProfileName = () => {
+      const storedProfile = localStorage.getItem('super_admin_profile');
+      if (!storedProfile) {
+        setAdminName('Super Admin');
+        if (pathname === '/supper-admin/Dashboard') {
+          setHeaderTitle('Welcome, Super Admin');
+        }
+        return;
+      }
+
+      try {
+        const profile = JSON.parse(storedProfile) as { name?: string };
+        const name = profile.name?.trim() || 'Super Admin';
+        setAdminName(name);
+        if (pathname === '/supper-admin/Dashboard') {
+          setHeaderTitle(`Welcome, ${name}`);
+        }
+      } catch {
+        setAdminName('Super Admin');
+        if (pathname === '/supper-admin/Dashboard') {
+          setHeaderTitle('Welcome, Super Admin');
+        }
+      }
+    };
+
+    readProfileName();
+    window.addEventListener('super-admin-profile-updated', readProfileName);
+    window.addEventListener('storage', readProfileName);
+
+    return () => {
+      window.removeEventListener('super-admin-profile-updated', readProfileName);
+      window.removeEventListener('storage', readProfileName);
+    };
+  }, [pathname]);
 
   // Handle logout
   const handleLogout = async () => {
@@ -112,7 +143,6 @@ export default function SuperAdminLayout({
       // Clear localStorage
       localStorage.removeItem('super_admin_token');
       localStorage.removeItem('super_admin_logged_in');
-      localStorage.removeItem('admin_name');
       
       // Redirect to login
       router.push('/supper-admin/login');
