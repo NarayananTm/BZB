@@ -4,7 +4,6 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import {
   CalendarDays,
   Camera,
-  Check,
   ChevronDown,
   Eye,
   EyeOff,
@@ -96,18 +95,18 @@ export default function SuperAdminManagementPage() {
     setNotice('Profile changes saved successfully.');
   };
 
-  const changePassword = () => {
-    if (!passwords.current || !passwords.next || !passwords.confirm) {
-      setNotice('Please complete all password fields.');
-    } else if (passwords.next.length < 8) {
-      setNotice('New password must be at least 8 characters.');
-    } else if (passwords.next !== passwords.confirm) {
-      setNotice('New password and confirmation do not match.');
-    } else {
-      setPasswords(emptyPasswords);
-      setNotice('Password changed successfully.');
-    }
-  };
+  // const changePassword = () => {
+  //   if (!passwords.current || !passwords.next || !passwords.confirm) {
+  //     setNotice('Please complete all password fields.');
+  //   } else if (passwords.next.length < 8) {
+  //     setNotice('New password must be at least 8 characters.');
+  //   } else if (passwords.next !== passwords.confirm) {
+  //     setNotice('New password and confirmation do not match.');
+  //   } else {
+  //     setPasswords(emptyPasswords);
+  //     setNotice('Password changed successfully.');
+  //   }
+  // };
 
   const uploadAvatar = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
