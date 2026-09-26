@@ -232,8 +232,8 @@ export default function PendingReviewPage() {
 
         <div className="p-6">
           <section className="mb-6">
-            <h1 className="text-[30px] font-bold tracking-tight">Pending Review</h1>
-            <p className="mt-1 text-[14px] text-gray-500">
+            <h1 className="text-[25px] font-bold tracking-tight">Pending Review</h1>
+            <p className="mt-1 text-[13px] text-gray-500">
               Review and approve or reject new member registration requests.
             </p>
           </section>

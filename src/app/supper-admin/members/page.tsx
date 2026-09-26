@@ -70,7 +70,7 @@ export default async function SuperAdminMembersPage() {
         .members-list h2 {
           margin: 0 0 4px;
           color: #111827;
-          font-size: 20px;
+          font-size: 25px;
         }
 
         .members-list p {

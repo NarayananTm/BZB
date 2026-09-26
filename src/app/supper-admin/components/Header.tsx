@@ -66,7 +66,7 @@ export default function Header({
         }
 
         .header-left h1 {
-          font-size: 24px;
+          font-size: 25px;
           font-weight: 600;
           color: #1f2937;
           margin: 0;

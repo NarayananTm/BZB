@@ -157,7 +157,7 @@ export default function SuperAdminLayout({
   }, [pathname]);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f8f9fb' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f8f9fb', fontFamily: 'Arial, sans-serif' }}>
       {!isLoginPage && (
         <Sidebar
           activeNav={activeNav}

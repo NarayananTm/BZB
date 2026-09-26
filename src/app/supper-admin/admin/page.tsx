@@ -127,7 +127,7 @@ export default function SuperAdminManagementPage() {
       <style>{`
         .profile-page { min-height: calc(100vh - 80px); padding: 30px 32px 44px; color: #20242b; }
         .profile-heading { margin-bottom: 22px; }
-        .profile-heading h2 { margin: 0; font-size: 24px; line-height: 1.2; font-weight: 700; }
+        .profile-heading h2 { margin: 0; font-size: 25px; line-height: 1.2; font-weight: 700; }
         .profile-heading p { margin: 5px 0 0; color: #6d737c; font-size: 13px; }
         .profile-grid { display: grid; grid-template-columns: 244px minmax(0, 1fr); gap: 20px; max-width: 1110px;  }
         .profile-card, .editor-card { background: #fff; border: 1px solid #e1e4e8; border-radius: 7px; box-shadow: 0 1px 3px rgba(31, 35, 40, .03); }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
 import {
   getAllWithdrawals, getWithdrawalById, createWithdrawal,
-  approveWithdrawal, rejectWithdrawal, getWithdrawalSummary,
+  approveWithdrawal, rejectWithdrawal, getWithdrawalSummary, InsufficientMbdWalletError,
 } from '@/services/withdrawalService';
 import { createAuditLog, generateAuditId } from '@/services/auditLogService';
 import type { CreateWithdrawalDto } from '@/models';
@@ -90,6 +90,9 @@ export async function processWithdrawal(request: NextRequest, id: string) {
 
     return NextResponse.json({ success: true, data: w });
   } catch (err) {
+    if (err instanceof InsufficientMbdWalletError) {
+      return NextResponse.json({ success: false, message: err.message }, { status: 409 });
+    }
     console.error('[withdrawalController.processWithdrawal]', err);
     return NextResponse.json({ success: false, message: 'Failed to update withdrawal' }, { status: 500 });
   }

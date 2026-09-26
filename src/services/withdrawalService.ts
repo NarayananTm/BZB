@@ -1,4 +1,4 @@
-import { query, queryOne, isDbConfigured } from '@/lib/postgres';
+import { getPool, query, queryOne, isDbConfigured } from '@/lib/postgres';
 import { adminWithdrawals, type AdminWithdrawal } from '@/data/admin/withdrawals';
 
 export interface Withdrawal {
@@ -13,6 +13,68 @@ export interface Withdrawal {
   remarks: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export class InsufficientMbdWalletError extends Error {
+  constructor() {
+    super('Insufficient available balance in your MBD Wallet (Referral Income).');
+    this.name = 'InsufficientMbdWalletError';
+  }
+}
+
+export async function getMbdWalletWithdrawalBalance(memberId: string) {
+  const rows = await query<{ id: string; name: string; mbd_wallet: string | number; pending_amount: string | number }>(
+    `SELECT m.id, m.name, m.mbd_wallet,
+       COALESCE(SUM(w.amount) FILTER (WHERE w.status = 'Pending'), 0) AS pending_amount
+     FROM members m
+     LEFT JOIN withdrawals w ON w.member_id = m.id
+     WHERE m.id = $1
+     GROUP BY m.id, m.name, m.mbd_wallet`,
+    [memberId],
+  );
+  if (!rows[0]) return null;
+  const walletBalance = Number(rows[0].mbd_wallet) || 0;
+  const pendingAmount = Number(rows[0].pending_amount) || 0;
+  return {
+    member_id: rows[0].id,
+    name: rows[0].name,
+    wallet_balance: walletBalance,
+    pending_amount: pendingAmount,
+    available_balance: Math.max(0, walletBalance - pendingAmount),
+  };
+}
+
+export async function createMbdWalletWithdrawal(memberId: string, amount: number): Promise<Withdrawal> {
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const memberResult = await client.query<{ name: string; mbd_wallet: string | number }>(
+      'SELECT name, mbd_wallet FROM members WHERE id = $1 FOR UPDATE', [memberId],
+    );
+    const member = memberResult.rows[0];
+    if (!member) throw new Error('Member not found');
+
+    const pendingResult = await client.query<{ pending_amount: string | number }>(
+      "SELECT COALESCE(SUM(amount), 0) AS pending_amount FROM withdrawals WHERE member_id = $1 AND status = 'Pending'",
+      [memberId],
+    );
+    const availableBalance = (Number(member.mbd_wallet) || 0) - (Number(pendingResult.rows[0]?.pending_amount) || 0);
+    if (amount > availableBalance) throw new InsufficientMbdWalletError();
+
+    const id = `WDR-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+    const result = await client.query<Withdrawal>(
+      `INSERT INTO withdrawals (id, member_id, member_name, amount, requested_date, status, payout_method)
+       VALUES ($1, $2, $3, $4, CURRENT_DATE, 'Pending', 'MBD Wallet (Referral Income)') RETURNING *`,
+      [id, memberId, member.name, amount],
+    );
+    await client.query('COMMIT');
+    return result.rows[0];
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 function adaptMockWithdrawal(w: AdminWithdrawal): Withdrawal {
@@ -58,12 +120,45 @@ export async function createWithdrawal(data: Omit<Withdrawal, 'approved_date' | 
 }
 
 export async function approveWithdrawal(id: string, remarks?: string): Promise<Withdrawal | null> {
-  return queryOne<Withdrawal>(
-    `UPDATE withdrawals
-     SET status = 'Approved', approved_date = CURRENT_DATE, remarks = COALESCE($2, remarks), updated_at = NOW()
-     WHERE id = $1 RETURNING *`,
-    [id, remarks ?? null],
-  );
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const withdrawalResult = await client.query<Withdrawal>(
+      'SELECT * FROM withdrawals WHERE id = $1 FOR UPDATE', [id],
+    );
+    const withdrawal = withdrawalResult.rows[0];
+    if (!withdrawal) {
+      await client.query('COMMIT');
+      return null;
+    }
+    if (withdrawal.status !== 'Pending') {
+      await client.query('COMMIT');
+      return withdrawal;
+    }
+
+    if (withdrawal.member_id) {
+      const memberUpdate = await client.query(
+        `UPDATE members SET mbd_wallet = mbd_wallet - $2, updated_at = NOW()
+         WHERE id = $1 AND mbd_wallet >= $2 RETURNING id`,
+        [withdrawal.member_id, withdrawal.amount],
+      );
+      if (!memberUpdate.rows[0]) throw new InsufficientMbdWalletError();
+    }
+
+    const result = await client.query<Withdrawal>(
+      `UPDATE withdrawals
+       SET status = 'Approved', approved_date = CURRENT_DATE, remarks = COALESCE($2, remarks), updated_at = NOW()
+       WHERE id = $1 RETURNING *`,
+      [id, remarks ?? null],
+    );
+    await client.query('COMMIT');
+    return result.rows[0] ?? null;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 export async function rejectWithdrawal(id: string, remarks?: string): Promise<Withdrawal | null> {

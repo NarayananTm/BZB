@@ -49,6 +49,7 @@ export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 
   const [topupAmount, setTopupAmount] = useState('');
   const [boosterTopupAmount, setBoosterTopupAmount] = useState('');
   const [member, setMember] = useState<{ id: string; name: string } | null>(null);
+  const [withdrawableBalance, setWithdrawableBalance] = useState(mbdWallet);
   const [submitting, setSubmitting] = useState(false);
   const [topupSubmitting, setTopupSubmitting] = useState(false);
   const [boosterTopupSubmitting, setBoosterTopupSubmitting] = useState(false);
@@ -56,11 +57,13 @@ export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 
   const openWithdrawal = async () => {
     setShowWithdrawal(true);
     setAmount('');
+    setWithdrawableBalance(mbdWallet);
     try {
-      const response = await fetch('/api/admin/profile');
+      const response = await fetch('/api/member/withdrawals');
       const data = await response.json();
-      if (!response.ok || !data.profile?.id) throw new Error(data.message || 'Unable to load your profile');
-      setMember({ id: data.profile.id, name: data.profile.name || '' });
+      if (!response.ok || !data.success) throw new Error(data.message || 'Unable to load your MBD Wallet');
+      setMember({ id: data.data.member_id, name: data.data.name || '' });
+      setWithdrawableBalance(Number(data.data.available_balance) || 0);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Unable to load your profile');
     }
@@ -70,18 +73,19 @@ export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 
     const requestedAmount = Number(amount);
     if (!member) { toast.error('Your profile is still loading.'); return; }
     if (!Number.isFinite(requestedAmount) || requestedAmount < 200) { toast.error('Minimum payout request is Rs. 200.'); return; }
-    if (requestedAmount > walletBalance) { toast.error('Requested amount exceeds your income wallet balance.'); return; }
+    if (requestedAmount > withdrawableBalance) { toast.error('Requested amount exceeds your available MBD Wallet balance.'); return; }
     setSubmitting(true);
     try {
-      const response = await fetch('/api/admin/withdrawals', {
+      const response = await fetch('/api/member/withdrawals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: `WDR-${Date.now()}`, member_id: member.id, member_name: member.name, amount: requestedAmount, payout_method: 'Income Wallet' }),
+        body: JSON.stringify({ amount: requestedAmount }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Unable to create withdrawal request');
       toast.success('Withdrawal request submitted successfully.');
       setAmount('');
+      setWithdrawableBalance((balance) => Math.max(0, balance - requestedAmount));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Unable to create withdrawal request');
     } finally {
@@ -184,11 +188,11 @@ export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 
       <div className="relative w-full max-w-md sm:max-w-2xl rounded-lg sm:rounded-md bg-white px-4 sm:px-8 py-8 sm:py-14 text-center shadow-xl">
         <button onClick={() => setShowWithdrawal(false)} className="absolute right-3 sm:right-5 top-3 sm:top-4 text-slate-900" aria-label="Close withdrawal dialog"><X size={20} className="sm:w-[22px] sm:h-[22px]" /></button>
         <p className="text-xs font-medium text-slate-800">MY EARNINGS</p>
-        <h2 id="withdrawal-title" className="mt-4 sm:mt-8 text-lg sm:text-2xl font-bold text-slate-950">INCOME WALLET AMOUNT<br />Rs. : {walletBalance.toLocaleString('en-IN')}</h2>
+        <h2 id="withdrawal-title" className="mt-4 sm:mt-8 text-lg sm:text-2xl font-bold text-slate-950">MBD WALLET (REFERRAL INCOME)<br />AVAILABLE: Rs. {withdrawableBalance.toLocaleString('en-IN')}</h2>
         <p className="mt-3 sm:mt-5 text-xs sm:text-sm text-slate-500">Request Amount Minimum payout request is<br />200 INR (TDS 5% + Service Charge 5%)</p>
         <label className="mt-4 sm:mt-7 block text-xs sm:text-sm text-slate-500" htmlFor="withdrawal-amount">Payout Request Amount Rs.</label>
-        <input id="withdrawal-amount" type="number" min="200" value={amount} onChange={(event) => setAmount(event.target.value)} className="mx-auto mt-2 sm:mt-4 block w-full max-w-xs rounded-md border border-[#F0F0F0] bg-[#F5F5F5] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" placeholder="Enter Amount" />
-        <button onClick={submitWithdrawal} disabled={submitting || !member} className="mt-4 sm:mt-8 w-full max-w-xs rounded-md bg-[#E5C500] px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium text-white disabled:opacity-50">{submitting ? 'Submitting...' : 'Withdraw'}</button>
+        <input id="withdrawal-amount" type="number" min="200" max={withdrawableBalance} value={amount} onChange={(event) => setAmount(event.target.value)} className="mx-auto mt-2 sm:mt-4 block w-full max-w-xs rounded-md border border-[#F0F0F0] bg-[#F5F5F5] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm" placeholder="Enter Amount" />
+        <button onClick={submitWithdrawal} disabled={submitting || withdrawableBalance < 200} className="mt-4 sm:mt-8 w-full max-w-xs rounded-md bg-[#E5C500] px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium text-white disabled:opacity-50">{submitting ? 'Submitting...' : 'Withdraw from MBD Wallet'}</button>
       </div>
     </div>}
 
