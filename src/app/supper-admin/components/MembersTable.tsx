@@ -294,57 +294,67 @@ export default function MembersTable({
             <div className="loading-state">Loading members...</div>
           )}
           {!loading && filteredMembers.length > 0 ? (
-            filteredMembers.map((member) => (
-              <div className="table-row" key={member.id}>
-                <span className="member-cell">
-                  <span className="member-avatar">{member.avatar || member.name.charAt(0).toUpperCase()}</span>
-                  <div>
-                    <div style={{ color: '#000000' }}>{member.name}</div>
-                    <div className="email">{member.id}</div>
-                  </div>
-                </span>
-                <span className="email">{member.email}</span>
-                <span>{member.level}</span>
-                <span>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      backgroundColor:
-                        member.status === 'Active'
-                          ? '#d1fae5'
-                          : member.status === 'Pending'
-                            ? '#fef3c7'
-                            : '#fee2e2',
-                      color:
-                        member.status === 'Active'
-                          ? '#065f46'
-                          : member.status === 'Pending'
-                            ? '#92400e'
-                            : '#7f1d1d',
-                    }}
-                  >
-                    {member.status}
-                  </span>
-                </span>
-                <span>{member.joined}</span>
-                <span className="actions-cell">
-                  <button className="more" onClick={() => setOpenMenu(openMenu === member.id ? null : member.id)} title="Member actions" aria-label={`Actions for ${member.name}`}>
-                    ⋮
-                  </button>
-                  {openMenu === member.id && (
-                    <div className="member-menu">
-                      <button onClick={() => loadMemberForEdit(member)}>Edit member</button>
-                      <button onClick={() => updateStatus(member)}>{member.status === 'Suspended' ? 'Resume member' : 'Pause or suspend'}</button>
-                      <button className="danger" onClick={() => { setOpenMenu(null); setDeletingMember(member); setMessage(''); }}>Delete member</button>
+            filteredMembers.map((member) => {
+              const name = String(member.name ?? '').trim() || 'Unknown member';
+              const id = String(member.id ?? '').trim() || '—';
+              const email = String(member.email ?? '').trim() || 'Not provided';
+              const level = String(member.level ?? '').trim() || '—';
+              const joined = String(member.joined ?? '').trim() || 'Recently';
+              const avatar = String(member.avatar ?? '').trim();
+              const initial = avatar.length === 1 ? avatar : name.charAt(0).toUpperCase();
+
+              return (
+                <div className="table-row" key={member.id}>
+                  <span className="member-cell">
+                    <span className="member-avatar" aria-hidden="true">{initial}</span>
+                    <div>
+                      <div title={name} style={{ color: '#000000' }}>{name}</div>
+                      <div className="email" title={id}>{id}</div>
                     </div>
-                  )}
-                </span>
-              </div>
-            ))
+                  </span>
+                  <span className="email" title={email}>{email}</span>
+                  <span title={level}>{level}</span>
+                  <span>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        fontWeight: '600',
+                        backgroundColor:
+                          member.status === 'Active'
+                            ? '#d1fae5'
+                            : member.status === 'Pending'
+                              ? '#fef3c7'
+                              : '#fee2e2',
+                        color:
+                          member.status === 'Active'
+                            ? '#065f46'
+                            : member.status === 'Pending'
+                              ? '#92400e'
+                              : '#7f1d1d',
+                      }}
+                    >
+                      {member.status || 'Pending'}
+                    </span>
+                  </span>
+                  <span title={joined}>{joined}</span>
+                  <span className="actions-cell">
+                    <button className="more" onClick={() => setOpenMenu(openMenu === member.id ? null : member.id)} title="Member actions" aria-label={`Actions for ${name}`}>
+                      ⋮
+                    </button>
+                    {openMenu === member.id && (
+                      <div className="member-menu">
+                        <button onClick={() => loadMemberForEdit(member)}>Edit member</button>
+                        <button onClick={() => updateStatus(member)}>{member.status === 'Suspended' ? 'Resume member' : 'Pause or suspend'}</button>
+                        <button className="danger" onClick={() => { setOpenMenu(null); setDeletingMember(member); setMessage(''); }}>Delete member</button>
+                      </div>
+                    )}
+                  </span>
+                </div>
+              );
+            })
           ) : (
             !loading && (
               <div className="empty-state">

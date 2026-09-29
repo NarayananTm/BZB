@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateMemberStatus, getMemberById } from '@/services/memberService';
+import { updateMemberStatus, getMemberById, awardReferralGift } from '@/services/memberService';
 import { sendCredentialsSMS, sendRejectionSMS } from '@/lib/smsService';
 import { sendApprovalEmail, sendRejectionEmail } from '@/lib/emailService';
 import { sendApprovalWhatsApp, sendRejectionWhatsApp } from '@/lib/whatsappService';
@@ -27,6 +27,10 @@ export async function POST(request: NextRequest) {
 
     if (!updatedMember) {
       return NextResponse.json({ success: false, message: 'Member not found' }, { status: 404 });
+    }
+
+    if (action === 'approve' && member.sponsor_id) {
+      await awardReferralGift(memberId);
     }
 
     // Send notifications based on action

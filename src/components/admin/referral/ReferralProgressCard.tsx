@@ -77,26 +77,44 @@ function LevelItem({
 type ReferralProgressCardProps = {
   referralCount?: number;
   percent?: number;
+  levels?: { name: string; required_referrals: number }[];
 };
 
 export default function ReferralProgressCard({
   referralCount = 0,
   percent,
+  levels = [
+    { name: 'Level 1', required_referrals: 5 },
+    { name: 'Level 2', required_referrals: 50 },
+    { name: 'Level 3', required_referrals: 125 },
+  ],
 }: ReferralProgressCardProps) {
-  const thresholds = [5, 50, 125];
+  const sortedLevels = [...levels].sort((first, second) => first.required_referrals - second.required_referrals);
   const safeReferralCount = Math.max(0, referralCount);
-  const currentLevel = safeReferralCount >= thresholds[2]
-    ? 3
-    : safeReferralCount >= thresholds[1]
-      ? 2
-      : 1;
-  const nextThreshold = thresholds[currentLevel - 1];
-  const safePercent = Math.min(100, Math.max(0, percent ?? Math.round((safeReferralCount / nextThreshold) * 100)));
-  const getLevelStatus = (level: number) => safeReferralCount >= thresholds[level - 1] ? 'Complete' : 'In progress';
+  const activeLevelIndex = sortedLevels.findIndex((level) => safeReferralCount < level.required_referrals);
+  const progressLevelIndex = activeLevelIndex === -1 ? sortedLevels.length - 1 : activeLevelIndex;
+  const progressLevel = sortedLevels[progressLevelIndex];
+  const previousThreshold = progressLevelIndex > 0
+    ? sortedLevels[progressLevelIndex - 1].required_referrals
+    : 0;
+  const nextThreshold = progressLevel?.required_referrals ?? 0;
+  const levelSpan = Math.max(1, nextThreshold - previousThreshold);
+  const progressWithinLevel = Math.min(levelSpan, Math.max(0, safeReferralCount - previousThreshold));
+  const overallTarget = sortedLevels.at(-1)?.required_referrals ?? 0;
+  const safePercent = Math.min(100, Math.max(0, percent ?? (
+    overallTarget > 0 ? Math.round((safeReferralCount / overallTarget) * 100) : 0
+  )));
+  const getLevelStatus = (index: number) => {
+    if (safeReferralCount >= sortedLevels[index].required_referrals) return 'Complete';
+    return index === activeLevelIndex ? 'In progress' : 'Locked';
+  };
   const remainingReferrals = Math.max(0, nextThreshold - safeReferralCount);
+  const progressLabel = activeLevelIndex === -1
+    ? 'All rewards unlocked'
+    : `${progressWithinLevel} of ${levelSpan} referrals to ${progressLevel.name}`;
 
   return (
-    <div className="relative min-h-[200px] sm:min-h-[200px] md:min-h-[2500px] lg:min-h-[560px] w-full overflow-hidden rounded-lg md:rounded-[8px] lg:rounded-[8px] border border-[#E5E5E5] bg-white px-3 sm:px-4 md:px-5 lg:px-[20px] pt-2 sm:pt-3 md:pt-4 lg:pt-[14px]">
+    <div className="relative min-h-[200px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[560px] w-full overflow-hidden rounded-lg md:rounded-[8px] lg:rounded-[8px] border border-[#E5E5E5] bg-white px-3 sm:px-4 md:px-5 lg:px-[20px] pt-2 sm:pt-3 md:pt-4 lg:pt-[14px]">
 
       {/* Header */}
       <h3 className="text-xs sm:text-sm md:text-[13px] lg:text-[14px] font-semibold text-[#A98F00]">
@@ -108,23 +126,23 @@ export default function ReferralProgressCard({
         {/* Level Items (Horizontal) */}
         <div className="flex justify-between px-2 mb-4 sm:mb-5">
           <LevelItem
-            label="Level 1"
+            label={sortedLevels[0]?.name ?? 'Level 1'}
             icon={Bike}
-            status={getLevelStatus(1)}
+            status={sortedLevels[0] ? getLevelStatus(0) : 'Locked'}
             statusColor="#333333"
             horizontal
           />
           <LevelItem
-            label="Level 2"
+            label={sortedLevels[1]?.name ?? 'Level 2'}
             icon={CarFront}
-            status={getLevelStatus(2)}
+            status={sortedLevels[1] ? getLevelStatus(1) : 'Locked'}
             statusColor="#333333"
             horizontal
           />
           <LevelItem
-            label="Level 3"
+            label={sortedLevels[2]?.name ?? 'Level 3'}
             icon={Home}
-            status={getLevelStatus(3)}
+            status={sortedLevels[2] ? getLevelStatus(2) : 'Locked'}
             statusColor="#333333"
             horizontal
           />
@@ -150,7 +168,7 @@ export default function ReferralProgressCard({
         {/* Mobile Info Text */}
         <div className="text-center mt-3 sm:mt-4">
           <p className="text-[9px] sm:text-[10px] text-[#777777]">
-            {safeReferralCount} of {nextThreshold} referrals
+            {progressLabel}
           </p>
           <p className="mt-1 text-[9px] sm:text-[10px] text-[#555555]">
             {remainingReferrals > 0 ? `${remainingReferrals} more to unlock next reward` : 'All rewards unlocked'}
@@ -166,22 +184,15 @@ export default function ReferralProgressCard({
 
           {/* Progress */}
           <div
-            className="absolute bottom-0 left-0 w-full bg-[#E5C500] transition-all duration-500"
+            className="absolute bottom-0 left-0 w-full overflow-hidden bg-[#E5C500] transition-all duration-500"
             style={{
               height: `${safePercent}%`,
             }}
-          />
-
-          {/* Current Progress Highlight */}
-          {safePercent > 0 && safePercent < 100 && (
-            <div
-              className="absolute left-0 w-full bg-[#B9A52D]"
-              style={{
-                bottom: `${safePercent}%`,
-                height: '48px',
-              }}
-            />
-          )}
+          >
+            {safePercent > 0 && safePercent < 100 && (
+              <div className="absolute left-0 top-0 h-[48px] max-h-full w-full bg-[#B9A52D]" />
+            )}
+          </div>
         </div>
 
         {/* Percentage */}
@@ -194,9 +205,9 @@ export default function ReferralProgressCard({
         {/* Level 3 */}
         <div className="absolute left-[52px] top-[34px]">
           <LevelItem
-            label="Level 3"
+            label={sortedLevels[2]?.name ?? 'Level 3'}
             icon={Home}
-            status={getLevelStatus(3)}
+            status={sortedLevels[2] ? getLevelStatus(2) : 'Locked'}
             statusColor="#333333"
           />
         </div>
@@ -204,9 +215,9 @@ export default function ReferralProgressCard({
         {/* Level 2 */}
         <div className="absolute left-[52px] top-[185px]">
           <LevelItem
-            label="Level 2"
+            label={sortedLevels[1]?.name ?? 'Level 2'}
             icon={CarFront}
-            status={getLevelStatus(2)}
+            status={sortedLevels[1] ? getLevelStatus(1) : 'Locked'}
             statusColor="#333333"
           />
         </div>
@@ -214,9 +225,9 @@ export default function ReferralProgressCard({
         {/* Level 1 */}
         <div className="absolute left-[52px] top-[340px]">
           <LevelItem
-            label="Level 1"
+            label={sortedLevels[0]?.name ?? 'Level 1'}
             icon={Bike}
-            status={getLevelStatus(1)}
+            status={sortedLevels[0] ? getLevelStatus(0) : 'Locked'}
             statusColor="#333333"
           />
         </div>
@@ -224,7 +235,7 @@ export default function ReferralProgressCard({
         {/* Bottom Text */}
         <div className="absolute top-[450px] left-0 w-full text-center">
           <p className="text-[10px] text-[#777777]">
-            {safeReferralCount} of {nextThreshold} referrals
+            {progressLabel}
           </p>
 
           <p className="mt-[6px] text-[10px] text-[#555555]">

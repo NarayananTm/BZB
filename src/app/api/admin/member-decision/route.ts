@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
-import { updateMemberStatus } from '@/services/memberService';
+import { updateMemberStatus, awardReferralGift, getMemberById } from '@/services/memberService';
 
 export async function POST(request: NextRequest) {
   const check = requireAdmin(request);
@@ -23,6 +23,13 @@ export async function POST(request: NextRequest) {
 
     if (!updatedMember) {
       return NextResponse.json({ success: false, message: 'Member not found' }, { status: 404 });
+    }
+
+    if (action === 'approve') {
+      const member = await getMemberById(memberId);
+      if (member?.sponsor_id) {
+        await awardReferralGift(memberId);
+      }
     }
 
     return NextResponse.json({

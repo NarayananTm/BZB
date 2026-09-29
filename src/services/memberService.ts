@@ -31,8 +31,27 @@ export interface Member {
 }
 
 export async function getAllMembers(): Promise<Member[]> {
-  const rows = await query<Member>('SELECT * FROM members ORDER BY created_at DESC');
-  return rows;
+  const rows = await query<Member & {
+    linked_name: string | null;
+    linked_email: string | null;
+  }>(
+    `SELECT
+       member.*,
+       COALESCE(user_by_id.full_name, user_by_email.full_name) AS linked_name,
+       COALESCE(user_by_id.email, user_by_email.email) AS linked_email
+     FROM members member
+     LEFT JOIN users user_by_id ON user_by_id.id = member.user_id
+     LEFT JOIN users user_by_email
+       ON user_by_id.id IS NULL
+       AND LOWER(TRIM(user_by_email.email)) = LOWER(TRIM(member.email))
+     ORDER BY member.created_at DESC`,
+  );
+
+  return rows.map(({ linked_name, linked_email, ...member }) => ({
+    ...member,
+    name: member.name?.trim() || linked_name?.trim() || '',
+    email: member.email?.trim() || linked_email?.trim() || '',
+  }));
 }
 
 export async function getMembersReferredBy(adminName: string, adminEmail: string): Promise<Member[]> {
@@ -60,6 +79,26 @@ export async function getTeamMembers(sponsorId: string): Promise<Member[]> {
   return query<Member>('SELECT * FROM members WHERE sponsor_id = $1 ORDER BY joining_date DESC', [sponsorId]);
 }
 
+export async function getIndirectTeamMemberCount(sponsorId: string): Promise<number> {
+  const row = await queryOne<{ indirect_count: number | string }>(
+    `WITH RECURSIVE descendants(id, depth, path) AS (
+       SELECT member.id, 1, ARRAY[$1::varchar, member.id]
+       FROM members member
+       WHERE member.sponsor_id = $1
+       UNION ALL
+       SELECT member.id, descendants.depth + 1, descendants.path || member.id
+       FROM members member
+       JOIN descendants ON member.sponsor_id = descendants.id
+       WHERE NOT member.id = ANY(descendants.path)
+     )
+     SELECT COUNT(*) FILTER (WHERE depth > 1)::int AS indirect_count
+     FROM descendants`,
+    [sponsorId],
+  );
+
+  return Number(row?.indirect_count ?? 0);
+}
+
 export async function createMember(data: Omit<Member, 'created_at' | 'updated_at'>): Promise<Member> {
   const rows = await query<Member>(
     `INSERT INTO members
@@ -79,11 +118,118 @@ export async function createMember(data: Omit<Member, 'created_at' | 'updated_at
   return rows[0];
 }
 
+export async function awardReferralGift(memberId: string, amount = 27000): Promise<boolean> {
+  const client = await getPool().connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const memberResult = await client.query<{ sponsor_id: string | null }>(
+      'SELECT sponsor_id FROM members WHERE id = $1 FOR UPDATE',
+      [memberId],
+    );
+
+    if (memberResult.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return false;
+    }
+
+    const sponsorId = memberResult.rows[0]?.sponsor_id;
+    if (!sponsorId) {
+      await client.query('COMMIT');
+      return false;
+    }
+
+    const referralResult = await client.query<{ reward_amount: string }>(
+      `SELECT reward_amount
+       FROM referrals
+       WHERE member_id = $1 AND sponsor_id = $2
+       FOR UPDATE`,
+      [memberId, sponsorId],
+    );
+
+    const currentReward = Number(referralResult.rows[0]?.reward_amount || 0);
+    if (currentReward >= amount) {
+      await client.query('COMMIT');
+      return true;
+    }
+
+    await client.query(
+      `UPDATE members
+       SET mbd_wallet = COALESCE(mbd_wallet, 0) + $1,
+           updated_at = NOW()
+       WHERE id = $2`,
+      [amount, sponsorId],
+    );
+
+    await client.query(
+      `UPDATE referrals
+       SET status = 'Approved',
+           reward_amount = $1,
+           updated_at = NOW()
+       WHERE member_id = $2 AND sponsor_id = $3`,
+      [amount, memberId, sponsorId],
+    );
+
+    await client.query('COMMIT');
+    return true;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 export async function updateMemberStatus(id: string, status: Member['status']): Promise<Member | null> {
-  return queryOne<Member>(
-    `UPDATE members SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
-    [status, id],
-  );
+  const client = await getPool().connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const memberResult = await client.query<{ sponsor_id: string | null; status: string }>(
+      'SELECT sponsor_id, status FROM members WHERE id = $1 FOR UPDATE',
+      [id],
+    );
+
+    if (memberResult.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return null;
+    }
+
+    const currentMember = memberResult.rows[0];
+    const updatedMember = await client.query<Member>(
+      `UPDATE members SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [status, id],
+    );
+
+    if ((status === 'Approved' || status === 'Active') && currentMember.status !== 'Approved' && currentMember.status !== 'Active' && currentMember.sponsor_id) {
+      await client.query(
+        `UPDATE members
+         SET mbd_wallet = COALESCE(mbd_wallet, 0) + 2700,
+             updated_at = NOW()
+         WHERE id = $1`,
+        [currentMember.sponsor_id],
+      );
+
+      await client.query(
+        `UPDATE referrals
+         SET status = 'Approved',
+             reward_amount = 2700,
+             updated_at = NOW()
+         WHERE member_id = $1 AND sponsor_id = $2`,
+        [id, currentMember.sponsor_id],
+      );
+    }
+
+    await client.query('COMMIT');
+    return updatedMember.rows[0];
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 export async function updateMember(id: string, data: Partial<Member>): Promise<Member | null> {

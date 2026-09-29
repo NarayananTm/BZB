@@ -4,9 +4,10 @@ import MemberAnalyticsCard from '@/components/admin/referral/MemberAnalyticsCard
 import ReferGrowCard from '@/components/admin/referral/ReferGrowCard';
 import ReferralProgressCard from '@/components/admin/referral/ReferralProgressCard';
 import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard';
+import { getAllLevels } from '@/services/levelService';
 // import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
-import { getMemberByEmail, getMemberById, getMembersReferredBy, getTeamMembers } from '@/services/memberService';
+import { getIndirectTeamMemberCount, getMemberByEmail, getMemberById, getMembersReferredBy, getTeamMembers } from '@/services/memberService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,8 @@ export default async function AdminReferralsPage() {
       ? await getMembersReferredBy(session.name, session.email)
       : [];
   const directMemberCount = directMembers.length;
+  const indirectMemberCount = member ? await getIndirectTeamMemberCount(member.id) : 0;
+  const levels = await getAllLevels();
   const chartStart = new Date();
   chartStart.setMonth(chartStart.getMonth() - 6, 1);
   chartStart.setHours(0, 0, 0, 0);
@@ -68,11 +71,11 @@ export default async function AdminReferralsPage() {
         <section className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-[42%_15%_40%]">
           <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
             <MemberAnalyticsCard data={memberCountData} labels={memberCountLabels} />
-            <ReferGrowCard direct={directMemberCount} referrals={me?.team_count ?? 0} total={directMemberCount + (me?.team_count ?? 0)} />
+            <ReferGrowCard direct={directMemberCount} referrals={indirectMemberCount} total={directMemberCount + indirectMemberCount} levels={levels} />
           </div>
 
           <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
-            <ReferralProgressCard referralCount={directMemberCount} />
+            <ReferralProgressCard referralCount={directMemberCount} levels={levels} />
           </div>
 
           <div>

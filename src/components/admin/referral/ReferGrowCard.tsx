@@ -1,131 +1,42 @@
 'use client';
 
-import { UserRoundPlus, Users } from 'lucide-react';
+import { Bike, CarFront, Home, UserRoundPlus, Users } from 'lucide-react';
 
 type ReferGrowCardProps = {
   direct?: number;
   referrals?: number;
   total?: number;
+  levels?: { name: string; required_referrals: number }[];
 };
 
-function Donut({ direct = 0, total = 0 }: Pick<ReferGrowCardProps, 'direct' | 'total'>) {
-  const cx = 105;
-  const cy = 105;
-  const outerRadius = 84;
-  const innerRadius = 50;
-  const directPercent = total > 0 ? Math.round((direct / total) * 100) : 0;
-  const startAngle = 0;
-  const endAngle = (directPercent / 100) * 360;
-
-  const polarToCartesian = (
-    centerX: number,
-    centerY: number,
-    radius: number,
-    angle: number
-  ) => {
-    const angleInRadians = ((angle - 90) * Math.PI) / 180;
-
-    return {
-      x: centerX + radius * Math.cos(angleInRadians),
-      y: centerY + radius * Math.sin(angleInRadians),
-    };
-  };
-
-  const outerStart = polarToCartesian(
-    cx,
-    cy,
-    outerRadius,
-    startAngle
-  );
-
-  const outerEnd = polarToCartesian(
-    cx,
-    cy,
-    outerRadius,
-    endAngle
-  );
-
-  const innerStart = polarToCartesian(
-    cx,
-    cy,
-    innerRadius,
-    startAngle
-  );
-
-  const innerEnd = polarToCartesian(
-    cx,
-    cy,
-    innerRadius,
-    endAngle
-  );
-
-  const yellowPath = directPercent === 0 ? '' : `
-    M ${outerStart.x} ${outerStart.y}
-    A ${outerRadius} ${outerRadius} 0 0 1 ${outerEnd.x} ${outerEnd.y}
-    L ${innerEnd.x} ${innerEnd.y}
-    A ${innerRadius} ${innerRadius} 0 0 0 ${innerStart.x} ${innerStart.y}
-    Z
-  `;
+function Donut({ percent, label }: { percent: number; label: string }) {
+  const radius = 67;
+  const circumference = 2 * Math.PI * radius;
 
   return (
     <div className="relative h-[190px] w-[190px]">
       <svg
-        width="190"
-        height="190"
         viewBox="0 0 210 210"
-        className="absolute inset-0"
+        className="absolute inset-0 h-full w-full -rotate-90"
       >
+        <circle cx="105" cy="105" r={radius} fill="none" stroke="#EDEDED" strokeWidth="34" />
         <circle
-          cx={cx}
-          cy={cy}
-          r={outerRadius}
-          fill="#EDEDED"
-        />
-
-        <circle
-          cx={cx}
-          cy={cy}
-          r={innerRadius}
-          fill="#FFFFFF"
-        />
-
-        <path
-          d={yellowPath}
-          fill="#E5C500"
-        />
-
-        <circle
-          cx={cx}
-          cy={cy}
-          r={outerRadius}
+          cx="105"
+          cy="105"
+          r={radius}
           fill="none"
-          strokeWidth="2.5"
-        />
-
-        <circle
-          cx={cx}
-          cy={cy}
-          r={innerRadius}
-          fill="none"
-          strokeWidth="2.5"
+          stroke="#E5C500"
+          strokeWidth="34"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference * (1 - percent / 100)}
+          strokeLinecap="butt"
         />
       </svg>
 
-      <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-        <Users
-          size={47}
-          strokeWidth={1.8}
-          className="text-[#A7A7A7]"
-        />
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <span className="text-2xl font-semibold leading-none text-[#111111]">{percent}%</span>
+        <span className="mt-1 text-xs text-[#666666]">{label}</span>
       </div>
-
-      <span className="absolute right-[0px] top-[94px] text-[10px] font-medium text-[#111111]">
-        {directPercent}%
-      </span>
-
-      <span className="absolute bottom-[1px] left-[71px] text-[10px] font-medium text-[#111111]">
-        {100 - directPercent}%
-      </span>
     </div>
   );
 }
@@ -134,7 +45,20 @@ export default function ReferGrowCard({
   direct = 5,
   referrals = 25,
   total = 30,
+  levels = [
+    { name: 'Level 1', required_referrals: 5 },
+    { name: 'Level 2', required_referrals: 50 },
+    { name: 'Level 3', required_referrals: 125 },
+  ],
 }: ReferGrowCardProps) {
+  const sortedLevels = [...levels].sort((first, second) => first.required_referrals - second.required_referrals);
+  const activeLevelIndex = sortedLevels.findIndex((level) => direct < level.required_referrals);
+  const overallTarget = sortedLevels.at(-1)?.required_referrals ?? 0;
+  const overallPercent = overallTarget > 0
+    ? Math.min(100, Math.max(0, Math.round((direct / overallTarget) * 100)))
+    : 0;
+  const levelIcons = [Bike, CarFront, Home];
+
   return (
     <div className="w-full min-h-[200px] sm:min-h-[220px] md:min-h-[238px] lg:min-h-[238px] rounded-lg md:rounded-[8px] lg:rounded-[8px] border border-[#E5E5E5] bg-white overflow-hidden">
       <div className="flex flex-col md:flex-col lg:flex-row h-full">
@@ -146,11 +70,12 @@ export default function ReferGrowCard({
             Refer &amp; Grow
           </h3>
 
-          <Donut direct={direct} total={total} />
+          <Donut percent={overallPercent} label="Overall progress" />
         </div>
 
         {/* RIGHT PANEL - Stats */}
-        <div className="w-full md:w-full lg:flex-1 grid grid-cols-3 md:grid-cols-3 lg:grid-cols-1 gap-0 bg-[#EEEEEE]">
+        <div className="w-full md:w-full lg:flex-1 flex flex-col bg-[#EEEEEE]">
+          <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-1 gap-0">
 
           <div className="border-b border-r md:border-r lg:border-b border-[#D9D9D9] px-2 sm:px-3 md:px-4 lg:px-[20px] py-2 sm:py-3 md:py-3 lg:py-[12px] flex flex-col items-center justify-center lg:justify-start">
             <div className="flex flex-col items-center gap-1 sm:gap-1 lg:gap-2">
@@ -197,6 +122,41 @@ export default function ReferGrowCard({
             </span>
           </div>
 
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 border-t border-[#D9D9D9] px-2 sm:px-3 md:px-4 lg:px-[12px] py-2 sm:py-3">
+            {sortedLevels.map((level, index) => {
+              const Icon = levelIcons[index] ?? Home;
+              const levelPercent = level.required_referrals > 0
+                ? Math.min(100, Math.round((direct / level.required_referrals) * 100))
+                : 0;
+              const status = direct >= level.required_referrals
+                ? 'Complete'
+                : index === activeLevelIndex
+                  ? 'In progress'
+                  : 'Locked';
+
+              return (
+                <div key={level.name} className="min-w-0 text-center">
+                  <div className="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-medium text-[#333333]">
+                    <span className="flex min-w-0 items-center gap-1">
+                      <Icon className="h-3 w-3 shrink-0 text-[#A98F00]" aria-hidden="true" />
+                      <span className="truncate">{level.name}</span>
+                    </span>
+                    <span className="shrink-0 text-sm sm:text-base font-semibold text-[#A98F00]">
+                      {levelPercent}%
+                    </span>
+                  </div>
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white">
+                    <div className="h-full bg-[#E5C500]" style={{ width: `${levelPercent}%` }} />
+                  </div>
+                  <p className="mt-1 truncate text-[10px] sm:text-xs text-[#555555]">
+                    {direct}/{level.required_referrals} · {status}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

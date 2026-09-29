@@ -17,16 +17,16 @@ export async function sendSMS(
 ): Promise<SMSResponse> {
   try {
     // For development, log to console
-    console.log(`📱 SMS to ${phoneNumber}: ${message}`);
+    // console.log(`📱 SMS to ${phoneNumber}: ${message}`);
 
     // TODO: Replace with actual SMS provider
     // Example with Twilio:
-    // const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    // const response = await client.messages.create({
-    //   body: message,
-    //   from: process.env.TWILIO_PHONE_NUMBER,
-    //   to: phoneNumber,
-    // });
+    const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: phoneNumber,
+    });
 
     // Example with AWS SNS:
     // const sns = new AWS.SNS();
@@ -57,7 +57,26 @@ export async function sendCredentialsSMS(
   password: string,
   memberName: string,
 ): Promise<SMSResponse> {
-  const message = `Welcome to MBD, ${memberName}! 🎉\n\nYour login credentials:\nUser ID: ${userId}\nPassword: ${password}\n\nLogin at: [your-app-url]\n\nKeep your credentials secure!`;
+  const loginUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin';
+
+  const message = `🎉 Congratulations ${memberName}! 🎉
+
+Your MBD membership has been APPROVED! ✅
+
+Welcome to the MBD family! Here are your login credentials:
+
+Member ID: ${userId}
+Password: ${password}
+
+🔐 Security Notice:
+• Keep your credentials secure
+• Never share your credentials with anyone
+• Change your password after login for better security
+• Report any suspicious activity immediately
+
+🔗 Login here: ${loginUrl}/login
+
+Questions? We're here to help! 💬`;
 
   return sendSMS(phoneNumber, message);
 }
@@ -68,8 +87,28 @@ export async function sendCredentialsSMS(
 export async function sendApprovalSMS(
   phoneNumber: string,
   memberName: string,
+  memberId?: string,
+  password?: string,
 ): Promise<SMSResponse> {
-  const message = `Hi ${memberName}, your MBD membership application has been approved! 🎊 You can now log in to your account.`;
+  const loginUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin';
+  const memberIdText = memberId ? `\nMember ID: ${memberId}` : '';
+  const passwordText = password ? `\nPassword: ${password}` : '';
+
+  const message = `🎉 Congratulations ${memberName}! 🎉
+
+Your MBD membership has been APPROVED! ✅
+
+Welcome to the MBD family! Here are your login credentials:${memberIdText}${passwordText}
+
+🔐 Security Notice:
+• Keep your credentials secure
+• Never share your credentials with anyone
+• Change your password after login for better security
+• Report any suspicious activity immediately
+
+🔗 Login here: ${loginUrl}/login
+
+Questions? We're here to help! 💬`;
 
   return sendSMS(phoneNumber, message);
 }

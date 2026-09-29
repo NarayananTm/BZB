@@ -8,6 +8,7 @@ export interface SuperAdminStats {
   total_members: number;
   active_members: number;
   pending_members: number;
+  pending_requests: number;
   suspended_members: number;
   total_referrals: number;
   pending_referrals: number;
@@ -74,6 +75,9 @@ export async function getSuperAdminDashboardStats(): Promise<SuperAdminStats> {
        (SELECT COUNT(*) FROM members) AS total_members,
        (SELECT COUNT(*) FROM members WHERE status = 'Active') AS active_members,
        (SELECT COUNT(*) FROM members WHERE status = 'Pending') AS pending_members,
+      ((SELECT COUNT(*) FROM members WHERE status = 'Pending') +
+       (SELECT COUNT(*) FROM withdrawals WHERE status = 'Pending') +
+       (SELECT COUNT(*) FROM topups WHERE status = 'Pending')) AS pending_requests,
        (SELECT COUNT(*) FROM members WHERE status = 'Suspended') AS suspended_members,
        (SELECT COUNT(*) FROM referrals) AS total_referrals,
        (SELECT COUNT(*) FROM referrals WHERE status = 'Pending') AS pending_referrals,
@@ -86,16 +90,21 @@ export async function getSuperAdminDashboardStats(): Promise<SuperAdminStats> {
   );
 
   const levels = await query<LevelDistribution>(
-    `SELECT 
-       name,
-       reward,
-       members_count,
-       CASE 
-         WHEN (SELECT COUNT(*) FROM members) = 0 THEN 0
-         ELSE ROUND((members_count::NUMERIC / (SELECT COUNT(*) FROM members) * 100)::NUMERIC, 2)::INTEGER
+    `SELECT
+       level.name,
+       level.reward,
+       COUNT(member.id)::INTEGER AS members_count,
+       CASE
+         WHEN totals.total_members = 0 THEN 0
+         ELSE ROUND(COUNT(member.id)::NUMERIC / totals.total_members * 100)::INTEGER
        END AS percentage
-     FROM levels 
-     ORDER BY required_referrals ASC`
+     FROM levels level
+     CROSS JOIN (SELECT COUNT(*)::INTEGER AS total_members FROM members) totals
+     LEFT JOIN members member
+       ON member.level_id = level.id
+       OR (member.level_id IS NULL AND LOWER(TRIM(member.level_name)) = LOWER(TRIM(level.name)))
+     GROUP BY level.id, level.name, level.reward, level.required_referrals, totals.total_members
+     ORDER BY level.required_referrals ASC`
   );
 
   return {
@@ -103,6 +112,7 @@ export async function getSuperAdminDashboardStats(): Promise<SuperAdminStats> {
       total_members: 0,
       active_members: 0,
       pending_members: 0,
+      pending_requests: 0,
       suspended_members: 0,
       total_referrals: 0,
       pending_referrals: 0,
@@ -278,9 +288,9 @@ export async function getRecentActivities(limit: number = 15): Promise<RecentAct
 }
 
 /**
- * Get top performing members
+ * Get the most recently joined members
  */
-export async function getTopPerformingMembers(limit: number = 5) {
+export async function getRecentMembers(limit: number = 5) {
   const members = await query(
     `SELECT 
        id,
@@ -293,8 +303,7 @@ export async function getTopPerformingMembers(limit: number = 5) {
        team_count,
        joining_date
      FROM members
-     WHERE status = 'Active'
-     ORDER BY total_earnings DESC
+     ORDER BY created_at DESC
      LIMIT $1`,
     [limit]
   );

@@ -31,21 +31,21 @@ export default function Header({
           top: 0;
           left: 0;
           right: 0;
-          height: 80px;
+          min-height: 88px;
           background: white;
           border-bottom: 1px solid #e5e7eb;
-          padding: 0 32px;
+          padding: 0 36px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 24px;
+          gap: 28px;
           z-index: 900;
         }
 
         .header-left {
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 24px;
           flex: 1;
         }
 
@@ -66,7 +66,7 @@ export default function Header({
         }
 
         .header-left h1 {
-          font-size: 25px;
+          font-size: 28px;
           font-weight: 600;
           color: #1f2937;
           margin: 0;
@@ -76,7 +76,7 @@ export default function Header({
         }
 
         .header-left p {
-          font-size: 13px;
+          font-size: 15px;
           color: #6b7280;
           margin: 0;
         }
@@ -168,8 +168,8 @@ export default function Header({
         }
 
         .profile-avatar {
-          width: 36px;
-          height: 36px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           background: linear-gradient(135deg, #f5c400 0%, #e6b400 100%);
           color: #000;
@@ -188,14 +188,14 @@ export default function Header({
         }
 
         .profile-copy strong {
-          font-size: 13px;
+          font-size: 14px;
           color: #1f2937;
           font-weight: 600;
           line-height: 1.2;
         }
 
         .profile-copy span {
-          font-size: 12px;
+          font-size: 13px;
           color: #6b7280;
           line-height: 1.2;
         }
@@ -287,7 +287,7 @@ export default function Header({
               <strong>{adminName}</strong>
               <span>{adminRole}</span>
             </div>
-            <span className="chevron">⌄</span>
+            {/* <span className="chevron">⌄</span> */}
           </div>
         </div>
       </header>

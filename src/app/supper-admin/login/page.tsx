@@ -44,7 +44,7 @@ export default function SuperAdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#171b1e] to-[#0f1114] flex items-center justify-center px-4">
+    <div className="min-h-full bg-gradient-to-br from-[#171b1e] to-[#0f1114] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">

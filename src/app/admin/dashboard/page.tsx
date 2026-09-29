@@ -17,7 +17,6 @@ export const dynamic = 'force-dynamic';
 
 function getReferralProgressPercent(currentReferrals: number, requiredReferrals: number): number {
   if (currentReferrals <= 0 || requiredReferrals <= 0) return 0;
-  if (requiredReferrals === 5 && currentReferrals === 3) return 85;
   return Math.min(100, Math.round((currentReferrals / requiredReferrals) * 100));
 }
 
@@ -46,13 +45,14 @@ export default async function AdminDashboardPage() {
         getTeamMembers(me.id),
       ])
     : [await getAllLevels(), [], []];
+  const directReferralCount = teamMembers.length;
 
   const levelProgressItems = levels.map((lvl) => ({
     id: lvl.id,
     name: lvl.name,
-    pct: me ? getReferralProgressPercent(me.referral_count, lvl.required_referrals) : 0,
+    pct: me ? getReferralProgressPercent(directReferralCount, lvl.required_referrals) : 0,
     required_referrals: lvl.required_referrals,
-    current_referrals: me?.referral_count ?? 0,
+    current_referrals: me ? directReferralCount : 0,
   }));
 
   const topupCount = topups.length;

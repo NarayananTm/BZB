@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMemberRequestById, updateMemberRequestStatus } from '@/services/memberRequestService';
-import { createMember } from '@/services/memberService';
+import { createMember, awardReferralGift } from '@/services/memberService';
 import { sendCredentialsSMS } from '@/lib/smsService';
 import { requireAdmin } from '@/lib/adminAuth';
 import { generateMemberId, generatePassword } from '@/lib/idGenerator';
@@ -77,6 +77,10 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     } as any);
+
+    if (newMember.sponsor_id) {
+      await awardReferralGift(newMember.id);
+    }
 
     // Send SMS with credentials
     const smsResult = await sendCredentialsSMS(

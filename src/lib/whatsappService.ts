@@ -42,12 +42,12 @@ Questions? We're here to help! 💬`;
 
     // TODO: Replace with actual WhatsApp provider
     // Example with Twilio WhatsApp:
-    // const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    // const response = await twilio.messages.create({
-    //   body: message,
-    //   from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-    //   to: `whatsapp:${phoneNumber}`,
-    // });
+    const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    await twilio.messages.create({
+      body: message,
+      from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+      to: `whatsapp:${phoneNumber}`,
+    });
 
     // Example with MessageBird:
     // const messagebird = require('messagebird')(process.env.MESSAGEBIRD_API_KEY);

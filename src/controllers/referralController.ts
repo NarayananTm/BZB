@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
 import { getAllReferrals, getReferralById, createReferral, updateReferralStatus, getReferralStats } from '@/services/referralService';
+import { getAllMembers } from '@/services/memberService';
 import type { CreateReferralDto } from '@/models';
 
 export async function listReferrals(request: NextRequest) {
@@ -16,6 +17,49 @@ export async function listReferrals(request: NextRequest) {
   } catch (err) {
     console.error('[referralController.listReferrals]', err);
     return NextResponse.json({ success: false, message: 'Failed to fetch referrals' }, { status: 500 });
+  }
+}
+
+export async function listSuperAdminReferralDirectory(request: NextRequest) {
+  const { error } = requireAdmin(request);
+  if (error) return error;
+
+  try {
+    const [referrals, members] = await Promise.all([getAllReferrals(), getAllMembers()]);
+    const referralIds = new Set(referrals.map((item) => item.member_id?.trim().toLowerCase()).filter(Boolean));
+    const referralNames = new Set(referrals.map((item) => item.member_name?.trim().toLowerCase()).filter(Boolean));
+    const directory = [
+      ...referrals.map((referral) => ({ ...referral, has_referral: true })),
+      ...members
+        .filter((member) => {
+          const memberId = member.id.trim().toLowerCase();
+          const memberName = member.name.trim().toLowerCase();
+          return !referralIds.has(memberId) && !referralNames.has(memberName);
+        })
+        .map((member) => ({
+          id: `MEMBER-${member.id}`,
+          sponsor_id: member.sponsor_id,
+          sponsor_name: member.sponsor_name,
+          member_id: member.id,
+          member_name: member.name,
+          level_name: member.level_name,
+          join_date: member.joining_date,
+          status: member.status,
+          reward_amount: 0,
+          created_at: member.created_at,
+          updated_at: member.updated_at,
+          has_referral: false,
+        })),
+    ].sort((first, second) => {
+      const firstDate = new Date(first.join_date || first.created_at).getTime();
+      const secondDate = new Date(second.join_date || second.created_at).getTime();
+      return secondDate - firstDate;
+    });
+
+    return NextResponse.json({ success: true, data: directory, referrals, total: directory.length });
+  } catch (err) {
+    console.error('[referralController.listSuperAdminReferralDirectory]', err);
+    return NextResponse.json({ success: false, message: 'Failed to fetch member referral directory' }, { status: 500 });
   }
 }
 
