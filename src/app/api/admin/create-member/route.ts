@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       mobile,
       sponsor_id: null,
       sponsor_name: null,
-      level_name: 'Level 1',
+      level_name: 'Level 0',
       status: 'Active',
       joining_date: joiningDate,
       total_earnings: 0,

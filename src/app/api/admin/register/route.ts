@@ -495,6 +495,7 @@ export async function POST(
           password,
           original_password,
           sponsor_id,
+          level_name,
           amount,
           wallet_balance,
           level_income_wallet,
@@ -528,6 +529,7 @@ export async function POST(
           $17,
           $18,
           $19,
+          $20,
           NOW()
         )
         RETURNING
@@ -547,6 +549,7 @@ export async function POST(
           passwordHash,
           password, // Store original password as plain text for display during approval
           sponsorId,
+          'Level 0',
           amount,
           walletAllocation.walletBalance,
           walletAllocation.levelIncomeWallet,

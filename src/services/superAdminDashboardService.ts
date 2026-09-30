@@ -247,7 +247,7 @@ export async function getRecentActivities(limit: number = 15): Promise<RecentAct
     `SELECT 
        m.id,
        'member_joined' AS type,
-       CONCAT(m.name, ' joined as ', COALESCE(m.level_name, 'Level 1')) AS description,
+      CONCAT(m.name, ' joined as ', COALESCE(m.level_name, 'Level 0')) AS description,
        m.name AS member_name,
        m.created_at::TEXT AS timestamp,
        m.status

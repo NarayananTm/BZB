@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     // Create new member with all required fields
     await getPool().query(
       `INSERT INTO members (id, email, name, mobile, level_id, level_name, status, joining_date) 
-       VALUES ($1, $2, $3, $4, 'level-1', 'Level 1', 'Active', CURRENT_DATE)`,
+      VALUES ($1, $2, $3, $4, NULL, 'Level 0', 'Active', CURRENT_DATE)`,
       [userId, admin.email, profileData.name || '', profileData.mobile || '']
     );
 

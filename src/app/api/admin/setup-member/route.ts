@@ -24,7 +24,7 @@ export async function POST() {
       mobile: '9601381',
       sponsor_id: null,
       sponsor_name: null,
-      level_name: 'Level 1',
+      level_name: 'Level 0',
       status: 'Active',
       joining_date: new Date().toISOString().slice(0, 10),
       total_earnings: 0,

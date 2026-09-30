@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS members (
   sponsor_id      VARCHAR(50)     REFERENCES members(id),
   sponsor_name    VARCHAR(255),
   level_id        VARCHAR(50)     REFERENCES levels(id),
-  level_name      VARCHAR(20)     NOT NULL DEFAULT 'Level 1',
+  level_name      VARCHAR(20)     NOT NULL DEFAULT 'Level 0',
   status          VARCHAR(20)     NOT NULL DEFAULT 'Pending',  -- Active | Inactive | Pending | Approved | Rejected
   joining_date    DATE            NOT NULL DEFAULT CURRENT_DATE,
   total_earnings  NUMERIC(14,2)   NOT NULL DEFAULT 0,

@@ -56,7 +56,7 @@ export default async function AdminDashboardPage() {
   }));
 
   const topupCount = topups.length;
-  const walletBalance = me?.level_income_wallet ?? me?.wallet_balance ?? Number(me?.amount ?? 0);
+  const walletBalance =  me?.wallet_balance ?? 0;
   const totalEarnings = me?.total_earnings ?? 0;
   const levelIncomeWallet = me?.level_income_wallet ?? 0;
 

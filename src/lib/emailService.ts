@@ -93,7 +93,7 @@ export async function sendApprovalEmail(
       </html>
     `;
 
-    console.log(`📧 Email sent to ${email}:`);
+    console.log(`📧 Approval email preview generated for ${email} (not sent):`);
     console.log(`   Subject: ${subject}`);
     console.log(`   Member ID: ${memberId}`);
     console.log(`   Name: ${memberName}`);
@@ -131,10 +131,7 @@ export async function sendApprovalEmail(
     //   },
     // }).promise();
 
-    return {
-      success: true,
-      messageId: `EMAIL-${Date.now()}`,
-    };
+    return { success: false, error: 'Email provider is not configured; preview was generated but not sent' };
   } catch (error) {
     console.error('Email sending failed:', error);
     return {
@@ -203,15 +200,12 @@ export async function sendRejectionEmail(
       </html>
     `;
 
-    console.log(`📧 Rejection email sent to ${email}`);
+    console.log(`📧 Rejection email preview generated for ${email} (not sent)`);
     console.log(`   Member: ${memberName}`);
     console.log(`   Subject: ${subject}`);
     console.log(`   Message preview length: ${htmlContent.length}`);
 
-    return {
-      success: true,
-      messageId: `EMAIL-${Date.now()}`,
-    };
+    return { success: false, error: 'Email provider is not configured; preview was generated but not sent' };
   } catch (error) {
     console.error('Email sending failed:', error);
     return {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMemberRequestById, updateMemberRequestStatus } from '@/services/memberRequestService';
-import { createMember, awardReferralGift } from '@/services/memberService';
+import { createMember, awardReferralGift, updateLevels } from '@/services/memberService';
 import { sendCredentialsSMS } from '@/lib/smsService';
 import { requireAdmin } from '@/lib/adminAuth';
 import { generateMemberId, generatePassword } from '@/lib/idGenerator';
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       mobile: memberRequest.mobile,
       sponsor_id: memberRequest.sponsor_id || null,
       sponsor_name: memberRequest.sponsor_name || null,
-      level_name: 'Level 1',
+      level_name: 'Level 0',
       status: 'Active',
       joining_date: new Date().toISOString().split('T')[0],
       total_earnings: 0,
@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
 
     if (newMember.sponsor_id) {
       await awardReferralGift(newMember.id);
+      await updateLevels(newMember.sponsor_id);
     }
 
     // Send SMS with credentials

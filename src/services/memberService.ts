@@ -1,4 +1,5 @@
 import { getPool, query, queryOne } from '@/lib/postgres';
+import type { PoolClient } from 'pg';
 
 export interface Member {
   id: string;
@@ -28,6 +29,68 @@ export interface Member {
   transaction_proof_type?: string;
   created_at: string;
   updated_at: string;
+}
+
+async function refreshSponsorLevel(client: PoolClient, sponsorId: string) {
+  const countResult = await client.query<{ count: string }>(
+    'SELECT COUNT(*)::text AS count FROM members WHERE sponsor_id = $1',
+    [sponsorId],
+  );
+  const referralCount = Number(countResult.rows[0]?.count || 0);
+  const levelResult = await client.query<{ id: string; name: string }>(
+    `SELECT id, name FROM levels
+     WHERE status = 'Active' AND required_referrals <= $1
+     ORDER BY required_referrals DESC LIMIT 1`,
+    [referralCount],
+  );
+
+  await client.query(
+    `UPDATE members
+     SET referral_count = $1, level_id = $2, level_name = $3, updated_at = NOW()
+     WHERE id = $4`,
+    [referralCount, levelResult.rows[0]?.id ?? null, levelResult.rows[0]?.name || 'Level 0', sponsorId],
+  );
+}
+
+async function creditReferralGift(
+  client: PoolClient,
+  memberId: string,
+  sponsorId: string,
+  amount: number,
+): Promise<boolean> {
+  const referralResult = await client.query<{ reward_amount: string }>(
+    `SELECT reward_amount::text AS reward_amount
+     FROM referrals
+     WHERE member_id = $1 AND sponsor_id = $2
+     FOR UPDATE`,
+    [memberId, sponsorId],
+  );
+
+  if (referralResult.rowCount === 0) return false;
+
+  const currentReward = Number(referralResult.rows[0].reward_amount || 0);
+  const rewardToCredit = Math.max(amount - currentReward, 0);
+
+  if (rewardToCredit > 0) {
+    await client.query(
+      `UPDATE members
+       SET mbd_wallet = COALESCE(mbd_wallet, 0) + $1,
+           updated_at = NOW()
+       WHERE id = $2`,
+      [rewardToCredit, sponsorId],
+    );
+  }
+
+  await client.query(
+    `UPDATE referrals
+     SET status = 'Approved',
+         reward_amount = GREATEST(reward_amount, $1),
+         updated_at = NOW()
+     WHERE member_id = $2 AND sponsor_id = $3`,
+    [amount, memberId, sponsorId],
+  );
+
+  return true;
 }
 
 export async function getAllMembers(): Promise<Member[]> {
@@ -100,25 +163,42 @@ export async function getIndirectTeamMemberCount(sponsorId: string): Promise<num
 }
 
 export async function createMember(data: Omit<Member, 'created_at' | 'updated_at'>): Promise<Member> {
-  const rows = await query<Member>(
-    `INSERT INTO members
-       (id, name, email, mobile, sponsor_id, sponsor_name, level_name, status,
-        joining_date, total_earnings, wallet_balance, level_income_wallet, mbd_wallet,
-        booster_topup, referral_count, team_count, avatar)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
-     RETURNING *`,
-    [
-      data.id, data.name, data.email, data.mobile, data.sponsor_id,
-      data.sponsor_name, data.level_name, data.status, data.joining_date,
-      data.total_earnings, data.wallet_balance, data.level_income_wallet,
-      data.mbd_wallet, data.booster_topup, data.referral_count, data.team_count,
-      data.avatar,
-    ],
-  );
-  return rows[0];
+  const client = await getPool().connect();
+
+  try {
+    await client.query('BEGIN');
+    const result = await client.query<Member>(
+      `INSERT INTO members
+         (id, name, email, mobile, sponsor_id, sponsor_name, level_name, status,
+          joining_date, total_earnings, wallet_balance, level_income_wallet, mbd_wallet,
+          booster_topup, referral_count, team_count, avatar)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+       RETURNING *`,
+      [
+        data.id, data.name, data.email, data.mobile, data.sponsor_id,
+        data.sponsor_name, 'Level 0', data.status, data.joining_date,
+        data.total_earnings, data.wallet_balance, data.level_income_wallet,
+        data.mbd_wallet, data.booster_topup, data.referral_count, data.team_count,
+        data.avatar,
+      ],
+    );
+
+    if (data.sponsor_id) await refreshSponsorLevel(client, data.sponsor_id);
+    await client.query('COMMIT');
+    return result.rows[0];
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 export async function awardReferralGift(memberId: string, amount = 27000): Promise<boolean> {
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new Error('Referral gift amount must be greater than zero');
+  }
+
   const client = await getPool().connect();
 
   try {
@@ -140,36 +220,38 @@ export async function awardReferralGift(memberId: string, amount = 27000): Promi
       return false;
     }
 
-    const referralResult = await client.query<{ reward_amount: string }>(
-      `SELECT reward_amount
-       FROM referrals
-       WHERE member_id = $1 AND sponsor_id = $2
-       FOR UPDATE`,
-      [memberId, sponsorId],
-    );
-
-    const currentReward = Number(referralResult.rows[0]?.reward_amount || 0);
-    if (currentReward >= amount) {
-      await client.query('COMMIT');
-      return true;
+    const credited = await creditReferralGift(client, memberId, sponsorId, amount);
+    if (!credited) {
+      await client.query('ROLLBACK');
+      return false;
     }
 
-    await client.query(
-      `UPDATE members
-       SET mbd_wallet = COALESCE(mbd_wallet, 0) + $1,
-           updated_at = NOW()
-       WHERE id = $2`,
-      [amount, sponsorId],
+    await client.query('COMMIT');
+    return true;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+export async function updateLevels(sponsorId: string): Promise<boolean> {
+  const client = await getPool().connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const sponsorResult = await client.query<{ id: string }>(
+      'SELECT id FROM members WHERE id = $1 FOR UPDATE',
+      [sponsorId],
     );
 
-    await client.query(
-      `UPDATE referrals
-       SET status = 'Approved',
-           reward_amount = $1,
-           updated_at = NOW()
-       WHERE member_id = $2 AND sponsor_id = $3`,
-      [amount, memberId, sponsorId],
-    );
+    if (sponsorResult.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return false;
+    }
+
+    await refreshSponsorLevel(client, sponsorId);
 
     await client.query('COMMIT');
     return true;
@@ -204,22 +286,11 @@ export async function updateMemberStatus(id: string, status: Member['status']): 
     );
 
     if ((status === 'Approved' || status === 'Active') && currentMember.status !== 'Approved' && currentMember.status !== 'Active' && currentMember.sponsor_id) {
-      await client.query(
-        `UPDATE members
-         SET mbd_wallet = COALESCE(mbd_wallet, 0) + 2700,
-             updated_at = NOW()
-         WHERE id = $1`,
-        [currentMember.sponsor_id],
-      );
+      await creditReferralGift(client, id, currentMember.sponsor_id, 27000);
+    }
 
-      await client.query(
-        `UPDATE referrals
-         SET status = 'Approved',
-             reward_amount = 2700,
-             updated_at = NOW()
-         WHERE member_id = $1 AND sponsor_id = $2`,
-        [id, currentMember.sponsor_id],
-      );
+    if (currentMember.sponsor_id) {
+      await refreshSponsorLevel(client, currentMember.sponsor_id);
     }
 
     await client.query('COMMIT');
@@ -264,6 +335,27 @@ export async function deleteMember(id: string): Promise<boolean> {
 
     const sponsorId = memberResult.rows[0].sponsor_id;
 
+    if (sponsorId) {
+      const referralResult = await client.query<{ reward_amount: string }>(
+        `SELECT reward_amount::text AS reward_amount
+         FROM referrals
+         WHERE member_id = $1 AND sponsor_id = $2
+         FOR UPDATE`,
+        [id, sponsorId],
+      );
+      const rewardAmount = Number(referralResult.rows[0]?.reward_amount || 0);
+
+      if (rewardAmount >= 27000) {
+        await client.query(
+          `UPDATE members
+           SET mbd_wallet = COALESCE(mbd_wallet, 0) - 27000,
+               updated_at = NOW()
+             WHERE id = $1`,
+            [sponsorId],
+        );
+      }
+    }
+
     // Keep financial history, but remove foreign-key links that prevent deletion.
     await client.query('UPDATE members SET sponsor_id = NULL, sponsor_name = NULL WHERE sponsor_id = $1', [id]);
     await client.query('DELETE FROM referrals WHERE sponsor_id = $1 OR member_id = $1', [id]);
@@ -274,24 +366,23 @@ export async function deleteMember(id: string): Promise<boolean> {
     await client.query('DELETE FROM members WHERE id = $1', [id]);
 
     if (sponsorId) {
-      const countResult = await client.query<{ count: string }>(
-        'SELECT COUNT(*)::text AS count FROM members WHERE sponsor_id = $1',
-        [sponsorId],
-      );
-      const referralCount = Number(countResult.rows[0]?.count || 0);
-      const levelResult = await client.query<{ name: string }>(
-        `SELECT name FROM levels
-         WHERE status = 'Active' AND required_referrals <= $1
-         ORDER BY required_referrals DESC LIMIT 1`,
-        [referralCount],
-      );
-      await client.query(
-        `UPDATE members
-         SET referral_count = $1, level_name = $2, updated_at = NOW()
-         WHERE id = $3`,
-        [referralCount, levelResult.rows[0]?.name || 'Level 1', sponsorId],
-      );
+      await refreshSponsorLevel(client, sponsorId);
     }
+
+    const highestIdResult = await client.query<{ max_id: string | null }>(
+      `SELECT MAX(member_number)::text AS max_id
+       FROM (
+         SELECT SUBSTRING(id::text FROM 4)::bigint AS member_number
+         FROM members
+         WHERE id::text ~ '^MBD[0-9]{6}$'
+         UNION ALL
+         SELECT SUBSTRING(id::text FROM 4)::bigint AS member_number
+         FROM users
+         WHERE id::text ~ '^MBD[0-9]{6}$'
+       ) existing_ids`,
+    );
+    const nextId = Number(highestIdResult.rows[0]?.max_id || 0) + 1;
+    await client.query(`ALTER SEQUENCE member_id_sequence RESTART WITH ${Math.max(nextId, 1)}`);
 
     await client.query('COMMIT');
     return true;
@@ -385,15 +476,15 @@ export async function getPendingStats() {
   );
   return rows[0]
     ? {
-        pendingReview: parseInt(rows[0].pending_review) || 0,
-        todaysSubmissions: parseInt(rows[0].todays_submissions) || 0,
-        thisWeek: parseInt(rows[0].this_week) || 0,
-        rejected7Days: parseInt(rows[0].rejected_7days) || 0,
-      }
+      pendingReview: parseInt(rows[0].pending_review) || 0,
+      todaysSubmissions: parseInt(rows[0].todays_submissions) || 0,
+      thisWeek: parseInt(rows[0].this_week) || 0,
+      rejected7Days: parseInt(rows[0].rejected_7days) || 0,
+    }
     : {
-        pendingReview: 0,
-        todaysSubmissions: 0,
-        thisWeek: 0,
-        rejected7Days: 0,
-      };
+      pendingReview: 0,
+      todaysSubmissions: 0,
+      thisWeek: 0,
+      rejected7Days: 0,
+    };
 }

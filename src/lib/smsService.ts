@@ -16,28 +16,49 @@ export async function sendSMS(
   message: string,
 ): Promise<SMSResponse> {
   try {
-    // For development, log to console
-    // console.log(`📱 SMS to ${phoneNumber}: ${message}`);
+    const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
+    const TWILIO_PHONE_NUMBER = process.env['TWILIO_PHONE_NUMBER'] || '+17372508034';
+    if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_PHONE_NUMBER) {
+      return { success: false, error: 'Twilio SMS credentials are not configured' };
+    }
 
-    // TODO: Replace with actual SMS provider
-    // Example with Twilio:
-    const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    await client.messages.create({
-      body: message,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: phoneNumber,
-    });
+    const normalizedPhone = phoneNumber.replace(/[\s().-]/g, '');
+    const destination = /^\d{10}$/.test(normalizedPhone)
+      ? `+91${normalizedPhone}`
+      : /^91\d{10}$/.test(normalizedPhone)
+        ? `+${normalizedPhone}`
+        : /^\+\d{10,15}$/.test(normalizedPhone)
+          ? normalizedPhone
+          : null;
 
-    // Example with AWS SNS:
-    // const sns = new AWS.SNS();
-    // const response = await sns.publish({
-    //   Message: message,
-    //   PhoneNumber: phoneNumber,
-    // }).promise();
+    if (!destination) {
+      return { success: false, error: 'Member phone number must be a valid international number' };
+    }
+
+    const response = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          To: destination,
+          From: TWILIO_PHONE_NUMBER,
+          Body: message,
+        }),
+      },
+    );
+    const result = await response.json() as { sid?: string; message?: string };
+
+    if (!response.ok) {
+      return { success: false, error: result.message || `Twilio rejected the SMS (${response.status})` };
+    }
 
     return {
       success: true,
-      messageId: `SMS-${Date.now()}`,
+      messageId: result.sid,
     };
   } catch (error) {
     console.error('SMS sending failed:', error);
@@ -59,24 +80,7 @@ export async function sendCredentialsSMS(
 ): Promise<SMSResponse> {
   const loginUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin';
 
-  const message = `🎉 Congratulations ${memberName}! 🎉
-
-Your MBD membership has been APPROVED! ✅
-
-Welcome to the MBD family! Here are your login credentials:
-
-Member ID: ${userId}
-Password: ${password}
-
-🔐 Security Notice:
-• Keep your credentials secure
-• Never share your credentials with anyone
-• Change your password after login for better security
-• Report any suspicious activity immediately
-
-🔗 Login here: ${loginUrl}/login
-
-Questions? We're here to help! 💬`;
+  const message = `Hello ${memberName}, your MBD membership is approved. Member ID: ${userId}. Password: ${password}. Login: ${loginUrl}/login. Please change your password after login.`;
 
   return sendSMS(phoneNumber, message);
 }

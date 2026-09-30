@@ -284,7 +284,7 @@ export default function DashboardPage() {
           const transformedMembers = (result.data.topMembers || []).map((m: any) => ({
             name: m.name || 'Unknown',
             id: m.id || '',
-            level: m.level_name || 'Level 1',
+            level: m.level_name || 'Level 0',
             status: (m.status || 'Pending') as Status,
             joined: formatDate(m.joining_date),
             avatar: m.name ? m.name.charAt(0).toUpperCase() : '?',

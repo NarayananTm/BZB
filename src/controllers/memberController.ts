@@ -54,7 +54,7 @@ export async function addMember(request: NextRequest) {
       mobile: body.mobile,
       sponsor_id: body.sponsor_id ?? null,
       sponsor_name: body.sponsor_name ?? null,
-      level_name: body.level_name ?? 'Level 1',
+      level_name: 'Level 0',
       status: body.status ?? 'Pending',
       joining_date: body.joining_date ?? new Date().toISOString().slice(0, 10),
       total_earnings: 0,

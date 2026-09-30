@@ -97,7 +97,7 @@ export default function PendingReviewPage() {
   const [loadingMemberDetails, setLoadingMemberDetails] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [approvalMessage, setApprovalMessage] = useState<{ memberId: string; name: string; password: string } | null>(null);
+  const [approvalMessage, setApprovalMessage] = useState<{ memberId: string; name: string; password: string; smsSent: boolean } | null>(null);
 
   // Fetch complete member details including PAN, Aadhar, UTR
   const fetchMemberDetails = useCallback(async (memberId: string) => {
@@ -681,22 +681,28 @@ export default function PendingReviewPage() {
                         });
                         const data = await response.json();
                         console.log('API Response:', data);
-                        console.log('Member Password from API:', data.memberPassword);
                         if (data.success) {
-                          const notifText = decision === "approve" 
-                            ? `Credentials sent via Email, SMS & WhatsApp`
-                            : `Rejection notification sent`;
+                          const notificationResults = data.notifications?.results || [];
+                          const smsSent = notificationResults.find((result: { type: string }) => result.type === "sms")?.success ?? false;
+                          const failedChannels = notificationResults
+                            .filter((result: { success: boolean }) => !result.success)
+                            .map((result: { type: string }) => result.type);
+                          const notifText = notificationResults.length === 0
+                            ? "Notification delivery status is unavailable."
+                            : failedChannels.length > 0
+                              ? `${smsSent ? "SMS accepted by provider" : "SMS failed"}; failed channels: ${failedChannels.join(", ")}.`
+                              : `Notifications accepted: ${notificationResults.map((result: { type: string }) => result.type).join(", ")}.`;
                           toast.success(`${selectedMember?.name} ${decision === "approve" ? "approved" : "rejected"} successfully.`, {
                             description: notifText,
                           });
                           
                           // Show credentials popup on approval with member's original password from API
                           if (decision === "approve" && selectedMember && data.memberPassword) {
-                            console.log('Setting approval message with password:', data.memberPassword);
                             setApprovalMessage({
                               memberId: selectedMember.id,
                               name: selectedMember.name,
                               password: data.memberPassword, // Member's original password from registration
+                              smsSent,
                             });
                           } else {
                             console.warn('NOT showing approval message. Conditions:', {
@@ -802,7 +808,11 @@ export default function PendingReviewPage() {
                   </div>
                   <div>
                     <h2 className="text-[20px] font-bold text-gray-900">✅ Member Approved!</h2>
-                    <p className="text-[13px] text-gray-600">Credentials are ready to send</p>
+                    <p className={`text-[13px] ${approvalMessage.smsSent ? "text-gray-600" : "font-semibold text-red-700"}`}>
+                      {approvalMessage.smsSent
+                        ? "SMS request accepted by provider"
+                        : "SMS was not sent. Use the copy actions below to share credentials."}
+                    </p>
                   </div>
                 </div>
               </div>
