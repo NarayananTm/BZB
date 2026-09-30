@@ -55,6 +55,18 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
+      localStorage.removeItem('super_admin_token');
+      localStorage.removeItem('super_admin_logged_in');
+
+      const logoutResponses = await Promise.all([
+        fetch('/api/logout', { method: 'POST', credentials: 'include' }),
+        fetch('/api/admin/logout', { method: 'POST', credentials: 'include' }),
+      ]);
+
+      if (logoutResponses.some((response) => !response.ok)) {
+        throw new Error('Could not clear the previous session. Please try again.');
+      }
+
       const isMemberId = /^MBD/i.test(form.userId.trim());
       const res = await fetch(isMemberId ? '/api/login' : '/api/admin/login', {
         method: 'POST',

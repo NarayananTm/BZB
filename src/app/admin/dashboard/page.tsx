@@ -7,7 +7,7 @@ import TeamMembersCard from '@/components/admin/TeamMembersCard';
 import RewardsBanner from '@/components/admin/RewardsBanner';
 import InviteMembersCard from '@/components/admin/InviteMembersCard';
 import AddMemberButton from '@/components/admin/AddMemberButton';
-import { getMemberByEmail, getTeamMembers } from '@/services/memberService';
+import { getMemberById, getTeamMembers } from '@/services/memberService';
 import { getAllLevels } from '@/services/levelService';
 import { getTopupsByMember } from '@/services/topupService';
 import { getMemberProfile } from '@/lib/postgres';
@@ -23,12 +23,12 @@ function getReferralProgressPercent(currentReferrals: number, requiredReferrals:
 export default async function AdminDashboardPage() {
   const session = await getAdminSessionUser();
   
-  // Get member by email first, if not found check profile
-  let me = session?.email ? await getMemberByEmail(session.email) : null;
+  // Resolve member data by the authenticated ID to avoid matching another account by email.
+  let me = session?.id ? await getMemberById(String(session.id)) : null;
   
   // Fallback: if member not found by email, try profile lookup
-  if (!me && session?.email) {
-    const profile = await getMemberProfile(session.email);
+  if (!me && session?.id) {
+    const profile = await getMemberProfile(String(session.id));
     if (profile) {
       me = profile as any;
     }
