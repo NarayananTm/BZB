@@ -7,20 +7,18 @@ import SponsorReferralCard from '@/components/admin/referral/SponsorReferralCard
 import { getAllLevels } from '@/services/levelService';
 // import UserReferralCard from '@/components/admin/referral/UserReferralCard';
 // import UserIDCard from '@/components/admin/referral/UserIDCard';
-import { getIndirectTeamMemberCount, getMemberByEmail, getMemberById, getMembersReferredBy, getTeamMembers } from '@/services/memberService';
+import { getIndirectTeamMemberCount, getMemberById, getTeamMembers } from '@/services/memberService';
 import { getAdminSessionUser } from '@/lib/adminAuth';
 export const dynamic = "force-dynamic";
 
 export default async function AdminReferralsPage() {
   const session = await getAdminSessionUser();
-  const me = session?.email ? await getMemberByEmail(session.email) : null;
+  const me = session?.id ? await getMemberById(String(session.id)) : null;
   const member = me;
   const userId = member?.id || session?.id?.toString() || '';
   const directMembers = member
     ? await getTeamMembers(member.id)
-    : session?.name && session.email
-      ? await getMembersReferredBy(session.name, session.email)
-      : [];
+    : [];
   const directMemberCount = directMembers.length;
   const indirectMemberCount = member ? await getIndirectTeamMemberCount(member.id) : 0;
   const levels = await getAllLevels();

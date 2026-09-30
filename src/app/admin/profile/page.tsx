@@ -1,6 +1,5 @@
 ﻿import AdminLayout from '@/components/admin/AdminLayout';
-import { getMemberByEmail } from '@/services/memberService';
-import { getReferralsBySponsor, getReferralsBySponsorName } from '@/services/referralService';
+import { getMemberById, getTeamMembers } from '@/services/memberService';
 import { getEarningsByMember } from '@/services/earningService';
 import { getTopupsByMember } from '@/services/topupService';
 import { getWithdrawalsByMember } from '@/services/withdrawalService';
@@ -11,12 +10,10 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminProfilePage() {
   const session = await getAdminSessionUser();
-  const member = session?.email ? await getMemberByEmail(session.email) : null;
-  const referrals = member
-    ? await getReferralsBySponsor(member.id)
-    : session?.name
-      ? await getReferralsBySponsorName(session.name)
-      : [];
+  const member = session?.id ? await getMemberById(String(session.id)) : null;
+  const directMembers = member
+    ? await getTeamMembers(member.id)
+    : [];
 
   const [earnings, topups, withdrawals, payouts] = member
     ? await Promise.all([
@@ -31,7 +28,7 @@ export default async function AdminProfilePage() {
     <AdminLayout title="Profile">
       <div className="space-y-4 mt-2">
         <ProfileInteractive
-          referrals={referrals}
+          directMembers={directMembers}
           earnings={earnings}
           topups={topups}
           withdrawals={withdrawals}

@@ -3,14 +3,14 @@
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Users, TrendingUp, FileText, Database, BarChart3, Wallet, Gift, ChevronRight } from 'lucide-react';
-import type { Referral } from '@/services/referralService';
+import type { Member } from '@/services/memberService';
 import type { Earning } from '@/services/earningService';
 import type { Topup } from '@/services/topupService';
 import type { Withdrawal } from '@/services/withdrawalService';
 import type { Payout } from '@/services/payoutService';
 
 interface Props {
-  referrals: Referral[];
+  directMembers: Member[];
   earnings?: Earning[];
   topups?: Topup[];
   withdrawals?: Withdrawal[];
@@ -24,7 +24,7 @@ function formatCellValue(value: unknown): string {
   return String(value);
 }
 
-export default function ProfileInteractive({ referrals, earnings = [], topups = [], withdrawals = [], payouts = [] }: Props) {
+export default function ProfileInteractive({ directMembers, earnings = [], topups = [], withdrawals = [], payouts = [] }: Props) {
   const router = useRouter();
   const [active, setActive] = useState<string>('direct');
   const [loggingOut, setLoggingOut] = useState(false);
@@ -155,17 +155,17 @@ export default function ProfileInteractive({ referrals, earnings = [], topups = 
           title: 'My Direct Referrals - Member Details',
           subtitle: 'Member Details on my Genealogy',
           columns: ['No', 'Member ID', 'Name', 'Joining Date', 'Sponsor ID', 'Level'],
-          rows: referrals.map((r, idx) => [
+          rows: directMembers.map((member, idx) => [
             String(idx + 1).padStart(2, '0'),
-            r.id.replace('REF-', ''),
-            r.member_name ?? '-',
-            r.join_date ?? '-',
-            r.sponsor_name ?? '-',
-            r.level_name ?? '-',
+            member.id,
+            member.name || '-',
+            member.joining_date || '-',
+            member.sponsor_id || '-',
+            member.level_name || '-',
           ]),
         };
     }
-  }, [active, referrals, earnings, topups, withdrawals, payouts]);
+  }, [active, directMembers, earnings, topups, withdrawals, payouts]);
 
   return (
     <div className="w-full bg-white">
