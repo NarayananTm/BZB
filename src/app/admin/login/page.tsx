@@ -94,21 +94,28 @@ useEffect(() => {
 
     
 
-      const isMemberId = /^MBD/i.test(form.userId.trim());
-      const res = await fetch(isMemberId ? '/api/login' : '/api/admin/login', {
+      const memberResponse = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(
-          isMemberId
-            ? { email: form.userId.trim(), password: form.password }
-            : { emailOrUsername: form.userId.trim(), password: form.password },
-        ),
+          body: JSON.stringify({ emailOrUsername: form.userId.trim(), password: form.password }),
       });
 
-      const data = await res.json();
+      let res = memberResponse;
+      let data = await memberResponse.json();
+      const isMemberLogin = memberResponse.ok && data.success;
+
+      if (memberResponse.status === 404) {
+        res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ emailOrUsername: form.userId.trim(), password: form.password }),
+        });
+        data = await res.json();
+      }
 
       if (!res.ok || !data.success) {
         throw new Error(
@@ -116,6 +123,7 @@ useEffect(() => {
         );
       }
 
+      if (isMemberLogin && data.token) localStorage.setItem('bzb_token', data.token);
       router.push('/admin/dashboard');
       router.refresh();
     } catch (error) {

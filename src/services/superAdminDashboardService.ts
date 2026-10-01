@@ -15,8 +15,11 @@ export interface SuperAdminStats {
   total_earnings: number;
   total_withdrawals: number;
   pending_withdrawals: number;
+  pending_withdrawal_count: number;
   total_topups: number;
   pending_topups: number;
+  pending_topup_count: number;
+  pending_kyc_members: number;
   unread_notifications: number;
   levels: LevelDistribution[];
 }
@@ -39,6 +42,8 @@ export interface MemberStats {
 
 export interface FinancialStats {
   total_income: number;
+  level_income_wallet: number;
+  mbd_wallet: number;
   pending_withdrawals: number;
   pending_topups: number;
   completed_withdrawals: number;
@@ -84,8 +89,11 @@ export async function getSuperAdminDashboardStats(): Promise<SuperAdminStats> {
        (SELECT COALESCE(SUM(amount), 0) FROM earnings WHERE status = 'Completed') AS total_earnings,
        (SELECT COALESCE(SUM(amount), 0) FROM withdrawals) AS total_withdrawals,
        (SELECT COALESCE(SUM(amount), 0) FROM withdrawals WHERE status = 'Pending') AS pending_withdrawals,
+      (SELECT COUNT(*) FROM withdrawals WHERE status = 'Pending') AS pending_withdrawal_count,
        (SELECT COALESCE(SUM(amount), 0) FROM topups WHERE status = 'Completed') AS total_topups,
        (SELECT COALESCE(SUM(amount), 0) FROM topups WHERE status = 'Pending') AS pending_topups,
+      (SELECT COUNT(*) FROM topups WHERE status = 'Pending') AS pending_topup_count,
+      (SELECT COUNT(DISTINCT member_id) FROM member_documents WHERE is_verified = FALSE) AS pending_kyc_members,
        (SELECT COUNT(*) FROM notifications WHERE is_read = FALSE) AS unread_notifications`
   );
 
@@ -119,8 +127,11 @@ export async function getSuperAdminDashboardStats(): Promise<SuperAdminStats> {
       total_earnings: 0,
       total_withdrawals: 0,
       pending_withdrawals: 0,
+      pending_withdrawal_count: 0,
       total_topups: 0,
       pending_topups: 0,
+      pending_topup_count: 0,
+      pending_kyc_members: 0,
       unread_notifications: 0,
     }),
     levels,
@@ -157,20 +168,20 @@ export async function getMemberStats(): Promise<MemberStats> {
 export async function getFinancialStats(): Promise<FinancialStats> {
   const stats = await queryOne<FinancialStats>(
     `SELECT
-       COALESCE(SUM(CASE WHEN e.status = 'Completed' THEN e.amount ELSE 0 END), 0) AS total_income,
-       COALESCE(SUM(CASE WHEN w.status = 'Pending' THEN w.amount ELSE 0 END), 0) AS pending_withdrawals,
-       COALESCE(SUM(CASE WHEN t.status = 'Pending' THEN t.amount ELSE 0 END), 0) AS pending_topups,
-       COALESCE(SUM(CASE WHEN w.status = 'Completed' THEN w.amount ELSE 0 END), 0) AS completed_withdrawals,
-       COALESCE(SUM(CASE WHEN t.status = 'Completed' THEN t.amount ELSE 0 END), 0) AS completed_topups,
-       COALESCE(SUM(m.wallet_balance), 0) AS total_platform_balance
-     FROM earnings e
-     FULL OUTER JOIN withdrawals w ON TRUE
-     FULL OUTER JOIN topups t ON TRUE
-     FULL OUTER JOIN members m ON TRUE`
+       (SELECT COALESCE(SUM(amount), 0) FROM earnings WHERE status = 'Completed') AS total_income,
+       (SELECT COALESCE(SUM(level_income_wallet), 0) FROM members) AS level_income_wallet,
+       (SELECT COALESCE(SUM(mbd_wallet), 0) FROM members) AS mbd_wallet,
+       (SELECT COALESCE(SUM(amount), 0) FROM withdrawals WHERE status = 'Pending') AS pending_withdrawals,
+       (SELECT COALESCE(SUM(amount), 0) FROM topups WHERE status = 'Pending') AS pending_topups,
+       (SELECT COALESCE(SUM(amount), 0) FROM withdrawals WHERE status = 'Approved') AS completed_withdrawals,
+       (SELECT COALESCE(SUM(amount), 0) FROM topups WHERE status = 'Completed') AS completed_topups,
+       (SELECT COALESCE(SUM(wallet_balance), 0) FROM members) AS total_platform_balance`
   );
 
   return stats || {
     total_income: 0,
+    level_income_wallet: 0,
+    mbd_wallet: 0,
     pending_withdrawals: 0,
     pending_topups: 0,
     completed_withdrawals: 0,

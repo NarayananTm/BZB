@@ -40,6 +40,12 @@ interface Props {
 }
 
 function fmt(n: number) { return `Rs.${n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
+function memberAuthHeaders(): Record<string, string> {
+  const token = window.localStorage.getItem('bzb_token');
+  const headers: Record<string, string> = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
 
 export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 0, levelIncome = 0, mbdWallet = 0, downlinesTopup = 0 }: Props) {
   const [showWithdrawal, setShowWithdrawal] = useState(false);
@@ -59,7 +65,7 @@ export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 
     setAmount('');
     setWithdrawableBalance(mbdWallet);
     try {
-      const response = await fetch('/api/member/withdrawals');
+      const response = await fetch('/api/member/withdrawals', { headers: memberAuthHeaders() });
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.message || 'Unable to load your MBD Wallet');
       setMember({ id: data.data.member_id, name: data.data.name || '' });
@@ -78,7 +84,7 @@ export default function FinancialCardsGrid({  walletBalance = 0, boosterTopup = 
     try {
       const response = await fetch('/api/member/withdrawals', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...memberAuthHeaders() },
         body: JSON.stringify({ amount: requestedAmount }),
       });
       const data = await response.json();

@@ -8,6 +8,20 @@ import {
 } from 'lucide-react';
 
 type RequestStatus = 'Pending' | 'Approved' | 'Rejected';
+type MbdWalletBalance = {
+  wallet_balance: number | string;
+  pending_amount: number | string;
+  available_balance: number | string;
+  bank_details: {
+    account_holder: string | null;
+    bank_name: string | null;
+    account_number: string | null;
+    ifsc_code: string | null;
+    branch: string | null;
+    upi_id: string | null;
+    account_type: string | null;
+  } | null;
+};
 type Withdrawal = {
   id: string;
   member_id: string | null;
@@ -51,6 +65,11 @@ export default function WithdrawalRequestsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [detail, setDetail] = useState<Withdrawal | null>(null);
+  const [rejectionRemarks, setRejectionRemarks] = useState('');
+  const [walletBalance, setWalletBalance] = useState<MbdWalletBalance | null>(null);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [walletError, setWalletError] = useState('');
+  const [walletRefreshKey, setWalletRefreshKey] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -74,6 +93,40 @@ export default function WithdrawalRequestsPage() {
   };
 
   useEffect(() => { void loadWithdrawals(); }, []);
+
+  useEffect(() => {
+    let active = true;
+    const loadWalletBalance = async () => {
+      if (!detail?.member_id) {
+        setWalletBalance(null);
+        setWalletError('Member wallet unavailable');
+        setWalletLoading(false);
+        return;
+      }
+
+      setWalletLoading(true);
+      setWalletError('');
+      try {
+        const token = window.localStorage.getItem('super_admin_token');
+        const response = await fetch(`/supper-admin/api/withdrawals/${encodeURIComponent(detail.id)}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Unable to load MBD Wallet balance');
+        if (active) setWalletBalance(result.data);
+      } catch (loadError) {
+        if (active) {
+          setWalletBalance(null);
+          setWalletError(loadError instanceof Error ? loadError.message : 'Unable to load MBD Wallet balance');
+        }
+      } finally {
+        if (active) setWalletLoading(false);
+      }
+    };
+
+    void loadWalletBalance();
+    return () => { active = false; };
+  }, [detail?.id, detail?.member_id, walletRefreshKey]);
 
   const methods = useMemo(() => Array.from(new Set(withdrawals.map((item) => item.payout_method).filter((item): item is string => Boolean(item)))), [withdrawals]);
   const filtered = useMemo(() => withdrawals.filter((item) => {
@@ -104,7 +157,16 @@ export default function WithdrawalRequestsPage() {
   useEffect(() => { setPage(1); }, [tab, search, status, method, date, appliedFilters]);
   useEffect(() => { if (page > pageCount) setPage(pageCount); }, [page, pageCount]);
 
-  const processRequest = async (item: Withdrawal, action: 'approve' | 'reject') => {
+  useEffect(() => {
+    if (!detail) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setDetail(null);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [detail]);
+
+  const processRequest = async (item: Withdrawal, action: 'approve' | 'reject', remarks?: string) => {
     setUpdatingId(item.id);
     setError('');
     try {
@@ -112,13 +174,14 @@ export default function WithdrawalRequestsPage() {
       const response = await fetch(`/supper-admin/api/withdrawals/${encodeURIComponent(item.id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify({ action, ...(action === 'reject' && remarks?.trim() ? { remarks: remarks.trim() } : {}) }),
       });
       const result = await response.json();
       if (!response.ok || !result.success) throw new Error(result.message || 'Unable to update request');
       const nextStatus: RequestStatus = action === 'approve' ? 'Approved' : 'Rejected';
       setWithdrawals((items) => items.map((entry) => entry.id === item.id ? { ...entry, status: nextStatus } : entry));
       setDetail((current) => current?.id === item.id ? { ...current, status: nextStatus } : current);
+      if (detail?.id === item.id) setWalletRefreshKey((key) => key + 1);
       setSelectedIds((items) => items.filter((id) => id !== item.id));
     } catch (updateError) {
       setError(updateError instanceof Error ? updateError.message : 'Unable to update request');
@@ -154,15 +217,19 @@ export default function WithdrawalRequestsPage() {
 
   const toggleStatus = (value: RequestStatus) => setSelectedStatuses((items) => items.includes(value) ? items.filter((item) => item !== value) : [...items, value]);
   const toggleMethod = (value: string) => setSelectedMethods((items) => items.includes(value) ? items.filter((item) => item !== value) : [...items, value]);
+  const openDetails = (item: Withdrawal) => {
+    setRejectionRemarks('');
+    setDetail(item);
+  };
 
   return <div className="withdrawals-page">
-    <style>{`
+    <style jsx global>{`
       .withdrawals-page{min-height:calc(100vh - 80px);padding:22px 28px 38px;background:#fafbfc;color:#171a1f;font-family:Arial,sans-serif}.withdrawals-page *{box-sizing:border-box}.withdrawals-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}.withdrawals-head h1{margin:0;font-size:26px;font-weight:650}.withdrawals-head p{margin:6px 0 0;color:#727983;font-size:13px}.export-button,.toolbar button,.pager button,.action-button,.bulk-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #e0e3e7;border-radius:6px;background:#fff;color:#343a40;cursor:pointer}.export-button{height:37px;padding:0 12px;font-size:12px;white-space:nowrap}.withdrawal-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:13px}.withdrawal-stat{display:flex;min-height:96px;align-items:center;gap:14px;padding:14px 16px;border:1px solid #e5e7ea;border-radius:7px;background:#fff}.withdrawal-stat-icon{width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%}.withdrawal-stat-label{font-size:11px;color:#666f79}.withdrawal-stat-value{margin-top:5px;font-size:21px;font-weight:650}.withdrawal-stat-note{margin-top:6px;font-size:10px;color:#78808a}.tone-pending{background:#fff7dc;color:#d6a800}.tone-approved{background:#eaf7ed;color:#44a65a}.tone-rejected{background:#fff0ef;color:#e45650}.tone-amount{background:#f3efff;color:#8061d5}.withdrawal-layout{display:grid;grid-template-columns:minmax(0,1fr) 228px;gap:13px;align-items:start}.withdrawal-panel,.filter-panel{border:1px solid #e5e7ea;border-radius:7px;background:white;overflow:hidden}.withdrawal-tabs{height:45px;display:flex;align-items:stretch;border-bottom:1px solid #e9ebed;padding:0 9px}.withdrawal-tab{position:relative;padding:0 13px;border:0;background:none;color:#424950;font-size:12px;cursor:pointer}.withdrawal-tab.active{color:#c7a000;font-weight:650}.withdrawal-tab.active:after{position:absolute;right:5px;bottom:0;left:5px;height:2px;background:#dbb500;content:''}.toolbar{display:flex;align-items:center;gap:8px;padding:10px;border-bottom:1px solid #eceef0}.withdrawal-search{display:flex;min-width:150px;flex:1;align-items:center;gap:8px;height:34px;padding:0 9px;border:1px solid #dfe2e6;border-radius:5px;color:#7f8790}.withdrawal-search input{width:100%;min-width:0;border:0;outline:none;font-size:11px}.withdrawal-search input::placeholder{color:#9299a1}.withdrawal-select,.toolbar-date{height:34px;border:1px solid #dfe2e6;border-radius:5px;background:#fff;color:#4c535c;font-size:11px}.withdrawal-select{width:120px;padding:0 8px}.toolbar-date{width:145px;padding:0 7px}.bulk-actions{display:flex;align-items:center;gap:7px;padding:8px 12px;background:#fffaf0;border-bottom:1px solid #f0e5be;color:#584b1d;font-size:11px}.bulk-button{height:27px;padding:0 9px;font-size:10px}.bulk-button:disabled{opacity:.5;cursor:not-allowed}.table-scroll{width:100%;overflow:auto}.withdrawal-table{width:100%;min-width:850px;border-collapse:collapse;text-align:left}.withdrawal-table th{padding:10px 8px;border-bottom:1px solid #e8eaed;color:#3f454d;font-size:10px;font-weight:650;white-space:nowrap}.withdrawal-table td{padding:9px 8px;border-bottom:1px solid #eff0f2;color:#4e555e;font-size:10px;white-space:nowrap}.withdrawal-table tbody tr:hover{background:#fafbfc}.withdrawal-table input,.filter-panel input[type=checkbox]{accent-color:#d5ae00}.withdrawal-member{display:flex;align-items:center;gap:9px;min-width:130px}.withdrawal-avatar{width:30px;height:30px;display:grid;flex:none;place-items:center;border-radius:50%;background:#e8edf1;color:#41515e;font-size:10px;font-weight:700}.withdrawal-member-name{color:#282e34;font-size:11px;font-weight:550}.withdrawal-member-email{margin-top:3px;color:#89919b;font-size:9px}.request-status{display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border-radius:4px;font-size:9px;font-weight:600}.request-status.pending{background:#fff8df;color:#b88c00}.request-status.approved{background:#ebf8ee;color:#449d56}.request-status.rejected{background:#fff0ef;color:#d9524c}.row-actions{display:flex;align-items:center;gap:5px}.action-button{height:28px;padding:0 9px;border-color:#e0b900;color:#a27f00;font-size:10px}.icon-action{width:28px;height:28px;border:1px solid #e1e4e7;border-radius:5px;background:white;color:#4b535a;cursor:pointer}.pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;color:#717984;font-size:10px}.pager{display:flex;align-items:center;gap:5px}.pager button{height:29px;min-width:29px;padding:0 7px;font-size:10px}.pager button.active{border-color:#d6b000;background:#d6b000;color:white}.pager button:disabled{color:#aeb4ba;cursor:not-allowed}.filter-panel{padding:14px}.filter-title{display:flex;align-items:center;gap:9px;margin-bottom:21px;font-size:13px;font-weight:650}.filter-group{margin-bottom:20px}.filter-group-title{margin-bottom:10px;font-size:11px;font-weight:600}.filter-option{display:flex;align-items:center;gap:9px;margin:9px 0;color:#4a5057;font-size:11px}.filter-option span:nth-child(2){flex:1}.filter-count{color:#79818a}.filter-date{display:grid;gap:7px}.filter-date input{width:100%;height:32px;padding:0 7px;border:1px solid #dfe2e6;border-radius:5px;font-size:10px}.apply-button,.reset-button{width:100%;height:34px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:5px;cursor:pointer;font-size:11px}.apply-button{border:0;background:#ddb600;color:white;font-weight:600}.reset-button{margin-top:8px;border:1px solid #dfe2e6;background:white;color:#41474e}.withdrawal-error{margin:0 0 12px;padding:10px 12px;border:1px solid #f0c5c1;border-radius:5px;background:#fff5f4;color:#a83a34;font-size:12px}.withdrawal-empty{display:grid;min-height:220px;place-items:center;color:#7d858e;font-size:12px}.detail-backdrop{position:fixed;inset:0;z-index:1100;display:flex;justify-content:flex-end;background:#11182766}.detail-drawer{width:min(420px,100%);height:100%;overflow:auto;background:white;box-shadow:-8px 0 30px #1112}.detail-heading{display:flex;align-items:center;justify-content:space-between;padding:19px;border-bottom:1px solid #eceef0}.detail-heading h2{margin:0;font-size:17px}.detail-heading p{margin:5px 0 0;color:#7c848d;font-size:11px}.detail-close{width:32px;height:32px;border:0;border-radius:5px;background:#f3f4f5;cursor:pointer}.detail-content{display:grid;gap:15px;padding:20px}.detail-field label{display:block;margin-bottom:5px;color:#7b838c;font-size:10px}.detail-field strong{font-size:12px;font-weight:550}.detail-actions{display:flex;gap:9px;padding:0 20px 20px}.detail-actions button{flex:1;height:36px;border:0;border-radius:5px;color:white;font-size:11px;font-weight:600;cursor:pointer}.approve-action{background:#48a85d}.reject-action{background:#dc5951}.detail-actions button:disabled{opacity:.6;cursor:wait}
       @media(max-width:1050px){.withdrawal-layout{grid-template-columns:minmax(0,1fr) 205px}.withdrawal-summary{gap:8px}.withdrawal-stat{gap:10px;padding:12px}.toolbar{flex-wrap:wrap}.withdrawal-search{flex-basis:40%}}
       @media(max-width:760px){.withdrawals-page{padding:18px 14px 28px}.withdrawals-head h1{font-size:22px}.withdrawal-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.withdrawal-layout{grid-template-columns:1fr}.filter-panel{order:-1}.filter-group{margin-bottom:13px}.toolbar-date{flex:1}.withdrawal-select{flex:1;min-width:105px}.withdrawal-search{flex-basis:100%}.pagination{align-items:flex-start;flex-direction:column}.withdrawal-tabs{overflow:auto}.withdrawal-tab{flex:none}.bulk-actions{flex-wrap:wrap}}
       @media(max-width:420px){.withdrawal-stat{min-height:85px;padding:10px}.withdrawal-stat-icon{width:34px;height:34px}.withdrawal-stat-value{font-size:18px}.export-button{height:33px;padding:0 8px;font-size:10px}.withdrawals-head{align-items:center}}
     `}</style>
-    <style>{`.withdrawals-head h1{font-size:25px}@media(max-width:760px){.withdrawals-head h1{font-size:22px}}`}</style>
+    <style jsx global>{`.withdrawals-head h1{font-size:25px}@media(max-width:760px){.withdrawals-head h1{font-size:22px}}.detail-backdrop{align-items:center;justify-content:center;padding:24px;overflow-y:auto}.detail-modal{width:min(720px,100%);height:auto;max-height:calc(100vh - 48px);overflow-y:auto;border-radius:10px;background:#fff;color:#171a1f;box-shadow:0 24px 70px #11182740;animation:detail-modal-in .18s ease-out}.detail-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px}.detail-section-title{grid-column:1/-1;margin:4px 0 -3px;padding-bottom:8px;border-bottom:1px solid #e9ebed;font-size:13px;font-weight:650;color:#343a40}.detail-field{min-width:0}.detail-field strong{overflow-wrap:anywhere}.detail-actions{position:sticky;bottom:0;padding-top:14px;background:#fff}@keyframes detail-modal-in{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}@media(max-width:600px){.detail-backdrop{padding:12px}.detail-modal{max-height:calc(100vh - 24px)}.detail-content{grid-template-columns:1fr;gap:12px}.detail-section-title{grid-column:auto}}`}</style>
 
     <div className="withdrawals-head">
       <div><h1>Withdrawal Requests</h1><p>Manage and process member withdrawal requests.</p></div>
@@ -192,11 +259,11 @@ export default function WithdrawalRequestsPage() {
           <thead><tr><th><input type="checkbox" aria-label="Select visible requests" checked={selectedVisible} onChange={() => setSelectedIds((items) => selectedVisible ? items.filter((id) => !visible.some((entry) => entry.id === id)) : Array.from(new Set([...items, ...visible.map((entry) => entry.id)])))} /></th><th>Member</th><th>Member ID</th><th>Request ID</th><th>Amount</th><th>Payout Method</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>{visible.map((item) => <tr key={item.id}>
             <td><input type="checkbox" aria-label={`Select ${item.id}`} checked={selectedIds.includes(item.id)} onChange={() => setSelectedIds((items) => items.includes(item.id) ? items.filter((id) => id !== item.id) : [...items, item.id])} /></td>
-            <td><div className="withdrawal-member"><span className="withdrawal-avatar">{initials(item.member_name)}</span><span><span className="withdrawal-member-name">{item.member_name || 'Unknown member'}</span><span className="withdrawal-member-email">{item.member_email || 'Email unavailable'}</span></span></div></td>
+            <td><div className="withdrawal-member"><span className="withdrawal-avatar ">{initials(item.member_name)}</span><span><span className="withdrawal-member-name mr-1">{item.member_name || 'Unknown member'}</span><span className="withdrawal-member-email">{item.member_email || 'Email unavailable'}</span></span></div></td>
             <td>{item.member_id || '-'}</td><td>{item.id}</td><td><strong>{currency(item.amount)}</strong></td><td>{item.payout_method || '-'}</td>
             <td>{dateLabel(item.requested_date)}</td>
             <td><span className={`request-status ${item.status.toLowerCase()}`}>{item.status === 'Pending' ? <Clock3 size={11} /> : item.status === 'Approved' ? <CheckCircle2 size={11} /> : <XCircle size={11} />}{item.status}</span></td>
-            <td><div className="row-actions"><button className="action-button" onClick={() => setDetail(item)}>{item.status === 'Pending' ? 'Review' : 'View'}</button><button className="icon-action" aria-label={`View ${item.id} details`} onClick={() => setDetail(item)}><MoreVertical size={15} /></button></div></td>
+            <td><div className="row-actions"><button className="action-button" onClick={() => openDetails(item)}>{item.status === 'Pending' ? 'Review' : 'View'}</button><button className="icon-action" aria-label={`View ${item.id} details`} onClick={() => openDetails(item)}><MoreVertical size={15} /></button></div></td>
           </tr>)}</tbody>
         </table></div>}
 
@@ -213,11 +280,25 @@ export default function WithdrawalRequestsPage() {
       </aside>
     </div>
 
-    {detail && <div className="detail-backdrop" onClick={() => setDetail(null)}><aside className="detail-drawer" onClick={(event) => event.stopPropagation()}>
-      <div className="detail-heading"><div><h2>{detail.member_name || 'Withdrawal request'}</h2><p>{detail.id}</p></div><button className="detail-close" aria-label="Close details" onClick={() => setDetail(null)}><X size={17} /></button></div>
-      <div className="detail-content"><DetailField label="Member ID" value={detail.member_id || '-'} /><DetailField label="Email" value={detail.member_email || '-'} /><DetailField label="Amount" value={currency(detail.amount)} /><DetailField label="Payout method" value={detail.payout_method || '-'} /><DetailField label="Requested date" value={dateLabel(detail.requested_date)} /><DetailField label="Status" value={detail.status} /><DetailField label="Remarks" value={detail.remarks || '-'} /></div>
-      {detail.status === 'Pending' && <div className="detail-actions"><button className="approve-action" disabled={updatingId === detail.id} onClick={() => void processRequest(detail, 'approve')}>Approve request</button><button className="reject-action" disabled={updatingId === detail.id} onClick={() => void processRequest(detail, 'reject')}>Reject request</button></div>}
-    </aside></div>}
+    {detail && <>
+    <div className="detail-backdrop" onClick={() => setDetail(null)}><section className="detail-modal" role="dialog" aria-modal="true" aria-labelledby="withdrawal-detail-title" onClick={(event) => event.stopPropagation()}>
+      <div className="detail-heading"><div><h2 id="withdrawal-detail-title">{detail.member_name || 'Withdrawal request'}</h2><p>{detail.id}</p></div><button className="detail-close" aria-label="Close details" onClick={() => setDetail(null)}><X size={17} /></button></div>
+      <div className="detail-content"><DetailField label="Member ID" value={detail.member_id || '-'} /><DetailField label="Email" value={detail.member_email || '-'} /><DetailField label="Amount" value={currency(detail.amount)} /><DetailField label="MBD Wallet balance" value={walletLoading ? 'Loading...' : walletBalance ? currency(walletBalance.wallet_balance) : walletError || '-'} />
+      {/* <DetailField label="Pending withdrawals" value={walletLoading ? 'Loading...' : walletBalance ? currency(walletBalance.pending_amount) : '-'} /> */}
+      <DetailField label="Available balance" value={walletLoading ? 'Loading...' : walletBalance ? currency(walletBalance.available_balance) : '-'} />
+      <h3 className="detail-section-title">Bank details</h3>
+      <DetailField label="Account holder" value={walletBalance?.bank_details?.account_holder || 'Not provided'} />
+      <DetailField label="Bank name" value={walletBalance?.bank_details?.bank_name || 'Not provided'} />
+      <DetailField label="Account number" value={walletBalance?.bank_details?.account_number || 'Not provided'} />
+      <DetailField label="IFSC code" value={walletBalance?.bank_details?.ifsc_code || 'Not provided'} />
+      <DetailField label="Branch" value={walletBalance?.bank_details?.branch || 'Not provided'} />
+      <DetailField label="UPI ID" value={walletBalance?.bank_details?.upi_id || 'Not provided'} />
+      <DetailField label="Account type" value={walletBalance?.bank_details?.account_type || 'Not provided'} />
+      <DetailField label="Payout method" value={detail.payout_method || '-'} /><DetailField label="Requested date" value={dateLabel(detail.requested_date)} /><DetailField label="Status" value={detail.status} />
+      {/* <DetailField label="Remarks" value={detail.remarks || '-'} /> */}
+      {detail.status === 'Pending' && <div className="col-span-full grid gap-1.5"><label className="text-[11px] text-[#78808a]" htmlFor="rejection-remarks">Rejection remarks (optional)</label><textarea className="min-h-[72px] w-full resize-y rounded-md border border-[#dfe3e8] bg-white px-2.5 py-2 text-[13px] text-[#171a1f]" id="rejection-remarks" value={rejectionRemarks} onChange={(event) => setRejectionRemarks(event.target.value)} placeholder="Add a reason for rejecting this request" /></div>}</div>
+      {detail.status === 'Pending' && <div className="detail-actions"><button className="approve-action" disabled={updatingId === detail.id} onClick={() => void processRequest(detail, 'approve')}>Approve request</button><button className="reject-action" disabled={updatingId === detail.id} onClick={() => void processRequest(detail, 'reject', rejectionRemarks)}>Reject request</button></div>}
+    </section></div></>}
   </div>;
 }
 

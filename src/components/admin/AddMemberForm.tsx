@@ -39,7 +39,7 @@ export default function AddMemberForm({
     phone_number: '',
     password: '',
     confirm_password: '',
-    amount: '',
+    amount: '135000',
     transaction_proof: undefined,
     transaction_utr: '',
   });

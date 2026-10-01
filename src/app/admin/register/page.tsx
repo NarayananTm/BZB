@@ -60,7 +60,7 @@ const INITIAL_FORM: RegisterForm = {
   mobile: '',
   password: '',
   confirmPassword: '',
-  amount: '',
+  amount: '135000',
   utrNumber: '',
   proof: null,
 };

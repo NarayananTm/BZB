@@ -20,6 +20,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // if (pathname === '/admin/dashboard' || pathname.startsWith('/admin/dashboard/')) {
+  //   const dashboardToken = request.cookies.get('bzb_admin_token')?.value ?? request.cookies.get('bzb_token')?.value;
+  //   if (!dashboardToken) return NextResponse.redirect(new URL('/admin/login', request.url));
+  //   return NextResponse.next();
+  // }
+
   const token = pathname.startsWith('/admin')
     ? request.cookies.get('bzb_admin_token')?.value
     : request.cookies.get('bzb_token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');

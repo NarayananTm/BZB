@@ -73,7 +73,7 @@ export async function createMbdWalletWithdrawal(memberId: string, amount: number
       [
         memberId,
         'Withdrawal request submitted',
-        `Your withdrawal request for Rs. ${amount.toLocaleString('en-IN')} is pending review.`,
+        `Withdrawal request ${id} for Rs. ${amount.toLocaleString('en-IN')} is pending review.`,
         '💸',
         'withdrawal_requested',
       ],
@@ -169,7 +169,7 @@ export async function approveWithdrawal(id: string, remarks?: string): Promise<W
         [
           withdrawal.member_id,
           'Withdrawal approved',
-          `Your withdrawal request for Rs. ${Number(withdrawal.amount).toLocaleString('en-IN')} was approved.`,
+          `Withdrawal request ${withdrawal.id} for Rs. ${Number(withdrawal.amount).toLocaleString('en-IN')} was approved.`,
           '✅',
           'withdrawal_approved',
         ],
@@ -211,7 +211,7 @@ export async function rejectWithdrawal(id: string, remarks?: string): Promise<Wi
         [
           withdrawal.member_id,
           'Withdrawal request rejected',
-          `Your withdrawal request for Rs. ${Number(withdrawal.amount).toLocaleString('en-IN')} was rejected.`,
+          `Withdrawal request ${withdrawal.id} for Rs. ${Number(withdrawal.amount).toLocaleString('en-IN')} was rejected.${remarks?.trim() ? ` Reason: ${remarks.trim()}` : ''}`,
           '⚠️',
           'withdrawal_rejected',
         ],

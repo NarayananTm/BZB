@@ -21,14 +21,16 @@ async function getMemberId(request: NextRequest): Promise<string | null> {
       [String(admin.id), admin.email || null],
     );
 
-    return member?.id ?? null;
+    if (member) return member.id;
   }
 
   const authorization = request.headers.get('authorization');
-  const memberToken = request.cookies.get('bzb_token')?.value ??
-    (authorization?.startsWith('Bearer ') ? authorization.slice(7) : null);
+  const memberTokens = [
+    authorization?.startsWith('Bearer ') ? authorization.slice(7) : null,
+    request.cookies.get('bzb_token')?.value ?? null,
+  ].filter((token, index, tokens): token is string => Boolean(token) && tokens.indexOf(token) === index);
 
-  if (memberToken) {
+  for (const memberToken of memberTokens) {
     try {
       const payload = verifyToken(memberToken) as { id?: string | number; email?: string };
       if (payload.id) {
@@ -44,9 +46,7 @@ async function getMemberId(request: NextRequest): Promise<string | null> {
 
         if (member) return member.id;
       }
-    } catch {
-      // Return unauthorized when neither session resolves to a member.
-    }
+    } catch { /* Try the next available member session. */ }
   }
   return null;
 }

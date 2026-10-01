@@ -73,7 +73,62 @@ export async function deleteNotification(id: string): Promise<boolean> {
   return rows.length > 0;
 }
 
+async function backfillWithdrawalNotifications(memberId: string) {
+  await query(
+    `INSERT INTO member_notifications (member_id, title, message, icon, notification_type, created_at)
+     SELECT w.member_id, 'Withdrawal request submitted',
+       'Withdrawal request ' || w.id || ' for Rs. ' || TO_CHAR(w.amount, 'FM999,999,999,990') || ' is pending review.',
+       '💸', 'withdrawal_requested', w.created_at
+     FROM withdrawals w
+     WHERE w.member_id = $1
+       AND NOT EXISTS (
+         SELECT 1 FROM member_notifications n
+         WHERE n.member_id = w.member_id
+           AND n.notification_type = 'withdrawal_requested'
+           AND (n.message LIKE '%' || w.id || '%'
+             OR n.created_at BETWEEN w.created_at - INTERVAL '2 minutes' AND w.created_at + INTERVAL '2 minutes')
+       )`,
+    [memberId],
+  );
+
+  await query(
+    `INSERT INTO member_notifications (member_id, title, message, icon, notification_type, created_at)
+     SELECT w.member_id, 'Withdrawal approved',
+       'Withdrawal request ' || w.id || ' for Rs. ' || TO_CHAR(w.amount, 'FM999,999,999,990') || ' was approved.',
+       '✅', 'withdrawal_approved', w.updated_at
+     FROM withdrawals w
+     WHERE w.member_id = $1 AND w.status = 'Approved'
+       AND NOT EXISTS (
+         SELECT 1 FROM member_notifications n
+         WHERE n.member_id = w.member_id
+           AND n.notification_type = 'withdrawal_approved'
+           AND (n.message LIKE '%' || w.id || '%'
+             OR n.created_at BETWEEN w.updated_at - INTERVAL '2 minutes' AND w.updated_at + INTERVAL '2 minutes')
+       )`,
+    [memberId],
+  );
+
+  await query(
+    `INSERT INTO member_notifications (member_id, title, message, icon, notification_type, created_at)
+     SELECT w.member_id, 'Withdrawal request rejected',
+       'Withdrawal request ' || w.id || ' for Rs. ' || TO_CHAR(w.amount, 'FM999,999,999,990') || ' was rejected.'
+         || CASE WHEN NULLIF(BTRIM(w.remarks), '') IS NULL THEN '' ELSE ' Reason: ' || BTRIM(w.remarks) END,
+       '⚠️', 'withdrawal_rejected', w.updated_at
+     FROM withdrawals w
+     WHERE w.member_id = $1 AND w.status = 'Rejected'
+       AND NOT EXISTS (
+         SELECT 1 FROM member_notifications n
+         WHERE n.member_id = w.member_id
+           AND n.notification_type = 'withdrawal_rejected'
+           AND (n.message LIKE '%' || w.id || '%'
+             OR n.created_at BETWEEN w.updated_at - INTERVAL '2 minutes' AND w.updated_at + INTERVAL '2 minutes')
+       )`,
+    [memberId],
+  );
+}
+
 export async function getMemberNotifications(memberId: string, page: number, limit: number) {
+  await backfillWithdrawalNotifications(memberId);
   const offset = (page - 1) * limit;
   const [notifications, counts] = await Promise.all([
     query<MemberNotification>(

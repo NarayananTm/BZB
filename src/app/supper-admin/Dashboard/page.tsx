@@ -1,6 +1,7 @@
 'use client';
 import React, { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from 'sonner';
 
 
 /**
@@ -32,13 +33,18 @@ type DashboardData = {
     total_earnings: number;
     total_withdrawals: number;
     pending_withdrawals: number;
+    pending_withdrawal_count: number;
     total_topups: number;
     pending_topups: number;
+    pending_topup_count: number;
+    pending_kyc_members: number;
     unread_notifications: number;
     levels: Array<{ name: string; reward: string | null; members_count: number; percentage: number }>;
   };
   financialStats: {
     total_income: number;
+    level_income_wallet: number;
+    mbd_wallet: number;
     pending_withdrawals: number;
     pending_topups: number;
     completed_withdrawals: number;
@@ -253,6 +259,7 @@ export default function DashboardPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const [search, setSearch] = useState("");
   const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const [exportingDetails, setExportingDetails] = useState(false);
 
   useEffect(() => {
     setCurrentTime(Date.now());
@@ -318,6 +325,36 @@ export default function DashboardPage() {
   };
   const navigateToNotifications = () => {
     router.push('/supper-admin/notifications');
+  };
+
+  const exportMemberDetails = async () => {
+    setExportingDetails(true);
+    try {
+      const token = localStorage.getItem('super_admin_token');
+      const response = await fetch('/api/super-admin/dashboard/member-export', {
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        cache: 'no-store',
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => null);
+        throw new Error(result?.message || 'Unable to export member details');
+      }
+
+      const workbook = await response.blob();
+      const downloadUrl = URL.createObjectURL(workbook);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `mbd-member-financial-details-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to export member details');
+    } finally {
+      setExportingDetails(false);
+    }
   };
 
   const filteredMembers = useMemo(
@@ -398,16 +435,18 @@ export default function DashboardPage() {
                 <section className="panel financial-panel">
                   <div className="panel-heading">
                     <h2 className="text-black">Financial Overview</h2>
-                    <button className="text-link">View All Details <Arrow /></button>
+                    <button className="text-link" type="button" onClick={() => void exportMemberDetails()} disabled={exportingDetails}>
+                      {exportingDetails ? 'Exporting...' : 'View All Details'} <Arrow />
+                    </button>
                   </div>
 
                   <div className="financial-grid">
                     <FinancialCard
                       icon="▣"
                       tone="yellow"
-                      label="Total Income"
-                      value={formatCurrency(dashboardData?.financialStats.total_income || 0)}
-                      subtitle="Platform-wide recorded income"
+                      label="Level Income Wallet"
+                      value={formatCurrency(dashboardData?.financialStats.level_income_wallet || 0)}
+                      subtitle="Combined current balance across all members"
                       action="View Details"
                     />
                     <FinancialCard
@@ -421,9 +460,9 @@ export default function DashboardPage() {
                     <FinancialCard
                       icon="⇧"
                       tone="blue"
-                      label="Top-up Requests"
-                      value={formatCurrency(dashboardData?.financialStats.pending_topups || 0)}
-                      subtitle="Pending top-up amount"
+                      label="MBD Wallet"
+                      value={formatCurrency(dashboardData?.financialStats.mbd_wallet || 0)}
+                      subtitle="Combined current balance across all members"
                       action="Review Requests"
                     />
                     <FinancialCard
@@ -557,8 +596,8 @@ export default function DashboardPage() {
                     <button className="text-link">View All <Arrow /></button>
                   </div>
 
-                  <ActionRow icon="⇩" title="Withdrawal Requests" sub={`${dashboardData?.dashboardStats.pending_withdrawals || 0} Pending`} tone="red" />
-                  <ActionRow icon="⇧" title="Top-up Requests" sub={`${dashboardData?.dashboardStats.pending_topups || 0} Pending`} tone="blue" />
+                  <ActionRow icon="⇩" title="Withdrawal Requests" sub={`${dashboardData?.dashboardStats.pending_withdrawal_count ?? 0} Pending`} tone="red" />
+                  <ActionRow icon="⇧" title="Top-up Requests" sub={`${dashboardData?.dashboardStats.pending_topup_count ?? 0} Pending`} tone="blue" />
                   <ActionRow 
                     icon="♙" 
                     title="Member Approvals" 
@@ -566,7 +605,7 @@ export default function DashboardPage() {
                     tone="purple"
                     onClick={navigateToPendingReview}
                   />
-                  <ActionRow icon="♧" title="KYC / Verification" sub={`${dashboardData?.dashboardStats.pending_members || 0} Pending`} tone="green" />
+                  <ActionRow icon="♧" title="KYC / Verification" sub={`${dashboardData?.dashboardStats.pending_kyc_members ?? 0} Pending`} tone="green" />
                 </section>
 
                 <section className="panel network-panel">
