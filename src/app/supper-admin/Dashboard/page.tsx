@@ -436,7 +436,7 @@ export default function DashboardPage() {
                   <div className="panel-heading">
                     <h2 className="text-black">Financial Overview</h2>
                     <button className="text-link" type="button" onClick={() => void exportMemberDetails()} disabled={exportingDetails}>
-                      {exportingDetails ? 'Exporting...' : 'View All Details'} <Arrow />
+                      {exportingDetails ? 'Exporting...' : 'Export Excel'} <Arrow />
                     </button>
                   </div>
 
