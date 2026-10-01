@@ -112,15 +112,13 @@ export function createXlsxWorkbook(sheetName: string, columns: WorkbookColumn[],
   const safeSheetName = escapeXml(sheetName.slice(0, 31));
   const lastColumn = columnName(Math.max(columns.length - 1, 0));
   const lastRow = rows.length + 1;
-  const worksheetRows = [
+  const worksheetValues: unknown[][] = [
     columns.map((column) => column.header),
-    ...rows.map((row) => row),
-  ].map((row, rowIndex) => {
+    ...rows.map((row) => columns.map((column) => row[column.key])),
+  ];
+  const worksheetRows = worksheetValues.map((row, rowIndex) => {
     const rowNumber = rowIndex + 1;
-    const cells = columns.map((column, columnIndex) => {
-      const value = rowIndex === 0 ? row[columnIndex] : (row as WorkbookRow)[column.key];
-      return cellXml(`${columnName(columnIndex)}${rowNumber}`, value);
-    }).join('');
+    const cells = row.map((value, columnIndex) => cellXml(`${columnName(columnIndex)}${rowNumber}`, value)).join('');
     return `<row r="${rowNumber}">${cells}</row>`;
   }).join('');
 
