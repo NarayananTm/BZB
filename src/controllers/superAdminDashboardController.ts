@@ -13,6 +13,7 @@ import {
   getTopupStats,
   getMemberGrowthData,
   getIncomeDistribution,
+  getRecentActivitiesCount,
 } from '@/services/superAdminDashboardService';
 
 /**
@@ -141,13 +142,21 @@ export async function getRecentActivitiesData(request: NextRequest) {
     if (check.error) return check.error;
 
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '15', 10);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '15', 10) || 15));
 
-    const activities = await getRecentActivities(limit);
+    const [activities, total] = await Promise.all([
+      getRecentActivities(limit, (page - 1) * limit),
+      getRecentActivitiesCount(),
+    ]);
 
     return NextResponse.json({
       success: true,
       data: activities,
+      page,
+      limit,
+      total,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
       timestamp: new Date().toISOString(),
     });
   } catch (err) {

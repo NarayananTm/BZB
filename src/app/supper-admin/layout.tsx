@@ -23,7 +23,12 @@ export default function SuperAdminLayout({
 
   // Determine active navigation and header content based on current path
   useEffect(() => {
-    if (pathname.includes('/members/pending')) {
+    if (pathname.includes('/notifications')) {
+      setActiveNav('Notifications');
+      setHeaderBreadcrumb(['Notifications']);
+      setHeaderTitle('Notifications');
+      setHeaderSubtitle('Review member registrations, referrals and withdrawal activity.');
+    } else if (pathname.includes('/members/pending')) {
       setActiveNav('Members');
       setHeaderBreadcrumb(['Members', 'Member Approvals']);
       setHeaderTitle('Pending Review');

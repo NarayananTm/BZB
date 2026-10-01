@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { markAsRead } from '@/services/notificationService';
+import { markMemberNotificationAsRead } from '@/services/notificationService';
+import { getNotificationMemberId } from '@/lib/memberNotificationAuth';
 
 type RouteContext = {
   params: Promise<{
@@ -8,9 +9,14 @@ type RouteContext = {
 };
 
 export async function PATCH(
-  _request: NextRequest,
+  request: NextRequest,
   context: RouteContext
 ) {
+  const memberId = await getNotificationMemberId(request);
+  if (!memberId) {
+    return NextResponse.json({ success: false, message: 'Please sign in to continue' }, { status: 401 });
+  }
+
   try {
     const { id } = await context.params;
 
@@ -24,9 +30,9 @@ export async function PATCH(
       );
     }
 
-    const notification = await markAsRead(id);
+    const updated = await markMemberNotificationAsRead(id, memberId);
 
-    if (!notification) {
+    if (!updated) {
       return NextResponse.json(
         {
           success: false,
@@ -38,7 +44,6 @@ export async function PATCH(
 
     return NextResponse.json({
       success: true,
-      notification,
     });
   } catch (error) {
     console.error(

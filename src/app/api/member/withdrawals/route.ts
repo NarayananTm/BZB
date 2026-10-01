@@ -1,24 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
+import { getAdminFromRequest } from '@/lib/adminAuth';
+import { queryOne } from '@/lib/postgres';
 import {
   createMbdWalletWithdrawal,
   getMbdWalletWithdrawalBalance,
   InsufficientMbdWalletError,
 } from '@/services/withdrawalService';
 
-function getMemberId(request: NextRequest): string | null {
-  const token = request.cookies.get('bzb_token')?.value;
-  if (!token) return null;
-  try {
-    const payload = verifyToken(token) as { id?: string | number; role?: string };
-    return payload.id ? String(payload.id) : null;
-  } catch {
-    return null;
+async function getMemberId(request: NextRequest): Promise<string | null> {
+  const admin = getAdminFromRequest(request);
+  if (admin && ['admin', 'superadmin'].includes(admin.role)) {
+    const member = await queryOne<{ id: string }>(
+      `SELECT id
+       FROM members
+       WHERE ($1::text IS NOT NULL AND id = $1)
+          OR ($2::text IS NOT NULL AND LOWER(email) = LOWER($2))
+       ORDER BY CASE WHEN id = $1 THEN 0 ELSE 1 END
+       LIMIT 1`,
+      [String(admin.id), admin.email || null],
+    );
+
+    return member?.id ?? null;
   }
+
+  const authorization = request.headers.get('authorization');
+  const memberToken = request.cookies.get('bzb_token')?.value ??
+    (authorization?.startsWith('Bearer ') ? authorization.slice(7) : null);
+
+  if (memberToken) {
+    try {
+      const payload = verifyToken(memberToken) as { id?: string | number; email?: string };
+      if (payload.id) {
+        const member = await queryOne<{ id: string }>(
+          `SELECT id
+           FROM members
+           WHERE ($1::text IS NOT NULL AND id = $1)
+              OR ($2::text IS NOT NULL AND LOWER(email) = LOWER($2))
+           ORDER BY CASE WHEN id = $1 THEN 0 ELSE 1 END
+           LIMIT 1`,
+          [String(payload.id), payload.email ?? null],
+        );
+
+        if (member) return member.id;
+      }
+    } catch {
+      // Return unauthorized when neither session resolves to a member.
+    }
+  }
+  return null;
 }
 
 export async function GET(request: NextRequest) {
-  const memberId = getMemberId(request);
+  const memberId = await getMemberId(request);
   if (!memberId) return NextResponse.json({ success: false, message: 'Please sign in to continue' }, { status: 401 });
 
   try {
@@ -32,7 +66,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const memberId = getMemberId(request);
+  const memberId = await getMemberId(request);
   if (!memberId) return NextResponse.json({ success: false, message: 'Please sign in to continue' }, { status: 401 });
 
   try {

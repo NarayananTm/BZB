@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, Eye, EyeOff, AlertCircle, Loader } from "lucide-react";
 
@@ -11,6 +11,16 @@ export default function SuperAdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  //  useEffect(() => {
+  //   // Check if the user is already logged in
+  //   const token = localStorage.getItem('super_admin_token');
+  //   const loggedIn = localStorage.getItem('super_admin_logged_in'); 
+
+  //   if (token && loggedIn === 'true') {
+  //     router.push('/supper-admin/dashboard');
+  //   }
+  // }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

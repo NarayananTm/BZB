@@ -242,7 +242,7 @@ export async function getPendingRequests(limit: number = 10): Promise<PendingReq
 /**
  * Get recent platform activities
  */
-export async function getRecentActivities(limit: number = 15): Promise<RecentActivity[]> {
+export async function getRecentActivities(limit: number = 15, offset: number = 0): Promise<RecentActivity[]> {
   const activities = await query<RecentActivity>(
     `SELECT 
        m.id,
@@ -280,11 +280,23 @@ export async function getRecentActivities(limit: number = 15): Promise<RecentAct
        w.status
      FROM withdrawals w
      ORDER BY timestamp DESC
-     LIMIT $1`,
-    [limit]
+     LIMIT $1 OFFSET $2`,
+    [limit, offset]
   );
 
   return activities;
+}
+
+export async function getRecentActivitiesCount(): Promise<number> {
+  const result = await queryOne<{ total: string | number }>(
+    `SELECT
+       (SELECT COUNT(*) FROM members) +
+       (SELECT COUNT(*) FROM referrals) +
+       (SELECT COUNT(*) FROM earnings) +
+       (SELECT COUNT(*) FROM withdrawals) AS total`
+  );
+
+  return Number(result?.total || 0);
 }
 
 /**

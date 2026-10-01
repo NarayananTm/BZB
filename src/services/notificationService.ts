@@ -11,6 +11,15 @@ export interface Notification {
   created_at: string;
 }
 
+export interface MemberNotification {
+  id: string;
+  title: string;
+  message: string;
+  icon: string | null;
+  is_read: boolean;
+  created_at: string;
+}
+
 function adaptMockNotification(n: AdminNotification): Notification {
   return {
     id: n.id,
@@ -62,4 +71,62 @@ export async function markAllAsRead(): Promise<number> {
 export async function deleteNotification(id: string): Promise<boolean> {
   const rows = await query('DELETE FROM notifications WHERE id = $1 RETURNING id', [id]);
   return rows.length > 0;
+}
+
+export async function getMemberNotifications(memberId: string, page: number, limit: number) {
+  const offset = (page - 1) * limit;
+  const [notifications, counts] = await Promise.all([
+    query<MemberNotification>(
+      `SELECT id::text AS id, title, message, icon, is_read, created_at
+       FROM member_notifications
+       WHERE member_id = $1
+       ORDER BY created_at DESC
+       LIMIT $2 OFFSET $3`,
+      [memberId, limit, offset],
+    ),
+    queryOne<{ total: string; unread_count: string }>(
+      `SELECT COUNT(*)::text AS total,
+         COUNT(*) FILTER (WHERE is_read = FALSE)::text AS unread_count
+       FROM member_notifications
+       WHERE member_id = $1`,
+      [memberId],
+    ),
+  ]);
+  const total = Number(counts?.total || 0);
+
+  return {
+    notifications: notifications.map((notification) => ({
+      id: notification.id,
+      title: notification.title,
+      message: notification.message,
+      icon: notification.icon,
+      createdAt: notification.created_at,
+      read: notification.is_read,
+    })),
+    unreadCount: Number(counts?.unread_count || 0),
+    total,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
+}
+
+export async function markMemberNotificationAsRead(id: string, memberId: string): Promise<boolean> {
+  const rows = await query(
+    `UPDATE member_notifications
+     SET is_read = TRUE, read_at = NOW(), updated_at = NOW()
+     WHERE id::text = $1 AND member_id = $2
+     RETURNING id`,
+    [id, memberId],
+  );
+  return rows.length > 0;
+}
+
+export async function markAllMemberNotificationsAsRead(memberId: string): Promise<number> {
+  const rows = await query(
+    `UPDATE member_notifications
+     SET is_read = TRUE, read_at = NOW(), updated_at = NOW()
+     WHERE member_id = $1 AND is_read = FALSE
+     RETURNING id`,
+    [memberId],
+  );
+  return rows.length;
 }

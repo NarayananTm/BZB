@@ -166,7 +166,35 @@ export default function AdminLayout({
                     hover:bg-slate-800
                   "
                 >
-                  <Bell className="h-5 w-5" />
+                    <Link
+                  href="/admin/notifications"
+                  aria-label="User profile"
+                  className="
+                    inline-flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-black
+                    sm:h-11
+                    sm:w-11
+                  "
+                >
+                  <Bell
+                    className={`
+                      h-[18px]
+                      w-[18px]
+                      sm:h-5
+                      sm:w-5
+                      ${linkActive(ROUTES.ADMIN + '/notifications')
+                        ? 'text-[#E5C500]'
+                        : 'text-white'
+                      }
+                    `}
+                  />
+                </Link>
+                  {/* <Bell className="h-5 w-5" /> */}
                 </button>
 
                 {/* User */}

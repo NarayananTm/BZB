@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,6 +23,40 @@ export default function AdminLoginPage() {
 
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
+
+ 
+useEffect(() => {
+  const handleLogout = async () => {
+    try {
+      const logoutResponses = await Promise.all([
+        // fetch('/api/logout', {
+        //   method: 'POST',
+        //   credentials: 'include',
+        // }),
+        fetch('/api/admin/logout', {
+          method: 'POST',
+          credentials: 'include',
+        }),
+      ]);
+
+      const hasError = logoutResponses.some(
+        (response) => !response.ok
+      );
+
+      if (hasError) {
+        throw new Error(
+          'Could not clear the previous session. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  handleLogout();
+}, [router]);
+
+
 
   /**
    * =========================================================
@@ -58,14 +92,7 @@ export default function AdminLoginPage() {
       localStorage.removeItem('super_admin_token');
       localStorage.removeItem('super_admin_logged_in');
 
-      const logoutResponses = await Promise.all([
-        fetch('/api/logout', { method: 'POST', credentials: 'include' }),
-        fetch('/api/admin/logout', { method: 'POST', credentials: 'include' }),
-      ]);
-
-      if (logoutResponses.some((response) => !response.ok)) {
-        throw new Error('Could not clear the previous session. Please try again.');
-      }
+    
 
       const isMemberId = /^MBD/i.test(form.userId.trim());
       const res = await fetch(isMemberId ? '/api/login' : '/api/admin/login', {

@@ -7,7 +7,7 @@ import TeamMembersCard from '@/components/admin/TeamMembersCard';
 import RewardsBanner from '@/components/admin/RewardsBanner';
 import InviteMembersCard from '@/components/admin/InviteMembersCard';
 import AddMemberButton from '@/components/admin/AddMemberButton';
-import { getMemberById, getTeamMembers } from '@/services/memberService';
+import { getMemberByEmail, getMemberById, getTeamMembers } from '@/services/memberService';
 import { getAllLevels } from '@/services/levelService';
 import { getTopupsByMember } from '@/services/topupService';
 import { getMemberProfile } from '@/lib/postgres';
@@ -25,8 +25,12 @@ export default async function AdminDashboardPage() {
   
   // Resolve member data by the authenticated ID to avoid matching another account by email.
   let me = session?.id ? await getMemberById(String(session.id)) : null;
-  
-  // Fallback: if member not found by email, try profile lookup
+
+  // Admin and member accounts can have different IDs while sharing the same email.
+  if (!me && session?.email) {
+    me = await getMemberByEmail(session.email);
+  }
+
   if (!me && session?.id) {
     const profile = await getMemberProfile(String(session.id));
     if (profile) {

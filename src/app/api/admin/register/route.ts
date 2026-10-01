@@ -564,6 +564,18 @@ export async function POST(
       );
 
     await client.query(
+      `INSERT INTO member_notifications (member_id, title, message, icon, notification_type)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [
+        sponsorId,
+        'New referral joined',
+        `${name} has joined your referral team.`,
+        '👥',
+        'referral_joined',
+      ],
+    );
+
+    await client.query(
       'COMMIT'
     );
 

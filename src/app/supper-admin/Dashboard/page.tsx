@@ -316,6 +316,9 @@ export default function DashboardPage() {
   const navigateToMembers = () => {
     router.push('/supper-admin/members/pending');
   };
+  const navigateToNotifications = () => {
+    router.push('/supper-admin/notifications');
+  };
 
   const filteredMembers = useMemo(
     () =>
@@ -589,7 +592,7 @@ export default function DashboardPage() {
                 <section className="panel notifications-panel">
                   <div className="panel-heading">
                     <h2 className="text-black">Notifications</h2>
-                    <button className="text-link">View All <Arrow /></button>
+                    <button className="text-link" onClick={navigateToNotifications}>View All <Arrow /></button>
                   </div>
 
                   {recentActivities.length > 0 ? recentActivities.map((activity) => (

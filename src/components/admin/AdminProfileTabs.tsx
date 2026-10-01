@@ -194,7 +194,7 @@ export default function AdminProfileTabs() {
               </button>
               {expandedSections.profile && (
               <>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p>
+              {/* <p className="text-xs sm:text-sm text-slate-500 mt-1">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p> */}
               <div className="mt-4 space-y-3 sm:space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {textInput('Full Name', 'name')}
@@ -404,7 +404,7 @@ export default function AdminProfileTabs() {
                   <User size={20} className="text-[#E5C500]" />
                   <h3 className="text-lg font-semibold">Profile Details</h3>
                 </div>
-                <p className="text-sm text-slate-500">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p>
+                {/* <p className="text-sm text-slate-500">{profile.name || 'No name set'} · {profile.mobile || 'No mobile'}</p> */}
                 <div className="mt-3 grid grid-cols-2 gap-3">
                   {textInput('Full Name', 'name')}
                   {textInput('Mobile No', 'mobile')}

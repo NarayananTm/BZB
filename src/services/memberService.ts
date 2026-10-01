@@ -183,7 +183,20 @@ export async function createMember(data: Omit<Member, 'created_at' | 'updated_at
       ],
     );
 
-    if (data.sponsor_id) await refreshSponsorLevel(client, data.sponsor_id);
+    if (data.sponsor_id) {
+      await client.query(
+        `INSERT INTO member_notifications (member_id, title, message, icon, notification_type)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          data.sponsor_id,
+          'New referral joined',
+          `${data.name} has joined your referral team.`,
+          '👥',
+          'referral_joined',
+        ],
+      );
+      await refreshSponsorLevel(client, data.sponsor_id);
+    }
     await client.query('COMMIT');
     return result.rows[0];
   } catch (error) {
@@ -204,8 +217,8 @@ export async function awardReferralGift(memberId: string, amount = 27000): Promi
   try {
     await client.query('BEGIN');
 
-    const memberResult = await client.query<{ sponsor_id: string | null }>(
-      'SELECT sponsor_id FROM members WHERE id = $1 FOR UPDATE',
+    const memberResult = await client.query<{ sponsor_id: string | null; name: string }>(
+      'SELECT sponsor_id, name FROM members WHERE id = $1 FOR UPDATE',
       [memberId],
     );
 
@@ -324,8 +337,8 @@ export async function deleteMember(id: string): Promise<boolean> {
 
   try {
     await client.query('BEGIN');
-    const memberResult = await client.query<{ sponsor_id: string | null }>(
-      'SELECT sponsor_id FROM members WHERE id = $1 FOR UPDATE',
+    const memberResult = await client.query<{ sponsor_id: string | null; name: string }>(
+      'SELECT sponsor_id, name FROM members WHERE id = $1 FOR UPDATE',
       [id],
     );
     if (memberResult.rowCount === 0) {
@@ -336,6 +349,18 @@ export async function deleteMember(id: string): Promise<boolean> {
     const sponsorId = memberResult.rows[0].sponsor_id;
 
     if (sponsorId) {
+      await client.query(
+        `INSERT INTO member_notifications (member_id, title, message, icon, notification_type)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          sponsorId,
+          'Referral member removed',
+          `${memberResult.rows[0].name} was removed from your referral team.`,
+          '⚠️',
+          'referral_removed',
+        ],
+      );
+
       const referralResult = await client.query<{ reward_amount: string }>(
         `SELECT reward_amount::text AS reward_amount
          FROM referrals

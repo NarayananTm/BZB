@@ -148,6 +148,12 @@ export default function NotificationsPage() {
    */
   useEffect(() => {
     loadNotifications();
+
+    const refreshInterval = window.setInterval(() => {
+      loadNotifications(true);
+    }, 30_000);
+
+    return () => window.clearInterval(refreshInterval);
   }, [loadNotifications]);
 
   /**

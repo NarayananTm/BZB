@@ -33,6 +33,8 @@ const navItems = [
   // { icon: '▤', label: 'Reports', key: 'Reports' },
   // { icon: '⚙', label: 'Settings', key: 'Settings' },
   { icon: '♙', label: 'Admin Management', key: 'AdminMgmt', route: '/supper-admin/admin' },
+  { icon: '♧', label: 'Notifications', key: 'Notifications', route: '/supper-admin/notifications' },
+
 ];
 
 export default function Sidebar({

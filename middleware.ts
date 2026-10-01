@@ -10,6 +10,16 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === '/admin/notifications') {
+    const memberToken = request.cookies.get('bzb_token')?.value;
+
+    if (!memberToken) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    return NextResponse.next();
+  }
+
   const token = pathname.startsWith('/admin')
     ? request.cookies.get('bzb_admin_token')?.value
     : request.cookies.get('bzb_token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');

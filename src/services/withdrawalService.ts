@@ -67,6 +67,17 @@ export async function createMbdWalletWithdrawal(memberId: string, amount: number
        VALUES ($1, $2, $3, $4, CURRENT_DATE, 'Pending', 'MBD Wallet (Referral Income)') RETURNING *`,
       [id, memberId, member.name, amount],
     );
+    await client.query(
+      `INSERT INTO member_notifications (member_id, title, message, icon, notification_type)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [
+        memberId,
+        'Withdrawal request submitted',
+        `Your withdrawal request for Rs. ${amount.toLocaleString('en-IN')} is pending review.`,
+        '💸',
+        'withdrawal_requested',
+      ],
+    );
     await client.query('COMMIT');
     return result.rows[0];
   } catch (error) {
@@ -151,6 +162,19 @@ export async function approveWithdrawal(id: string, remarks?: string): Promise<W
        WHERE id = $1 RETURNING *`,
       [id, remarks ?? null],
     );
+    if (withdrawal.member_id) {
+      await client.query(
+        `INSERT INTO member_notifications (member_id, title, message, icon, notification_type)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          withdrawal.member_id,
+          'Withdrawal approved',
+          `Your withdrawal request for Rs. ${Number(withdrawal.amount).toLocaleString('en-IN')} was approved.`,
+          '✅',
+          'withdrawal_approved',
+        ],
+      );
+    }
     await client.query('COMMIT');
     return result.rows[0] ?? null;
   } catch (error) {
@@ -162,12 +186,45 @@ export async function approveWithdrawal(id: string, remarks?: string): Promise<W
 }
 
 export async function rejectWithdrawal(id: string, remarks?: string): Promise<Withdrawal | null> {
-  return queryOne<Withdrawal>(
-    `UPDATE withdrawals
-     SET status = 'Rejected', remarks = COALESCE($2, remarks), updated_at = NOW()
-     WHERE id = $1 RETURNING *`,
-    [id, remarks ?? null],
-  );
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const withdrawalResult = await client.query<Withdrawal>(
+      'SELECT * FROM withdrawals WHERE id = $1 FOR UPDATE', [id],
+    );
+    const withdrawal = withdrawalResult.rows[0];
+    if (!withdrawal || withdrawal.status !== 'Pending') {
+      await client.query('COMMIT');
+      return withdrawal ?? null;
+    }
+
+    const result = await client.query<Withdrawal>(
+      `UPDATE withdrawals
+       SET status = 'Rejected', remarks = COALESCE($2, remarks), updated_at = NOW()
+       WHERE id = $1 RETURNING *`,
+      [id, remarks ?? null],
+    );
+    if (withdrawal.member_id) {
+      await client.query(
+        `INSERT INTO member_notifications (member_id, title, message, icon, notification_type)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          withdrawal.member_id,
+          'Withdrawal request rejected',
+          `Your withdrawal request for Rs. ${Number(withdrawal.amount).toLocaleString('en-IN')} was rejected.`,
+          '⚠️',
+          'withdrawal_rejected',
+        ],
+      );
+    }
+    await client.query('COMMIT');
+    return result.rows[0] ?? null;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 export async function getWithdrawalSummary() {
