@@ -1,4 +1,4 @@
-import { query, queryOne } from '@/lib/postgres';
+import { getPool, query, queryOne } from '@/lib/postgres';
 import bcrypt from 'bcryptjs';
 import { generateUserId } from '@/lib/idGenerator';
 export interface AdminUser {
@@ -15,14 +15,14 @@ export interface AdminUser {
 
 export async function findAdminByEmail(email: string): Promise<AdminUser | null> {
   return queryOne<AdminUser>(
-    'SELECT * FROM admin_users WHERE email = $1 AND is_active = TRUE',
+    'SELECT * FROM admin_users WHERE LOWER(email) = LOWER($1) AND is_active = TRUE',
     [email],
   );
 }
 
 export async function findAdminByUsername(username: string): Promise<AdminUser | null> {
   return queryOne<AdminUser>(
-    'SELECT * FROM admin_users WHERE username = $1 AND is_active = TRUE',
+    'SELECT * FROM admin_users WHERE LOWER(username) = LOWER($1) AND is_active = TRUE',
     [username],
   );
 }
@@ -31,10 +31,15 @@ export async function validateAdminCredentials(
   emailOrUsername: string,
   password: string,
 ): Promise<Omit<AdminUser, 'password'> | null> {
-  const admin =
-    (await findAdminByEmail(emailOrUsername)) ??
-    (await findAdminByUsername(emailOrUsername));
-    
+  const identifier = emailOrUsername.trim();
+  const result = await getPool().query<AdminUser>(
+    `SELECT * FROM admin_users
+     WHERE (LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1))
+       AND is_active = TRUE
+     LIMIT 1`,
+    [identifier],
+  );
+  const admin = result.rows[0] ?? null;
 
   if (!admin) return null;
 
@@ -43,6 +48,36 @@ export async function validateAdminCredentials(
 
   const { password: _, ...safeAdmin } = admin;
   return safeAdmin;
+}
+
+export async function validateMemberCredentials(identifier: string, password: string) {
+  const result = await getPool().query<{
+    id: string;
+    username: string;
+    email: string;
+    mobile: string;
+    password: string | null;
+    status: string;
+    created_at: string;
+  }>(
+    `SELECT id, name AS username, email, mobile, password, status, created_at
+     FROM members
+     WHERE LOWER(id) = LOWER($1) OR mobile = $1 OR LOWER(email) = LOWER($1)`,
+    [identifier.trim()],
+  );
+  const normalizedIdentifier = identifier.trim().toLowerCase();
+  const exactMatches = result.rows.filter(
+    (member) => member.id.toLowerCase() === normalizedIdentifier || member.mobile === identifier.trim(),
+  );
+  const candidates = exactMatches.length ? exactMatches : result.rows;
+  if (candidates.length !== 1) return null;
+
+  const member = candidates[0];
+  if (!member.password || !['Approved', 'Active'].includes(member.status)) return null;
+  if (!(await bcrypt.compare(password, member.password))) return null;
+
+  const { password: _, status: __, ...safeMember } = member;
+  return { ...safeMember, role: 'member' };
 }
 
 export async function getAllAdmins(): Promise<Omit<AdminUser, 'password'>[]> {

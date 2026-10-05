@@ -1,6 +1,6 @@
 'use client';
 
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -25,39 +25,6 @@ export default function AdminLoginPage() {
   const [showPwd, setShowPwd] = useState(false);
 
  
-useEffect(() => {
-  const handleLogout = async () => {
-    try {
-      const logoutResponses = await Promise.all([
-        // fetch('/api/logout', {
-        //   method: 'POST',
-        //   credentials: 'include',
-        // }),
-        fetch('/api/admin/logout', {
-          method: 'POST',
-          credentials: 'include',
-        }),
-      ]);
-
-      const hasError = logoutResponses.some(
-        (response) => !response.ok
-      );
-
-      if (hasError) {
-        throw new Error(
-          'Could not clear the previous session. Please try again.'
-        );
-      }
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-  handleLogout();
-}, [router]);
-
-
-
   /**
    * =========================================================
    * HANDLE INPUT CHANGE
@@ -89,41 +56,26 @@ useEffect(() => {
     setLoading(true);
 
     try {
-      localStorage.removeItem('super_admin_token');
-      localStorage.removeItem('super_admin_logged_in');
-
-    
-
-      const memberResponse = await fetch('/api/admin/login', {
+      const loginResponse = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-          body: JSON.stringify({ emailOrUsername: form.userId.trim(), password: form.password }),
+        body: JSON.stringify({
+          emailOrUsername: form.userId.trim(),
+          password: form.password,
+        }),
       });
 
-      let res = memberResponse;
-      let data = await memberResponse.json();
-      const isMemberLogin = memberResponse.ok && data.success;
+      const data = await loginResponse.json();
 
-      if (memberResponse.status === 404) {
-        res = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ emailOrUsername: form.userId.trim(), password: form.password }),
-        });
-        data = await res.json();
-      }
-
-      if (!res.ok || !data.success) {
+      if (!loginResponse.ok || !data.success) {
         throw new Error(
-          data.message || 'Invalid Member ID or Password'
+          data.message || 'Invalid login ID or password'
         );
       }
 
-      if (isMemberLogin && data.token) localStorage.setItem('bzb_token', data.token);
       router.push('/admin/dashboard');
       router.refresh();
     } catch (error) {
@@ -257,7 +209,6 @@ useEffect(() => {
                 >
                   Member login
                 </h1>
-
                 {/* =================================================
                     LOGIN FORM
                 ================================================== */}
@@ -267,7 +218,7 @@ useEffect(() => {
                 >
 
                   {/* =================================================
-                      MEMBER ID
+                          ADMIN USERNAME OR EMAIL
                   ================================================== */}
                   <div className="relative">
                     <Mail
@@ -295,7 +246,7 @@ useEffect(() => {
                       }
                       required
                       autoComplete="username"
-                      placeholder="Member ID"
+                      placeholder="Member ID, mobile or email"
                       disabled={loading}
                       className="
                         h-[78px]

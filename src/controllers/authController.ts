@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/adminAuth';
-import { validateAdminCredentials, createAdmin, getAllAdmins, findAdminByUsername, findAdminByEmail } from '@/services/adminUserService';
+import { validateAdminCredentials, validateMemberCredentials, createAdmin, getAllAdmins, findAdminByUsername, findAdminByEmail } from '@/services/adminUserService';
 import { signToken } from '@/lib/jwt';
 import { createAuditLog } from '@/services/auditLogService';
 import { generateUserId } from '@/lib/idGenerator';
@@ -11,11 +11,12 @@ export async function login(request: NextRequest) {
   try {
     const { emailOrUsername, password } = await request.json();
 
-    if (!emailOrUsername || !password) {
+    if (typeof emailOrUsername !== 'string' || !emailOrUsername.trim() || typeof password !== 'string' || !password) {
       return NextResponse.json({ success: false, message: 'Credentials are required' }, { status: 400 });
     }
 
-    const admin = await validateAdminCredentials(emailOrUsername, password);
+    const admin = (await validateAdminCredentials(emailOrUsername, password))
+      ?? (await validateMemberCredentials(emailOrUsername, password));
     if (!admin) {
       return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
     }
