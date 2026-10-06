@@ -17,7 +17,7 @@ export default function HeroLayout() {
         <div className="px-5 pb-10 pt-8 sm:px-10 lg:hidden">
           <HeroTitle size="mobile" />
           <Image
-            src="/images/bzb/house-outline.png"
+            src="/images/bzb/house-outline.svg"
             alt="Luxury House"
             width={760}
             height={760}
@@ -33,7 +33,7 @@ export default function HeroLayout() {
             <HeroTitle size="desktop" />
           </div>
           <Image
-            src="/images/bzb/house-outline.png"
+            src="/images/bzb/house-outline.svg"
             alt="Luxury House"
             width={760}
             height={760}

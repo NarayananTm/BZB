@@ -16,7 +16,7 @@ export default function Footer() {
   ];
 
   const contact = {
-    address: 'Head Office : 4-A East Cross Road, Gandhi Nagar, Vellore - 632007',
+    address: 'NO. 33, 4A EAST CROSS Street, BHARATHI NAGAR, Gandhinagar (Vellore), Vellore, Vellore- 632006, Tamil Nadu',
     phones: ['77320 05003 , 7036662777'],
     email: 'magimai777@gmail.com',
   };
@@ -119,7 +119,7 @@ export default function Footer() {
                     text-sm
                     leading-7
                     text-gray-400
-                     w-1/2
+                     w-42
                   "
                 >
                   {contact.address}
