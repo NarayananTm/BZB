@@ -25,6 +25,7 @@ import {
   Loader,
   Clock3,
   Settings,
+  MessageCircle,
 } from "lucide-react";
 
 type Member = {
@@ -90,7 +91,25 @@ export default function PendingReviewPage() {
   const [loadingMemberDetails, setLoadingMemberDetails] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [approvalMessage, setApprovalMessage] = useState<{ memberId: string; name: string; password: string; smsSent: boolean } | null>(null);
+  const [approvalMessage, setApprovalMessage] = useState<{ memberId: string; name: string; mobile: string; password: string; smsSent: boolean } | null>(null);
+  const fullApprovalMessage = approvalMessage ? `🎉 Congratulations ${approvalMessage.name}! 🎉
+
+Your MBD membership has been APPROVED! ✅
+
+Welcome to the MBD family! Here are your login credentials:
+
+Member ID: ${approvalMessage.memberId}
+Password: ${approvalMessage.password}
+
+🔐 Security Notice:
+• Keep your credentials secure
+• Never share your credentials with anyone
+• Change your password after login for better security
+• Report any suspicious activity immediately
+
+🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin'}/login
+
+Questions? We're here to help! 💬` : "";
 
   // Fetch complete member details including PAN, Aadhar, UTR
   const fetchMemberDetails = useCallback(async (memberId: string) => {
@@ -633,6 +652,7 @@ export default function PendingReviewPage() {
                             setApprovalMessage({
                               memberId: selectedMember.id,
                               name: selectedMember.name,
+                              mobile: selectedMember.mobile,
                               password: data.memberPassword, // Member's original password from registration
                               smsSent,
                             });
@@ -768,24 +788,7 @@ export default function PendingReviewPage() {
                   <p className="text-[12px] font-semibold text-gray-600 mb-3">📝 COPY & SEND MESSAGE</p>
                   <div className="bg-gray-900 text-white p-4 rounded-lg border border-gray-700 font-mono text-[12px] leading-relaxed overflow-auto max-h-64 select-all">
                     <div className="whitespace-pre-wrap">
-{`🎉 Congratulations ${approvalMessage.name}! 🎉
-
-Your MBD membership has been APPROVED! ✅
-
-Welcome to the MBD family! Here are your login credentials:
-
-Member ID: ${approvalMessage.memberId}
-Password: ${approvalMessage.password}
-
-🔐 Security Notice:
-• Keep your credentials secure
-• Never share your credentials with anyone
-• Change your password after login for better security
-• Report any suspicious activity immediately
-
-🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin'}/login
-
-Questions? We're here to help! 💬`}
+                      {fullApprovalMessage}
                     </div>
                   </div>
                 </div>
@@ -797,28 +800,10 @@ Questions? We're here to help! 💬`}
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 bg-gray-50 p-4 flex gap-2">
+              <div className="border-t border-gray-200 bg-gray-50 p-4 flex flex-wrap gap-2">
                 <button
                   onClick={() => {
-                    const message = `🎉 Congratulations ${approvalMessage.name}! 🎉
-
-Your MBD membership has been APPROVED! ✅
-
-Welcome to the MBD family! Here are your login credentials:
-
-Member ID: ${approvalMessage.memberId}
-Password: ${approvalMessage.password}
-
-🔐 Security Notice:
-• Keep your credentials secure
-• Never share your credentials with anyone
-• Change your password after login for better security
-• Report any suspicious activity immediately
-
-🔗 Login here: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.magimai.builders/admin'}/login
-
-Questions? We're here to help! 💬`;
-                    navigator.clipboard.writeText(message).then(() => {
+                    navigator.clipboard.writeText(fullApprovalMessage).then(() => {
                       toast.success('Message copied to clipboard!');
                     }).catch(() => {
                       toast.error('Failed to copy');
@@ -839,6 +824,25 @@ Questions? We're here to help! 💬`;
                   className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 text-gray-700 text-[13px] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   🔑 Copy Credentials
+                </button>
+                <button
+                  type="button"
+                  aria-label="Share full message on WhatsApp"
+                  title="Share full message on WhatsApp"
+                  onClick={() => {
+                    let phone = (approvalMessage.mobile || "").replace(/\D/g, "");
+                    if (phone.startsWith("00")) phone = phone.slice(2);
+                    if (phone.length === 11 && phone.startsWith("0")) phone = phone.slice(1);
+                    if (phone.length === 10) phone = `91${phone}`;
+                    if (!/^[1-9]\d{7,14}$/.test(phone)) {
+                      toast.error("This member does not have a valid mobile number for WhatsApp.");
+                      return;
+                    }
+                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(fullApprovalMessage)}`, "_blank", "noopener,noreferrer");
+                  }}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+                >
+                  <MessageCircle size={20} />
                 </button>
                 <button
                   onClick={() => setApprovalMessage(null)}
