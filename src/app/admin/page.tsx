@@ -87,7 +87,7 @@ export default function AdminPage() {
             <TeamMembersCard members={members} />
           </div>
 
-          <div className="grid min-h-[150px] gap-6 lg:grid-cols-[1.7fr_0.9fr]"><RewardsBanner /><InviteMembersCard /></div>
+          <div className="grid min-h-[150px] gap-6 lg:grid-cols-[1.7fr_0.9fr]"><RewardsBanner /><InviteMembersCard memberId={profile?.id} /></div>
         </div>
       </div>
 

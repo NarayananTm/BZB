@@ -188,7 +188,7 @@ export default function ForgotPasswordPage() {
                 "
               >
                 <Image
-                  src="/images/admin/logo/MBD_logo.svg"
+                  src="/images/admin/logo/MBD_logo.png"
                   alt="MBD Builders & Developers"
                   width={430}
                   height={150}

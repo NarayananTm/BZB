@@ -153,6 +153,7 @@ export default function AdminLoginPage() {
                 justify-center
                 px-6
                 py-12
+                pl-0
                 sm:px-10
                 lg:px-12
               "
@@ -161,10 +162,10 @@ export default function AdminLoginPage() {
 
                 {/* Logo */}
                 <Image
-                  src="/images/admin/logo/MBD_logo.svg"
+                  src="/images/admin/logo/MBD_logo.png"
                   alt="MBD - Builders & Developers"
-                  width={430}
-                  height={150}
+                  width={400}
+                  height={120}
                   priority
                   className="
                     h-auto

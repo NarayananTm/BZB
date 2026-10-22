@@ -94,15 +94,15 @@ export default function AdminLayout({
                 <Image
                   src="/images/admin/logo/MBD_logo.svg"
                   alt="MBD Logo"
-                  width={150}
-                  height={70}
+                  width={250}
+                  height={100}
                   priority
                   className="
                     h-auto
-                    w-[105px]
+                    w-[120px]
                     object-contain
-                    sm:w-[125px]
-                    md:w-[150px]
+                    sm:w-[150px]
+                    md:w-[231px]
                   "
                 />
               </Link>

@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
 
           <div className="grid gap-3 sm:gap-3 md:gap-4 lg:gap-4 grid-cols-1 lg:grid-cols-[1.7fr_0.9fr]">
             <RewardsBanner />
-            <InviteMembersCard />
+            <InviteMembersCard memberId={me?.id} />
           </div>
         </div>
       </div>
