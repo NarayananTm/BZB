@@ -1,6 +1,8 @@
 import AdminLayout from '@/components/admin/AdminLayout';
 import { getAllAuditLogs } from '@/services/auditLogService';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminAuditLogsPage() {
   const logs = await getAllAuditLogs();
   return (

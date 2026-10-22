@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAllNotifications } from '@/services/notificationService';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const notifications = await getAllNotifications();
